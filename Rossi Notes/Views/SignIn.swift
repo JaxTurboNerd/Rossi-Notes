@@ -13,6 +13,7 @@ struct SignIn: View {
     @State var password = ""
     
     @State var isShowingSignUp = false
+    @State var isLogged = false
     
     var body: some View {
         ZStack {
@@ -45,7 +46,7 @@ struct SignIn: View {
                 VStack {
                     Button{
                         //action:
-                        
+                        isLogged = true
                     } label: {
                         Text("Sign In")
                             .frame(maxWidth: 250)
@@ -54,10 +55,13 @@ struct SignIn: View {
                     .padding()
                     .buttonStyle(.borderedProminent)
                     .controlSize(.large)
+                    NavigationLink(
+                        destination: HomeTabView().navigationBarBackButtonHidden(true),
+                        isActive: $isLogged){EmptyView()}
                 }
                 Divider()
                     .frame(width: 350, height: 2)
-                    .overlay(.blue)
+                    .overlay(Color("AppBlue"))
                     .padding(.vertical)
                 Text("Don't have an account?")
                     .foregroundColor(.white)
@@ -75,7 +79,8 @@ struct SignIn: View {
                     .buttonStyle(.borderedProminent)
                     .controlSize(.large)
                     NavigationLink(
-                        destination: SignUp(),
+                        destination: SignUp()
+                            .navigationBarBackButtonHidden(true),
                         isActive: $isShowingSignUp){EmptyView()}
                 }
             }

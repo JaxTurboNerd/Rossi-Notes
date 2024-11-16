@@ -29,6 +29,11 @@ struct SignUp: View {
                         .font(Font.custom("Urbanist-Regular", size: 20))
                     TextField("First Name", text: $firstName, onCommit: {})
                         .textFieldStyle(.roundedBorder)
+                        .textInputAutocapitalization(.words)
+                        .onSubmit {
+                            //code:
+                        }
+                        .disableAutocorrection(true)
                 }
                 VStack(alignment: .leading){
                     Text("Last Name:")
@@ -41,14 +46,14 @@ struct SignUp: View {
                     Text("Password:")
                         .foregroundColor(.white)
                         .font(Font.custom("Urbanist-Regular", size: 20))
-                    TextField("password", text: $password, onCommit: {})
+                    SecureField("password", text: $password, onCommit: {})
                         .textFieldStyle(.roundedBorder)
                 }
                 VStack(alignment: .leading){
                     Text("Confirm Password")
                         .foregroundColor(.white)
                         .font(Font.custom("Urbanist-Regular", size: 20))
-                    TextField("confirm password", text: $passwordConfirm, onCommit: {})
+                    SecureField("confirm password", text: $passwordConfirm, onCommit: {})
                         .textFieldStyle(.roundedBorder)
                 }
                 Button{
@@ -64,7 +69,7 @@ struct SignUp: View {
                 .controlSize(.large)
                 Divider()
                     .frame(width: 350, height: 2)
-                    .overlay(.blue)
+                    .overlay(Color("AppBlue"))
                     .padding(.vertical)
                 VStack {
                     Text("Alread have an account?")
