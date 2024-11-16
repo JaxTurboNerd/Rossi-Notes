@@ -12,7 +12,6 @@ struct LandingPage: View {
     @State var isShowingSignIn = false
     
     var body: some View {
-        NavigationView {
             ZStack {
                 BackgroundView()
                 VStack{
@@ -28,11 +27,9 @@ struct LandingPage: View {
                         .multilineTextAlignment(.center)
                         .font(Font.custom("Urbanist-Medium", size: 20))
                         .padding()
-                    Text("Create, Update or Delete notes for each protocol dog!")
-                        .multilineTextAlignment(.center)
-                        .font(Font.custom("Urbanist-Medium", size: 20))
-                        .padding()
                     Divider()
+                        .frame(height: 2)
+                        .overlay(.gray)
                     Spacer()
                     VStack {
                         Button{
@@ -48,14 +45,15 @@ struct LandingPage: View {
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
                         NavigationLink(destination: SignIn(), isActive: $isShowingSignIn){EmptyView()}
+                            .navigationBarBackButtonHidden(true)//not working
+
                     }
                     Spacer()
                 }
                 .padding()
             }
-        }
-       
     }
+       
 }
 
 struct BackgroundView: View {

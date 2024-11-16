@@ -12,6 +12,8 @@ struct SignIn: View {
     @State var email = ""
     @State var password = ""
     
+    @State var isShowingSignUp = false
+    
     var body: some View {
         ZStack {
             Color("SignInBG")//sets the background color
@@ -23,32 +25,23 @@ struct SignIn: View {
                     .foregroundColor(.white)
                     .font(Font.custom("Urbanist-Regular", size: 20))
                     .padding(.vertical)
-                VStack(spacing: 5){
-                    HStack {
-                        Text("email:")
-                            .foregroundColor(.white)
-                            .font(Font.custom("Urbanist-Regular", size: 20))
-                        Spacer()
-                    }
-
+                VStack(alignment: .leading){
+                    Text("email:")
+                        .foregroundColor(.white)
+                        .font(Font.custom("Urbanist-Regular", size: 20))
                     TextField("email", text: $email, onCommit: {})
                         .textFieldStyle(.roundedBorder)
-                        .padding(.horizontal)
                 }
-                
-                VStack(spacing:5) {
-                    HStack{
-                        Text("password")
-                            .foregroundColor(.white)
-                            .font(Font.custom("Urbanist-Regular", size: 20))
-
-                        Spacer()
-                    }
-                    SecureField("password", text: $password, onCommit: {})
+                .padding()
+                VStack(alignment: .leading) {
+                    Text("password")
+                        .foregroundColor(.white)
+                        .font(Font.custom("Urbanist-Regular", size: 20))
+                    
+                    SecureField("password:", text: $password, onCommit: {})
                         .textFieldStyle(.roundedBorder)
-                        .padding(.horizontal)
                 }
-                .padding(.vertical)
+                .padding()
                 VStack {
                     Button{
                         //action:
@@ -62,10 +55,37 @@ struct SignIn: View {
                     .buttonStyle(.borderedProminent)
                     .controlSize(.large)
                 }
-
+                Divider()
+                    .frame(width: 350, height: 2)
+                    .overlay(.blue)
+                    .padding(.vertical)
+                Text("Don't have an account?")
+                    .foregroundColor(.white)
+                    .font(Font.custom("Urbanist-Regular", size: 20))
+                VStack {
+                    Button{
+                        //action:
+                        isShowingSignUp = true
+                    } label: {
+                        Text("Sign Up")
+                            .frame(maxWidth: 250)
+                            .font(.headline)
+                    }
+                    .padding()
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.large)
+                    NavigationLink(
+                        destination: SignUp(),
+                        isActive: $isShowingSignUp){EmptyView()}
+                }
             }
         }
         .ignoresSafeArea(.all)
+        .navigationBarBackButtonHidden(true)
+        .onTapGesture {
+            self.dismissKeyboard()
+        }
+        
     }
 }
 
