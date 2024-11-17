@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct Home: View {
+    
+    @State var isShowingHomeView = false
+    
     var body: some View {
         VStack {
             Spacer()
@@ -33,6 +36,7 @@ struct Home: View {
                             
             Button{
                 //action:
+                isShowingHomeView = true
                 
             } label: {
                 Text("Sign Out")
@@ -46,6 +50,10 @@ struct Home: View {
             .padding()
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
+            NavigationLink(
+                destination: ContentView()
+                    .navigationBarBackButtonHidden(),
+                isActive: $isShowingHomeView){EmptyView()}
             Spacer()
 
         }

@@ -86,7 +86,7 @@ struct SignIn: View {
             }
         }
         .ignoresSafeArea(.all)
-        .navigationBarBackButtonHidden(true)
+        //.navigationBarBackButtonHidden(true)
         .onTapGesture {
             self.dismissKeyboard()
         }
