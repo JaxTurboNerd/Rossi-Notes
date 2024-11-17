@@ -22,7 +22,7 @@ struct HomeTabView: View {
                    .tag("protocol")
                Text("Protocol Plus")
                    .tabItem {
-                       Label("Protocol +", systemImage: "plus")
+                       Label("Protocol +", systemImage: "cross")
                    }
                    .tag("plus")
            }
