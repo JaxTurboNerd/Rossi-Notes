@@ -10,7 +10,13 @@ import SwiftUI
 struct ProtocolView: View {
     //Need to add navigation bar items on the top of the view
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack(alignment: .leading) {
+            CardView()
+            CardView()
+            Spacer()
+        }
+        .padding([.top], 40)
+       
     }
 }
 

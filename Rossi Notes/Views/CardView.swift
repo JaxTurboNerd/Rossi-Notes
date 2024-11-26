@@ -20,7 +20,7 @@ struct CardView: View {
             .background(Color("AppBlue"))
             .foregroundColor(.white)
             .clipShape(RoundedRectangle(cornerRadius: 10))
-            .padding()
+            .padding([.horizontal, .bottom])
     }
 }
 

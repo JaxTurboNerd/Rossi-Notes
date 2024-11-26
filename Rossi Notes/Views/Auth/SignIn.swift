@@ -55,9 +55,9 @@ struct SignIn: View {
                     .padding()
                     .buttonStyle(.borderedProminent)
                     .controlSize(.large)
-                    NavigationLink(
-                        destination: HomeTabView().navigationBarBackButtonHidden(true),
-                        isActive: $isLogged){EmptyView()}
+//                    NavigationLink(
+//                        destination: HomeTabView().navigationBarBackButtonHidden(true),
+//                        isActive: $isLogged){EmptyView()}
                 }
                 Divider()
                     .frame(width: 350, height: 2)
