@@ -12,7 +12,7 @@ struct ContentView: View {
     @State var isShowingSignIn = false
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack {
                 BackgroundView()
                 VStack{
@@ -45,16 +45,13 @@ struct ContentView: View {
                         .padding()
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
-                        NavigationLink(
-                            destination: SignIn()
-                                .navigationBarBackButtonHidden(),
-                            isActive: $isShowingSignIn){EmptyView()}
-                            
                     }
+                    .navigationDestination(isPresented: $isShowingSignIn, destination: {SignIn()})
                     Spacer()
                 }
                 .padding()
             }
+            .navigationBarBackButtonHidden()
         }
     }
 }
