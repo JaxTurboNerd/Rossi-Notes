@@ -26,6 +26,7 @@ struct HomeTabView: View {
                    }
                    .tag("plus")
            }
+           .navigationBarBackButtonHidden()
        }
 }
 
