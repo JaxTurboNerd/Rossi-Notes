@@ -15,6 +15,11 @@ struct SignUp: View {
     @State var passwordConfirm = ""
     @State var isShowingSignIn = false
     
+    @FocusState var fnameIsFocused: Bool
+    @FocusState var lnameIsFocused: Bool
+    @FocusState var passwordIsFocused: Bool
+    @FocusState var password2IsFocused: Bool
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -31,10 +36,15 @@ struct SignUp: View {
                         TextField("First Name", text: $firstName, onCommit: {})
                             .textFieldStyle(.roundedBorder)
                             .textInputAutocapitalization(.words)
+                            .focused($fnameIsFocused)
                             .onSubmit {
                                 //code:
                             }
                             .disableAutocorrection(true)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 5)
+                                    .stroke(fnameIsFocused ? Color.blue : Color.white, lineWidth: 3)
+                            )
                     }
                     VStack(alignment: .leading){
                         Text("Last Name:")
@@ -42,6 +52,16 @@ struct SignUp: View {
                             .font(Font.custom("Urbanist-Regular", size: 20))
                         TextField("Last Name", text: $lastName, onCommit: {})
                             .textFieldStyle(.roundedBorder)
+                            .textInputAutocapitalization(.words)
+                            .focused($lnameIsFocused)
+                            .disableAutocorrection(true)
+                            .onSubmit {
+                                //code:
+                            }
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 5)
+                                    .stroke(lnameIsFocused ? Color.blue : Color.white, lineWidth: 3)
+                            )
                     }
                     VStack(alignment: .leading){
                         Text("Password:")
@@ -49,6 +69,13 @@ struct SignUp: View {
                             .font(Font.custom("Urbanist-Regular", size: 20))
                         SecureField("password", text: $password, onCommit: {})
                             .textFieldStyle(.roundedBorder)
+                            .disableAutocorrection(true)
+                            .focused($passwordIsFocused)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 5)
+                                    .stroke(passwordIsFocused ? Color.blue : Color.white, lineWidth: 3)
+                            )
+
                     }
                     VStack(alignment: .leading){
                         Text("Confirm Password")
@@ -56,6 +83,13 @@ struct SignUp: View {
                             .font(Font.custom("Urbanist-Regular", size: 20))
                         SecureField("confirm password", text: $passwordConfirm, onCommit: {})
                             .textFieldStyle(.roundedBorder)
+                            .disableAutocorrection(true)
+                            .focused($password2IsFocused)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 5)
+                                    .stroke(password2IsFocused ? Color.blue : Color.white, lineWidth: 3)
+                            )
+
                     }
                     Button{
                         //action:

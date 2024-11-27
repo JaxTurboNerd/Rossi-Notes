@@ -15,6 +15,9 @@ struct SignIn: View {
     @State var isShowingSignUp = false
     @State var isLogged = false
     
+    @FocusState var emailIsFocused: Bool
+    @FocusState var passwordIsFocused: Bool
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -33,6 +36,11 @@ struct SignIn: View {
                             .font(Font.custom("Urbanist-Regular", size: 20))
                         TextField("email", text: $email, onCommit: {})
                             .textFieldStyle(.roundedBorder)
+                            .focused($emailIsFocused)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 5)
+                                    .stroke(emailIsFocused ? Color.blue : Color.white, lineWidth: 3)
+                            )
                     }
                     .padding()
                     VStack(alignment: .leading) {
@@ -42,6 +50,12 @@ struct SignIn: View {
                         
                         SecureField("password:", text: $password, onCommit: {})
                             .textFieldStyle(.roundedBorder)
+                            .focused($passwordIsFocused)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 5)
+                                    .stroke(passwordIsFocused ? Color.blue : Color.white, lineWidth: 3)
+                            )
+
                     }
                     .padding()
                     VStack {
