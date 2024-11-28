@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ProtocolPlusView: View {
+    @State private var showForm = false
+    
     var body: some View {
         NavigationView {
             VStack(alignment: .leading){
@@ -22,9 +24,10 @@ struct ProtocolPlusView: View {
                 ToolbarItem(placement: .topBarTrailing,
                             content: {
                     Button("Add Note"){
-                        //code
-                        print("note added")
+                        showForm = true
                     }
+                    //Displays the protocol form to create a new note
+                    .sheet(isPresented: $showForm, content: {ProtocolForm()})
                 })
             }
 

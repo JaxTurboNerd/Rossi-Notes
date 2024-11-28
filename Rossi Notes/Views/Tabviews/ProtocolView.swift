@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct ProtocolView: View {
+    
+    @State private var showForm = false
+    
     //Need to add navigation bar items on the top of the view
     var body: some View {
         NavigationView {
@@ -20,9 +23,10 @@ struct ProtocolView: View {
                 ToolbarItem(placement: .topBarTrailing,
                             content: {
                     Button("Add Note"){
-                        //code
-                        
+                        showForm = true
                     }
+                    //Displays the protocol form to create a new note
+                    .sheet(isPresented: $showForm, content: {ProtocolForm()})
                 })
             }
         }
