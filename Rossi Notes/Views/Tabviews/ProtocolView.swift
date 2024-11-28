@@ -10,13 +10,22 @@ import SwiftUI
 struct ProtocolView: View {
     //Need to add navigation bar items on the top of the view
     var body: some View {
-        VStack(alignment: .leading) {
-            CardView()
-            CardView()
-            Spacer()
+        NavigationView {
+            List(0..<5, id: \.self){_ in
+                CardView()
+            }
+            .navigationTitle("Protocol")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing,
+                            content: {
+                    Button("Add Note"){
+                        //code
+                        
+                    }
+                })
+            }
         }
-        .padding([.top], 40)
-       
     }
 }
 

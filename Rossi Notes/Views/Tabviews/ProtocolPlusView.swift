@@ -9,7 +9,26 @@ import SwiftUI
 
 struct ProtocolPlusView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationView {
+            VStack(alignment: .leading){
+                CardView()
+                CardView()
+                Spacer()
+            }
+            .padding([.top], 40)
+            .navigationTitle("Protocol +")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing,
+                            content: {
+                    Button("Add Note"){
+                        //code
+                        print("note added")
+                    }
+                })
+            }
+
+        }
     }
 }
 

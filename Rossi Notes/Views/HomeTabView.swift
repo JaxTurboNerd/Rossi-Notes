@@ -9,25 +9,22 @@ import SwiftUI
 
 struct HomeTabView: View {
     var body: some View {
-           TabView {
-               Home()
-                   .tabItem {
-                       Label("Home", systemImage: "house")
-                   }
-                   .tag("home")
-               Text("Protocol")
-                   .tabItem {
-                       Label("Protocol", systemImage: "dog")
-                   }
-                   .tag("protocol")
-               Text("Protocol Plus")
-                   .tabItem {
-                       Label("Protocol +", systemImage: "cross")
-                   }
-                   .tag("plus")
-           }
-           .navigationBarBackButtonHidden()
-       }
+        TabView {
+            Home()
+                .tabItem {
+                    Label("Home", systemImage: "house")
+                }
+            ProtocolView()
+                .tabItem {
+                    Label("Protocol", systemImage: "dog")
+                }
+            ProtocolPlusView()
+                .tabItem {
+                    Label("Protocol +", systemImage: "cross")
+                }
+        }
+        .navigationBarBackButtonHidden()
+    }
 }
 
 #Preview {
