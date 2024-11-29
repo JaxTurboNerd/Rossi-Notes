@@ -12,12 +12,9 @@ struct ProtocolPlusView: View {
     
     var body: some View {
         NavigationView {
-            VStack(alignment: .leading){
+            List(0..<5, id: \.self){_ in
                 CardView()
-                CardView()
-                Spacer()
             }
-            .padding([.top], 40)
             .navigationTitle("Protocol +")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
