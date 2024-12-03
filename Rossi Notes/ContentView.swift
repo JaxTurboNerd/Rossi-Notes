@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
    
     @State var isShowingSignIn = false
+    let appwrite = Appwrite()
     
     var body: some View {
         NavigationStack {
@@ -36,6 +37,10 @@ struct ContentView: View {
                         Button{
                             //action:
                             isShowingSignIn = true
+                            Task {
+                                let user: () = await appwrite.getAccount()
+                               print(user)
+                            }
                             
                         } label: {
                             Text("Sign In")

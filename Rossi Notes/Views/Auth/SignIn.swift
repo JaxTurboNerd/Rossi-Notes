@@ -7,13 +7,35 @@
 
 import SwiftUI
 
+class LoginViewModel: ObservableObject {
+    @Published var email: String = ""
+    @Published var password: String = ""
+}
+
+enum LoginTextfieldError: Error {
+    case emptyEmail, emptyPassword
+}
+
+struct UserSession: Codable {
+    let id: String
+    let createdAt: String
+    let updatedAt: String
+    let userID: String
+    let expire: String
+}
+
 struct SignIn: View {
     
-    @State var email = ""
-    @State var password = ""
+    //    @State var email = ""
+    //    @State var password = ""
+    @ObservedObject var viewModel = LoginViewModel()
+    let appwrite = Appwrite()
     
     @State var isShowingSignUp = false
-    @State var isLogged = false
+    @State var isLoggedIn = false //need to make observable throughout the app?
+    @State private var isLoading = false
+    @State private var showAlert = false
+    @State private var alertMessage = ""
     
     @FocusState var emailIsFocused: Bool
     @FocusState var passwordIsFocused: Bool
@@ -34,7 +56,9 @@ struct SignIn: View {
                         Text("email:")
                             .foregroundColor(.white)
                             .font(Font.custom("Urbanist-Regular", size: 20))
-                        TextField("email", text: $email, onCommit: {})
+                        TextField("email", text: $viewModel.email, onCommit: {})
+                            .keyboardType(.emailAddress)
+                            .textInputAutocapitalization(.never)
                             .textFieldStyle(.roundedBorder)
                             .focused($emailIsFocused)
                             .overlay(
@@ -48,30 +72,63 @@ struct SignIn: View {
                             .foregroundColor(.white)
                             .font(Font.custom("Urbanist-Regular", size: 20))
                         
-                        SecureField("password:", text: $password, onCommit: {})
+                        SecureField("password:", text: $viewModel.password, onCommit: {})
                             .textFieldStyle(.roundedBorder)
                             .focused($passwordIsFocused)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 5)
                                     .stroke(passwordIsFocused ? Color.blue : Color.white, lineWidth: 3)
                             )
-
+                        
                     }
                     .padding()
                     VStack {
                         Button{
                             //action:
-                            isLogged = true
+                            Task {
+                                do {
+                                    let isValidFields = try checkLoginFields(viewModel.email, viewModel.password)
+                                    
+                                    if isValidFields {
+                                        isLoading = true
+                                        //returns a Session JSON Object
+                                        let loginSession = try await appwrite.signIn(viewModel.email, viewModel.password)
+                                        print("session creation: \(loginSession.createdAt)")
+                                        isLoggedIn = true
+                                    }
+                                } catch LoginTextfieldError.emptyEmail{
+                                    alertMessage = "Please enter your email"
+                                    showAlert = true
+                                } catch LoginTextfieldError.emptyPassword {
+                                    alertMessage = "Please enter your password"
+                                    showAlert = true
+                                } catch {
+                                    isLoading = false
+                                    alertMessage = "An error logging in occured"
+                                    showAlert = true
+                                }
+                                
+                            }
                         } label: {
-                            Text("Sign In")
-                                .frame(maxWidth: 250)
-                                .font(.headline)
+                            if isLoading {
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle())
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(minWidth: 250, maxWidth: 250, minHeight: 20, maxHeight: 20, alignment: .center)
+                            } else {
+                                Text("Sign In")
+                                    .frame(maxWidth: 250)
+                                    .font(.headline)
+                            }
                         }
                         .padding()
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
+                        .alert(isPresented: $showAlert){
+                            Alert(title: Text("Login Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                        }
                     }
-                    .navigationDestination(isPresented: $isLogged, destination: {HomeTabView()})
+                    .navigationDestination(isPresented: $isLoggedIn, destination: {HomeTabView()})
                     Divider()
                         .frame(width: 350, height: 2)
                         .overlay(Color("AppBlue"))
@@ -102,6 +159,15 @@ struct SignIn: View {
         }
         .navigationBarBackButtonHidden()
     }
+}
+
+private func checkLoginFields(_ email: String, _ password: String) throws -> Bool {
+    if email.isEmpty {
+        throw LoginTextfieldError.emptyEmail
+    } else if password.isEmpty {
+        throw LoginTextfieldError.emptyPassword
+    }
+    return true
 }
 
 #Preview {

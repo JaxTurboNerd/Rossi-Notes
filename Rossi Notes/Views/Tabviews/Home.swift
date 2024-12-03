@@ -10,6 +10,7 @@ import SwiftUI
 struct Home: View {
     
     @State var isShowingHomeView = false
+    let appwrite = Appwrite()
     
     var body: some View {
         NavigationStack {
@@ -37,7 +38,10 @@ struct Home: View {
                                 
                 Button{
                     //action:
-                    isShowingHomeView = true
+                    Task {
+                        let result = try await appwrite.onLogout()
+                        isShowingHomeView = true
+                    }
                     
                 } label: {
                     Text("Sign Out")
