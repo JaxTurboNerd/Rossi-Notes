@@ -10,6 +10,7 @@ import SwiftUI
 struct Home: View {
     
     @State var isShowingHomeView = false
+    @Binding var isLoggedIn: Bool
     let appwrite = Appwrite()
     
     var body: some View {
@@ -35,12 +36,18 @@ struct Home: View {
                     .foregroundColor(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                 Spacer(minLength: 250)
-                                
+                
                 Button{
                     //action:
                     Task {
-                        let result = try await appwrite.onLogout()
-                        isShowingHomeView = true
+                        do {
+                            try await appwrite.onLogout()
+                            isLoggedIn = false
+                            isShowingHomeView = true
+                            
+                        } catch {
+                            print("logout error")
+                        }
                     }
                     
                 } label: {
@@ -56,7 +63,7 @@ struct Home: View {
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
                 Spacer()
-
+                
             }
             .padding()
             .navigationDestination(isPresented: $isShowingHomeView, destination: {ContentView()})
@@ -66,5 +73,5 @@ struct Home: View {
 }
 
 #Preview {
-    Home()
+    Home(isLoggedIn: .constant(false))
 }

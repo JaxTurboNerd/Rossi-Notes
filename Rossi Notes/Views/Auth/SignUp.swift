@@ -14,6 +14,7 @@ struct SignUp: View {
     @State var password =  ""
     @State var passwordConfirm = ""
     @State var isShowingSignIn = false
+    @Binding var isLoggedIn: Bool
     
     @FocusState var fnameIsFocused: Bool
     @FocusState var lnameIsFocused: Bool
@@ -122,7 +123,7 @@ struct SignUp: View {
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
                     }
-                    .navigationDestination(isPresented: $isShowingSignIn, destination: {SignIn()})
+                    .navigationDestination(isPresented: $isShowingSignIn, destination: {SignIn(isLoggedIn: $isLoggedIn)})
                 }
                 .padding()
                 
@@ -138,5 +139,5 @@ struct SignUp: View {
 }
 
 #Preview {
-    SignUp()
+    SignUp(isLoggedIn: .constant(false))
 }

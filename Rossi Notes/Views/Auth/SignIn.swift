@@ -16,29 +16,19 @@ enum LoginTextfieldError: Error {
     case emptyEmail, emptyPassword
 }
 
-struct UserSession: Codable {
-    let id: String
-    let createdAt: String
-    let updatedAt: String
-    let userID: String
-    let expire: String
-}
-
 struct SignIn: View {
-    
-    //    @State var email = ""
-    //    @State var password = ""
     @ObservedObject var viewModel = LoginViewModel()
-    let appwrite = Appwrite()
-    
     @State var isShowingSignUp = false
-    @State var isLoggedIn = false //need to make observable throughout the app?
+    @Binding var isLoggedIn: Bool //need to make observable throughout the app?
     @State private var isLoading = false
     @State private var showAlert = false
     @State private var alertMessage = ""
     
     @FocusState var emailIsFocused: Bool
     @FocusState var passwordIsFocused: Bool
+    
+    let appwrite = Appwrite()
+
     
     var body: some View {
         NavigationStack {
@@ -128,7 +118,7 @@ struct SignIn: View {
                             Alert(title: Text("Login Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
                         }
                     }
-                    .navigationDestination(isPresented: $isLoggedIn, destination: {HomeTabView()})
+                    .navigationDestination(isPresented: $isLoggedIn, destination: {HomeTabView(isLoggedIn: $isLoggedIn)})
                     Divider()
                         .frame(width: 350, height: 2)
                         .overlay(Color("AppBlue"))
@@ -149,7 +139,7 @@ struct SignIn: View {
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
                     }
-                    .navigationDestination(isPresented: $isShowingSignUp, destination: {SignUp()})
+                    .navigationDestination(isPresented: $isShowingSignUp, destination: {SignUp(isLoggedIn: $isLoggedIn)})
                 }
             }
             .ignoresSafeArea(.all)
@@ -171,5 +161,5 @@ private func checkLoginFields(_ email: String, _ password: String) throws -> Boo
 }
 
 #Preview {
-    SignIn()
+    SignIn(isLoggedIn: .constant(false))
 }

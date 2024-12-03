@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
    
     @State var isShowingSignIn = false
+    @State private var isLoggedIn = false
     let appwrite = Appwrite()
     
     var body: some View {
@@ -51,7 +52,7 @@ struct ContentView: View {
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
                     }
-                    .navigationDestination(isPresented: $isShowingSignIn, destination: {SignIn()})
+                    .navigationDestination(isPresented: $isShowingSignIn, destination: {SignIn(isLoggedIn: $isLoggedIn)})
                     Spacer()
                 }
                 .padding()

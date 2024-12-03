@@ -28,27 +28,19 @@ class Appwrite {
         _ lastName: String,
         _ email: String,
         _ password: String
-    ) async -> Bool {
-        do {
-            let name = firstName + " " + lastName
-            let _ = try await account.create(
-                userId: ID.unique(),
-                email: email,
-                password: password,
-                name: name
-            )
-            return true
-        } catch {
-            print("Error: \(error)")
-            //Will need to catch the various types of errors: user exists, etc
-            return false
-        }
+    ) async throws -> User<[String: AnyCodable]> {
+        let name = firstName + " " + lastName
+        return try await account.create(
+            userId: ID.unique(),
+            email: email,
+            password: password,
+            name: name
+        )
     }
-    
+        
     public func getAccount() async {
         do {
             let user = try await account.get()
-            print(user)
         } catch {
             print("Error: \(error)")
         }

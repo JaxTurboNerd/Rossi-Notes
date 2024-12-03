@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct HomeTabView: View {
+    @Binding var isLoggedIn: Bool
+    
     var body: some View {
         TabView {
-            Home()
+            Home(isLoggedIn: $isLoggedIn)
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }
@@ -28,5 +30,5 @@ struct HomeTabView: View {
 }
 
 #Preview {
-    HomeTabView()
+    HomeTabView(isLoggedIn: .constant(false))
 }
