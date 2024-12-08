@@ -9,9 +9,9 @@ import SwiftUI
 
 struct Home: View {
     
+    @StateObject var user = Appwrite()
     @State var isShowingHomeView = false
-    @Binding var isLoggedIn: Bool
-    let appwrite = Appwrite()
+    //let appwrite = Appwrite()
     
     var body: some View {
         NavigationStack {
@@ -41,8 +41,8 @@ struct Home: View {
                     //action:
                     Task {
                         do {
-                            try await appwrite.onLogout()
-                            isLoggedIn = false
+                            try await user.onLogout()
+                            user.isLoggedIn = false
                             isShowingHomeView = true
                             
                         } catch {
@@ -73,5 +73,5 @@ struct Home: View {
 }
 
 #Preview {
-    Home(isLoggedIn: .constant(false))
+    Home()
 }
