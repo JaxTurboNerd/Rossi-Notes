@@ -11,7 +11,9 @@ import SwiftUI
 struct Rossi_NotesApp: App {
     var body: some Scene {
         WindowGroup {
+            let user = Appwrite()
             ContentView()
+                .environmentObject(user)
         }
     }
 }

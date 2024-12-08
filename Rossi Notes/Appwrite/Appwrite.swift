@@ -7,11 +7,14 @@
 
 import Foundation
 import Appwrite
+import AppwriteEnums
 import JSONCodable
 
-class Appwrite {
+class Appwrite: ObservableObject {
+    //initialize appwrite:
     var client: Client
     var account: Account
+    var avatars: Avatars
     
     public init() {
         self.client = Client()
@@ -19,8 +22,12 @@ class Appwrite {
             .setProject("66a04859001d3df0988d")
         
         self.account = Account(client)
+        self.avatars = Avatars(client)
     }
     
+    @Published var user: User<[String: AnyCodable]>?
+    @Published var session: Session?
+    @Published var isLoggedIn = false
     
     //creates a new account
     public func createAccount(
@@ -38,12 +45,8 @@ class Appwrite {
         )
     }
         
-    public func getAccount() async {
-        do {
-            let user = try await account.get()
-        } catch {
-            print("Error: \(error)")
-        }
+    public func getAccount() async throws -> User<[String: AnyCodable]>{
+        return try await account.get()
     }
     
     public func signIn(
@@ -54,6 +57,10 @@ class Appwrite {
             email: email,
             password: password
         )
+    }
+    
+    public func getInitials() async throws {
+        let bytes = try await avatars.getInitials(width: 40)
     }
     
     public func onLogout() async throws {

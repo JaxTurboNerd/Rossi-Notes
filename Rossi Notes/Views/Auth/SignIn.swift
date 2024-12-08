@@ -7,27 +7,18 @@
 
 import SwiftUI
 
-class LoginViewModel: ObservableObject {
-    @Published var email: String = ""
-    @Published var password: String = ""
-}
-
-enum LoginTextfieldError: Error {
-    case emptyEmail, emptyPassword
-}
-
 struct SignIn: View {
     @ObservedObject var viewModel = LoginViewModel()
+    @StateObject var user = Appwrite()
     @State var isShowingSignUp = false
-    @Binding var isLoggedIn: Bool //need to make observable throughout the app?
+    @State var showHomeTabView = false
+    
     @State private var isLoading = false
     @State private var showAlert = false
     @State private var alertMessage = ""
     
     @FocusState var emailIsFocused: Bool
     @FocusState var passwordIsFocused: Bool
-    
-    let appwrite = Appwrite()
 
     
     var body: some View {
@@ -69,7 +60,6 @@ struct SignIn: View {
                                 RoundedRectangle(cornerRadius: 5)
                                     .stroke(passwordIsFocused ? Color.blue : Color.white, lineWidth: 3)
                             )
-                        
                     }
                     .padding()
                     VStack {
@@ -81,15 +71,20 @@ struct SignIn: View {
                                     
                                     if isValidFields {
                                         isLoading = true
-                                        //returns a Session JSON Object
-                                        let loginSession = try await appwrite.signIn(viewModel.email, viewModel.password)
-                                        print("session creation: \(loginSession.createdAt)")
-                                        isLoggedIn = true
+                                        //returns a Session Object
+                                        let loginSession = try await user.signIn(viewModel.email, viewModel.password)
+                                        let authUser = try await user.getAccount()
+                                        user.isLoggedIn = true
+                                        showHomeTabView = true
                                     }
                                 } catch LoginTextfieldError.emptyEmail{
+                                    isLoading = false
+                                    emailIsFocused = true
                                     alertMessage = "Please enter your email"
                                     showAlert = true
                                 } catch LoginTextfieldError.emptyPassword {
+                                    isLoading = false
+                                    passwordIsFocused = true
                                     alertMessage = "Please enter your password"
                                     showAlert = true
                                 } catch {
@@ -118,7 +113,7 @@ struct SignIn: View {
                             Alert(title: Text("Login Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
                         }
                     }
-                    .navigationDestination(isPresented: $isLoggedIn, destination: {HomeTabView(isLoggedIn: $isLoggedIn)})
+                    .navigationDestination(isPresented: $showHomeTabView, destination: {HomeTabView()})
                     Divider()
                         .frame(width: 350, height: 2)
                         .overlay(Color("AppBlue"))
@@ -139,7 +134,7 @@ struct SignIn: View {
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
                     }
-                    .navigationDestination(isPresented: $isShowingSignUp, destination: {SignUp(isLoggedIn: $isLoggedIn)})
+                    .navigationDestination(isPresented: $isShowingSignUp, destination: {SignUp()})
                 }
             }
             .ignoresSafeArea(.all)
@@ -149,6 +144,10 @@ struct SignIn: View {
         }
         .navigationBarBackButtonHidden()
     }
+}
+
+enum LoginTextfieldError: Error {
+    case emptyEmail, emptyPassword
 }
 
 private func checkLoginFields(_ email: String, _ password: String) throws -> Bool {
@@ -161,5 +160,5 @@ private func checkLoginFields(_ email: String, _ password: String) throws -> Boo
 }
 
 #Preview {
-    SignIn(isLoggedIn: .constant(false))
+    SignIn()
 }

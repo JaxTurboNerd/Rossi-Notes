@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct ContentView: View {
-   
+    @EnvironmentObject var user: Appwrite
     @State var isShowingSignIn = false
-    @State private var isLoggedIn = false
-    let appwrite = Appwrite()
+    // @State private var isLoggedIn = false
+    //let appwrite = Appwrite()
     
     var body: some View {
-        if isLoggedIn {
-            HomeTabView(isLoggedIn: $isLoggedIn)
-        } else {
-            NavigationStack {
+        NavigationStack {
+            if user.isLoggedIn {
+                HomeTabView()
+            } else {
                 ZStack {
                     BackgroundView()
                     VStack{
@@ -41,10 +41,14 @@ struct ContentView: View {
                             Button{
                                 //action:
                                 isShowingSignIn = true
-                                Task {
-                                    let user: () = await appwrite.getAccount()
-                                   print(user)
-                                }
+                                //                                Task {
+                                //                                    do {
+                                //                                        try await user.getAccount()
+                                //                                    }catch {
+                                //                                        print(error)
+                                //                                    }
+                                //
+                                //                                }
                                 
                             } label: {
                                 Text("Sign In")
@@ -55,12 +59,13 @@ struct ContentView: View {
                             .buttonStyle(.borderedProminent)
                             .controlSize(.large)
                         }
-                        .navigationDestination(isPresented: $isShowingSignIn, destination: {SignIn(isLoggedIn: $isLoggedIn)})
+                        .navigationDestination(isPresented: $isShowingSignIn, destination: {SignIn()})
                         Spacer()
                     }
                     .padding()
                 }
                 .navigationBarBackButtonHidden()
+                
             }
         }
     }
