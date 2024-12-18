@@ -12,7 +12,7 @@ struct ProtocolPlusView: View {
     
     var body: some View {
         NavigationView {
-            List(0..<5, id: \.self){_ in
+            List(0..<4, id: \.self){_ in
                 CardView()
             }
             .navigationTitle("Protocol +")

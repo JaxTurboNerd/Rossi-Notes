@@ -19,7 +19,7 @@ struct SignIn: View {
     
     @FocusState var emailIsFocused: Bool
     @FocusState var passwordIsFocused: Bool
-
+    
     
     var body: some View {
         NavigationStack {
@@ -73,9 +73,16 @@ struct SignIn: View {
                                         isLoading = true
                                         //returns a Session Object
                                         let loginSession = try await user.signIn(viewModel.email, viewModel.password)
-                                        let authUser = try await user.getAccount()
+                                        async let authUser = user.getAccount()
+                                        async let userAvatar = user.getInitials()
+                                        let (fetchedAuthUser, fetchedUserAvatar) = try await(authUser, userAvatar)
                                         user.isLoggedIn = true
                                         showHomeTabView = true
+
+                                        DispatchQueue.main.async {
+                                            viewModel.response = String(describing: loginSession.toMap())
+                                            //print("response: \(viewModel.response)")
+                                        }
                                     }
                                 } catch LoginTextfieldError.emptyEmail{
                                     isLoading = false
@@ -91,6 +98,9 @@ struct SignIn: View {
                                     isLoading = false
                                     alertMessage = "An error logging in occured"
                                     showAlert = true
+                                    DispatchQueue.main.async {
+                                        viewModel.response = error.localizedDescription
+                                    }
                                 }
                                 
                             }
