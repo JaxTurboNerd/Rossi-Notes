@@ -21,9 +21,6 @@ struct Rossi_NotesApp: App {
 //extends View class to make this function available to all views:
 #if canImport(UIKit)
 extension View {
-//    func hideKeyboard() {
-//        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-//    }
     
     func dismissKeyboard() {
         let keyWindow = UIApplication.shared.connectedScenes
