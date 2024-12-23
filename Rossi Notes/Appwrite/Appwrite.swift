@@ -92,7 +92,6 @@ class Appwrite: ObservableObject {
             queries: [] // optional
         )
     }
-    
 }
 
 

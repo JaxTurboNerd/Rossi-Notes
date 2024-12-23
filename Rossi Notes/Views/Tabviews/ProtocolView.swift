@@ -12,62 +12,46 @@ import Appwrite
 struct ProtocolView: View {
     
     @State private var showForm = false
-    @State private var numOfNotes = 0
-    @State private var notes = []
-    @StateObject var database = Appwrite()
-    private var protocolCollectionId = "66a04db400070bffec78"
+    @StateObject private var viewModel = ProtocolViewModel()
+    
     
     //Need to add navigation bar items on the top of the view
     var body: some View {
         NavigationView {
-            List(0..<numOfNotes, id: \.self){_ in
-                CardView()
-            }
-            .navigationTitle("Protocol")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing,
-                            content: {
-                    Button("Add Note"){
-                        showForm = true
+            Group {
+                if viewModel.isLoading {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .aspectRatio(contentMode: .fit)
+                        .frame(minWidth: 250, maxWidth: 250, minHeight: 20, maxHeight: 20, alignment: .center)
+                } else if let error = viewModel.errorMessage {
+                    VStack {
+                        Text("Error: \(error)")
+                        Button("Retry") {
+                            viewModel.fetchDocuments()
+                        }
                     }
-                    //Displays the protocol form to create a new note
-                    .sheet(isPresented: $showForm, content: {ProtocolForm()})
-                })
-            }
-            .task {
-                await loadData()
-            }
-        }
-    }
-    
-    private func loadData() async {
-        do {
-            let protocolNotes = try await database.getNotesList(protocolCollectionId)
-            numOfNotes = protocolNotes.total //works
-            self.notes = protocolNotes.documents
-            let note = String(describing: protocolNotes.documents[0].toMap())
-            //print("documents one: \(type(of: note))")//works -> String
-            
-            //testing code to get appwrite reponse to json object:
-            if let jsonData = note.data(using: .utf8){
-                do {
-                    if let jsonObject = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
-                        print(jsonObject)
+                } else {
+                    List(viewModel.documents, id: \.id){document in
+                        Text("Test")
                     }
-                } catch {
-                    print("error parsing: \(error)")
+                    .navigationTitle("Protocol")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing,
+                                    content: {
+                            Button("Add Note"){
+                                showForm = true
+                            }
+                            //Displays the protocol form to create a new note
+                            .sheet(isPresented: $showForm, content: {ProtocolForm()})
+                        })
+                    }
                 }
             }
-            
-            DispatchQueue.main.async {
-                let response = String(describing: protocolNotes.toMap())
-            }
-        } catch {
-            print("get protocol notes error: \(error)")
-            DispatchQueue.main.async {
-                let response = error.localizedDescription
-            }
+        }
+        .onAppear {
+            viewModel.fetchDocuments()
         }
     }
 }
