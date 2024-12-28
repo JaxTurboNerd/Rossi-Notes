@@ -7,7 +7,7 @@
 
 import SwiftUI
 import Foundation
-import Appwrite
+//import Appwrite
 
 struct ProtocolView: View {
     
@@ -18,12 +18,12 @@ struct ProtocolView: View {
     //Need to add navigation bar items on the top of the view
     var body: some View {
         NavigationView {
-            Group {
+            VStack {
                 if viewModel.isLoading {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle())
-                        .aspectRatio(contentMode: .fit)
-                        .frame(minWidth: 250, maxWidth: 250, minHeight: 20, maxHeight: 20, alignment: .center)
+                        .aspectRatio(contentMode: .fill)
+                        .frame(minWidth: 500, alignment: .center)
                 } else if let error = viewModel.errorMessage {
                     VStack {
                         Text("Error: \(error)")
@@ -33,7 +33,10 @@ struct ProtocolView: View {
                     }
                 } else {
                     List(viewModel.documents, id: \.id){document in
-                        Text("Test")
+                        //let name = document.data["name"] ?? "No Name"
+                        //Text(document.data["name"]?.description ?? "")
+                        let name = document.data["name"]?.description ?? ""
+                        CardView(name: name)
                     }
                     .navigationTitle("Protocol")
                     .navigationBarTitleDisplayMode(.inline)

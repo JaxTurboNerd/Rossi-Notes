@@ -70,12 +70,6 @@ class Appwrite: ObservableObject {
     public func getInitials() async throws -> ByteBuffer {
         //returns a ByteBuffer Object
         let bytes = try await avatars.getInitials(width: 40)
-        //print("get initial bytes: \(bytes)")
-        let allocator = ByteBufferAllocator()
-        var buffer = allocator.buffer(capacity: 803)
-        if let readBytes = buffer.readBytes(length: 803){//not working!
-            //print("read bytes: \(readBytes)")
-        }
         return bytes
     }
     
