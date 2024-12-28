@@ -8,13 +8,18 @@
 import Foundation
 import Appwrite
 import AppwriteEnums
+import AppwriteModels
 import JSONCodable
+import NIOCore
 
 class Appwrite: ObservableObject {
     //initialize appwrite:
     var client: Client
     var account: Account
     var avatars: Avatars
+    var databases: Databases
+    private var databaseId = "66a04cba001cb48a5bd7"
+//    private var plusCollectionId = "66a402a0003ddfe36884"
     
     public init() {
         self.client = Client()
@@ -23,6 +28,9 @@ class Appwrite: ObservableObject {
         
         self.account = Account(client)
         self.avatars = Avatars(client)
+        self.databases = Databases(client)
+        
+        
     }
     
     @Published var user: User<[String: AnyCodable]>?
@@ -59,8 +67,10 @@ class Appwrite: ObservableObject {
         )
     }
     
-    public func getInitials() async throws {
+    public func getInitials() async throws -> ByteBuffer {
+        //returns a ByteBuffer Object
         let bytes = try await avatars.getInitials(width: 40)
+        return bytes
     }
     
     public func onLogout() async throws {
@@ -69,6 +79,13 @@ class Appwrite: ObservableObject {
         )
     }
     
+    public func getNotesList(_ collectionId: String) async throws -> DocumentList<[String: AnyCodable]> {
+        return try await databases.listDocuments(
+            databaseId: databaseId,
+            collectionId: collectionId,
+            queries: [] // optional
+        )
+    }
 }
 
 

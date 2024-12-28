@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import Appwrite
+import JSONCodable
 
 struct CardView: View {
-    @State var name = "Artie"
+    var name: String = ""
     
     var body: some View {
-        Text("\(name)")
+        Text(name)
             .font(Font.custom("ConcertOne-Regular", size: 24))
             .tracking(2)//adds letter spacing
             .frame(maxWidth: .infinity, minHeight: 60, maxHeight:70 ,alignment: .center)

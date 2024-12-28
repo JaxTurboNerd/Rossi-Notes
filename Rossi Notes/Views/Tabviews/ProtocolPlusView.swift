@@ -9,25 +9,47 @@ import SwiftUI
 
 struct ProtocolPlusView: View {
     @State private var showForm = false
+    @StateObject private var viewModel = PlusViewModel()
     
     var body: some View {
         NavigationView {
-            List(0..<5, id: \.self){_ in
-                CardView()
-            }
-            .navigationTitle("Protocol +")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing,
-                            content: {
-                    Button("Add Note"){
-                        showForm = true
+            Group {
+                if viewModel.isLoading {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .aspectRatio(contentMode: .fill)
+                        .frame(minWidth: 500, alignment: .center)
+                } else if let error = viewModel.errorMessage {
+                    VStack {
+                        Text("Error: \(error)")
+                        Button("Retry") {
+                            viewModel.fetchDocuments()
+                        }
                     }
-                    //Displays the protocol form to create a new note
-                    .sheet(isPresented: $showForm, content: {ProtocolForm()})
-                })
+                } else {
+                    List(viewModel.documents, id: \.id){document in
+                        //let name = document.data["name"] ?? "No Name"
+                        //Text(document.data["name"]?.description ?? "")
+                        let name = document.data["name"]?.description ?? ""
+                        CardView(name: name)
+                    }
+                    .navigationTitle("Protocol")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing,
+                                    content: {
+                            Button("Add Note"){
+                                showForm = true
+                            }
+                            //Displays the protocol form to create a new note
+                            .sheet(isPresented: $showForm, content: {ProtocolForm()})
+                        })
+                    }
+                }
             }
-
+        }
+        .onAppear(){
+            viewModel.fetchDocuments()
         }
     }
 }
