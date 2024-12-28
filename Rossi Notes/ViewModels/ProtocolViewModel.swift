@@ -9,18 +9,39 @@ import SwiftUI
 import Appwrite
 import JSONCodable
 
+struct Protocol: Codable, Identifiable {
+    let id: String
+    let name: String
+    let dogReactive: Bool
+    let barrierReactive: Bool
+    let miscNotes: String
+    let protocolDate: Date
+    let catReactive: Bool
+    let resourceGuarder: Bool
+    let strangerReactive: Bool
+    let jumpyMouthy: Bool
+    let doorRoutine: Bool
+    let placeRoutine: Bool
+    let leashReactive: Bool
+    let creatorName: String
+}
+
+
 class ProtocolViewModel: ObservableObject {
     private let client: Client
     private let databases: Databases
     
     // Published properties for UI updates
-    @Published var documents: [Document<[String: AnyCodable]>] = []
-    @Published var isLoading = false
-    @Published var errorMessage: String?
+    @Published public var documents: [Document<[String: AnyCodable]>] = []
+    @Published public var sampleDocuments: [String] = []
+    @Published public var sampleResponse: String = ""
+    @Published public var isLoading = false
+    @Published public var errorMessage: String?
     
     // Constants
     private let databaseId = "66a04cba001cb48a5bd7"
     private let collectionId = "66a04db400070bffec78"
+    //private let sampleData: Protocol
     
     init() {
         // Initialize Appwrite client
@@ -42,10 +63,25 @@ class ProtocolViewModel: ObservableObject {
                     collectionId: collectionId,
                     queries: []
                 )
-                print("Response: \(response)")
+                //returns response of type: DocumentList<Dictionary<String, AnyCodable>>
+                //print(String(describing: response.toMap()))
                 await MainActor.run {
                     self.documents = response.documents
                     self.isLoading = false
+                    self.sampleResponse = String(describing: response.toMap())
+                    //print(sampleResponse)
+                    //Prints: 'Optional("Peanut")
+                    //print(String(describing: documents[0].data["name"]?.value))
+                }
+                //print(type(of: documents[0].data))//Dictionary<String: AnyCodable>
+                let sampleData = documents[0].data
+                let sampleName = documents[0].data["name"]
+//                print("sample data: \(sampleName ?? "no name")")
+//                print("sample data 2: \(documents[0].data["leash_reactive"] ?? "no value")")
+                //iterate over the data dictionary:
+                for (key, value) in sampleData {
+                    print("Key: \(key) value is: \(value)")
+                    //key value type = String, value type = AnyCodable
                 }
             } catch {
                 await MainActor.run {

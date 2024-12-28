@@ -74,7 +74,7 @@ class Appwrite: ObservableObject {
         let allocator = ByteBufferAllocator()
         var buffer = allocator.buffer(capacity: 803)
         if let readBytes = buffer.readBytes(length: 803){//not working!
-            print("read bytes: \(readBytes)")
+            //print("read bytes: \(readBytes)")
         }
         return bytes
     }
