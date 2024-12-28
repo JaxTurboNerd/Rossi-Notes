@@ -7,7 +7,6 @@
 
 import SwiftUI
 import Foundation
-//import Appwrite
 
 struct ProtocolView: View {
     
