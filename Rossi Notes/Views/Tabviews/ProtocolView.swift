@@ -34,6 +34,9 @@ struct ProtocolView: View {
                     List(viewModel.documents, id: \.id){document in
                         let name = document.data["name"]?.description ?? ""
                         CardView(name: name)
+                            .overlay {
+                                NavigationLink(destination: DetailView(name: name), label: {EmptyView()})
+                            }
                     }
                     .navigationTitle("Protocol")
                     .navigationBarTitleDisplayMode(.inline)
