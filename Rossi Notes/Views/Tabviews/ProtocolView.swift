@@ -17,7 +17,7 @@ struct ProtocolView: View {
     //Need to add navigation bar items on the top of the view
     var body: some View {
         NavigationView {
-            VStack {
+            Group {
                 if viewModel.isLoading {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle())
@@ -32,8 +32,6 @@ struct ProtocolView: View {
                     }
                 } else {
                     List(viewModel.documents, id: \.id){document in
-                        //let name = document.data["name"] ?? "No Name"
-                        //Text(document.data["name"]?.description ?? "")
                         let name = document.data["name"]?.description ?? ""
                         CardView(name: name)
                     }
