@@ -13,7 +13,6 @@ struct ProtocolView: View {
     @State private var showForm = false
     @StateObject private var viewModel = ProtocolViewModel()
     
-    
     //Need to add navigation bar items on the top of the view
     var body: some View {
         NavigationView {
@@ -21,8 +20,7 @@ struct ProtocolView: View {
                 if viewModel.isLoading {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle())
-                        .aspectRatio(contentMode: .fill)
-                        .frame(minWidth: 500, alignment: .center)
+                        .controlSize(.large)
                 } else if let error = viewModel.errorMessage {
                     VStack {
                         Text("Error: \(error)")
@@ -35,7 +33,7 @@ struct ProtocolView: View {
                         let name = document.data["name"]?.description ?? ""
                         CardView(name: name)
                             .overlay {
-                                NavigationLink(destination: DetailView(name: name), label: {EmptyView()})
+                                NavigationLink(destination: DetailView(), label: {EmptyView()})
                             }
                     }
                     .navigationTitle("Protocol")
@@ -59,6 +57,6 @@ struct ProtocolView: View {
     }
 }
 
-#Preview {
-    ProtocolView()
-}
+//#Preview {
+//    ProtocolView()
+//}

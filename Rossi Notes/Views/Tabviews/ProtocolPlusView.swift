@@ -17,8 +17,7 @@ struct ProtocolPlusView: View {
                 if viewModel.isLoading {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle())
-                        .aspectRatio(contentMode: .fill)
-                        .frame(minWidth: 500, alignment: .center)
+                        .controlSize(.large)
                 } else if let error = viewModel.errorMessage {
                     VStack {
                         Text("Error: \(error)")
@@ -31,7 +30,7 @@ struct ProtocolPlusView: View {
                         let name = document.data["name"]?.description ?? ""
                         CardView(name: name)
                             .overlay {
-                                NavigationLink(destination: DetailView(name: name), label: {EmptyView()})
+                                NavigationLink(destination: DetailView(), label: {EmptyView()})
                             }
                     }
                     .navigationTitle("Protocol")

@@ -9,7 +9,7 @@ import SwiftUI
 import Appwrite
 import JSONCodable
 
-class ProtocolViewModel: ObservableObject {
+final class ProtocolViewModel: ObservableObject {
     private let client: Client
     private let databases: Databases
     
@@ -58,6 +58,8 @@ class ProtocolViewModel: ObservableObject {
                     //print("sample data 2: \(documents[0].data["leash_reactive"] ?? "no value")") //prints: false
                     //iterate over the data dictionary:
                     //let sampleData = documents[0].data
+                    //let createDate = documents[0].data["$createdAt"]
+                    //print("created date: \(createDate ?? "")")
                 }
                 
             } catch {

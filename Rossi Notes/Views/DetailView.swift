@@ -6,15 +6,23 @@
 //
 
 import SwiftUI
+import Appwrite
+import JSONCodable
+import Foundation
 
 struct DetailView: View {
-    var name = ""
+    @StateObject private var viewModel = DetailViewModel()
+    
     var body: some View {
-        Text(name)
-            .font(.title)
+        VStack{
+            Text("test")
+//            Text(document.data["name"]?.description ?? "")
+//                .font(.title)
+//            Text("Notes: \(document.data["misc_notes"]?.description ?? "")")   
+        }
     }
 }
 
-#Preview {
-    DetailView()
-}
+//#Preview {
+//    DetailView()
+//}
