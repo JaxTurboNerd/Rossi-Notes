@@ -12,13 +12,28 @@ import Foundation
 
 struct DetailView: View {
     @StateObject private var viewModel = DetailViewModel()
+    var collectionId = ""
+    var documentId = ""
     
     var body: some View {
-        VStack{
-            Text("test")
-//            Text(document.data["name"]?.description ?? "")
-//                .font(.title)
-//            Text("Notes: \(document.data["misc_notes"]?.description ?? "")")   
+        Group {
+            if viewModel.isLoading {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle())
+                    .controlSize(.large)
+            } else if let error = viewModel.errorMessage {
+                VStack {
+                    Text("Error: \(error)")
+                    Button("Retry") {
+                        viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
+                    }
+                }
+            } else {
+                Text("test")
+            }
+        }
+        .onAppear{
+            viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
         }
     }
 }

@@ -20,7 +20,7 @@ final class ProtocolViewModel: ObservableObject {
     
     // Constants
     private let databaseId = "66a04cba001cb48a5bd7"
-    private let collectionId = "66a04db400070bffec78"
+    let collectionId = "66a04db400070bffec78"
     
     init() {
         // Initialize Appwrite client
@@ -65,6 +65,7 @@ final class ProtocolViewModel: ObservableObject {
             } catch {
                 await MainActor.run {
                     self.errorMessage = error.localizedDescription
+                    print("get document error \(String(describing: errorMessage))")
                     self.isLoading = false
                 }
             }
