@@ -14,7 +14,8 @@ class DetailViewModel: ObservableObject {
     private let client: Client
     private let databases: Databases
     
-    @Published var protocolDetails: [ProtocolDetails] = []
+    //@Published var protocolDetails: [ProtocolDetails] = []
+    @Published var detailsData = DetailsModel()
     @Published var document: Document<[String: AnyCodable]>?
     @Published var isLoading = false
     @Published public var errorMessage: String?
@@ -47,8 +48,9 @@ class DetailViewModel: ObservableObject {
                 )
                 await MainActor.run {
                     self.document = response
-                    print("detail response: \(String(describing: response))")
                     self.isLoading = false
+                    //protocolDetails?.name = document?.data["name"]?.value as! String //works
+                    decodeResponse(response: document!.data)
                 }
                 
             } catch {
@@ -60,8 +62,14 @@ class DetailViewModel: ObservableObject {
         }
     }
     
-    private func decodeResponse(response: Document<[String: AnyCodable]>){
-        //code to loop through response dictionary:
-        
+    private func decodeResponse(response: Dictionary<String, AnyCodable>){
+        //print("decode response for name: \(response["name"]?.value as! String)") //works: Priscilla
+        //assign response data values to the data model:
+        detailsData.id = response["$id"]?.value as! String
+        detailsData.name = response["name"]?.value as! String
+        detailsData.miscNotes = response["misc_notes"]?.value as! String
+        let date = response["protocol_date"]?.value as! String
+        detailsData.formatDate(from: date)
+        //print(detailsData.protocolDate = detailsData.formatDate(from: date) ?? Date())
     }
 }

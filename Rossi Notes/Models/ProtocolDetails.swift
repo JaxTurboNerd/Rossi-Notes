@@ -7,19 +7,34 @@
 
 import Foundation
 
-struct ProtocolDetails: Codable, Identifiable {
-    let id: String
-    let name: String
-    let dogReactive: Bool
-    let barrierReactive: Bool
-    let miscNotes: String
-    let protocolDate: Date
-    let catReactive: Bool
-    let resourceGuarder: Bool
-    let strangerReactive: Bool
-    let jumpyMouthy: Bool
-    let doorRoutine: Bool
-    let placeRoutine: Bool
-    let leashReactive: Bool
-    let creatorName: String
+@Observable class DetailsModel: Identifiable {
+    var id = ""
+    var name = ""
+    var dogReactive = ""
+    var barrierReactive = ""
+    var miscNotes = ""
+    var protocolDate = Date()
+    var catReactive = ""
+    var resourceGuarder = ""
+    var strangerReactive = ""
+    var jumpyMouthy = ""
+    var doorRoutine = ""
+    var placeRoutine = ""
+    var leashReactive = ""
+    var creatorName = ""
+    
+    func formatDate(from dateString: String) -> Date? {
+        let dateFormatter = ISO8601DateFormatter()
+        dateFormatter.formatOptions = [
+            .withMonth,
+            .withDay,
+            .withYear
+        ]
+        
+//        dateFormatter.dateStyle = .medium
+//        dateFormatter.timeStyle = .none
+        let formatedDate = dateFormatter.date(from: dateString)//returns nil and not a formatted date
+        print("formated Date: \(formatedDate ?? .now)") //prints now and not the parameter date
+        return formatedDate
+    }
 }

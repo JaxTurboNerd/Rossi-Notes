@@ -29,7 +29,8 @@ struct DetailView: View {
                     }
                 }
             } else {
-                Text("test")
+                Text(viewModel.detailsData.name)
+                Text(viewModel.detailsData.miscNotes)
             }
         }
         .onAppear{
