@@ -30,6 +30,7 @@ struct DetailView: View {
                 }
             } else {
                 Text(viewModel.detailsData.name)
+                Text(viewModel.detailsData.protocolDate)
                 Text(viewModel.detailsData.miscNotes)
             }
         }

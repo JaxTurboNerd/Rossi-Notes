@@ -13,7 +13,7 @@ import Foundation
     var dogReactive = ""
     var barrierReactive = ""
     var miscNotes = ""
-    var protocolDate = Date()
+    var protocolDate = ""
     var catReactive = ""
     var resourceGuarder = ""
     var strangerReactive = ""
@@ -23,18 +23,15 @@ import Foundation
     var leashReactive = ""
     var creatorName = ""
     
-    func formatDate(from dateString: String) -> Date? {
-        let dateFormatter = ISO8601DateFormatter()
-        dateFormatter.formatOptions = [
-            .withMonth,
-            .withDay,
-            .withYear
-        ]
+    func formatDate(from dateString: String) -> String {
+        let isoDateFormatter = ISO8601DateFormatter()
+        isoDateFormatter.formatOptions = .withFullDate
+        let formatedDate = isoDateFormatter.date(from: dateString) ?? Date.now
         
-//        dateFormatter.dateStyle = .medium
-//        dateFormatter.timeStyle = .none
-        let formatedDate = dateFormatter.date(from: dateString)//returns nil and not a formatted date
-        print("formated Date: \(formatedDate ?? .now)") //prints now and not the parameter date
-        return formatedDate
+        //Non-ISO Date formatting, which is what is needed?
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        
+        return dateFormatter.string(from: formatedDate)
     }
 }

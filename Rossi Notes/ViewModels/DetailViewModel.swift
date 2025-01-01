@@ -69,7 +69,6 @@ class DetailViewModel: ObservableObject {
         detailsData.name = response["name"]?.value as! String
         detailsData.miscNotes = response["misc_notes"]?.value as! String
         let date = response["protocol_date"]?.value as! String
-        detailsData.formatDate(from: date)
-        //print(detailsData.protocolDate = detailsData.formatDate(from: date) ?? Date())
+        detailsData.protocolDate = detailsData.formatDate(from: date)
     }
 }
