@@ -8,20 +8,21 @@
 import Foundation
 
 @Observable class DetailsModel: Identifiable {
-    var id = ""
-    var name = ""
-    var dogReactive = ""
-    var barrierReactive = ""
-    var miscNotes = ""
-    var protocolDate = ""
-    var catReactive = ""
-    var resourceGuarder = ""
-    var strangerReactive = ""
-    var jumpyMouthy = ""
-    var doorRoutine = ""
-    var placeRoutine = ""
-    var leashReactive = ""
-    var creatorName = ""
+    var id: String = ""
+    var name: String = ""
+    var dogReactive: String = ""
+    var barrierReactive: String = ""
+    var miscNotes: String = ""
+    var protocolDate: String = ""
+    var catReactive: String = ""
+    var resourceGuarder: String = ""
+    var strangerReactive: String = ""
+    var jumpyMouthy: String = ""
+    var doorRoutine: String = ""
+    var placeRoutine: String = ""
+    var leashReactive: String = ""
+    var creatorName: String = ""
+
     
     func formatDate(from dateString: String) -> String {
         let isoDateFormatter = ISO8601DateFormatter()

@@ -29,9 +29,23 @@ struct DetailView: View {
                     }
                 }
             } else {
-                Text(viewModel.detailsData.name)
-                Text(viewModel.detailsData.protocolDate)
-                Text(viewModel.detailsData.miscNotes)
+                Text(viewModel.detailsData.name ?? "Name Error")
+                    .font(Font.custom("ConcertOne-Regular", size: 28))
+                    .tracking(1.5)
+                    .padding([.leading, .trailing], 100)
+                    .padding([.top, .bottom], 20)
+                    .addBorder(Color("AppBlue"), cornerRadius: 10)
+                Text(viewModel.detailsData.protocolDate ?? "Date Error")
+                Divider()
+                    .frame(width: 350, height: 1)
+                    .overlay(Color.gray)
+                    .padding(.vertical)
+                Text(viewModel.detailsData.barrierReactive ?? "Test")
+                Text(viewModel.detailsData.dogReactive)
+                Text(viewModel.detailsData.doorRoutine ?? "Door Routine Error")
+                Text(viewModel.detailsData.resourceGuarder ?? "Resource Error")
+                Text(viewModel.detailsData.miscNotes ?? "Notes Error")
+                //viewModel.showTextViews()
             }
         }
         .onAppear{
@@ -39,6 +53,14 @@ struct DetailView: View {
         }
     }
 }
+
+extension View {
+     public func addBorder<S>(_ content: S, width: CGFloat = 1, cornerRadius: CGFloat) -> some View where S : ShapeStyle {
+         let roundedRect = RoundedRectangle(cornerRadius: cornerRadius)
+         return clipShape(roundedRect)
+              .overlay(roundedRect.strokeBorder(content, lineWidth: width))
+     }
+ }
 
 //#Preview {
 //    DetailView()
