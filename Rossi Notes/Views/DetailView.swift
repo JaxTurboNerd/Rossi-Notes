@@ -29,23 +29,39 @@ struct DetailView: View {
                     }
                 }
             } else {
-                Text(viewModel.detailsData.name ?? "Name Error")
-                    .font(Font.custom("ConcertOne-Regular", size: 28))
-                    .tracking(1.5)
-                    .padding([.leading, .trailing], 100)
-                    .padding([.top, .bottom], 20)
-                    .addBorder(Color("AppBlue"), cornerRadius: 10)
-                Text(viewModel.detailsData.protocolDate ?? "Date Error")
-                Divider()
-                    .frame(width: 350, height: 1)
-                    .overlay(Color.gray)
-                    .padding(.vertical)
-                Text(viewModel.detailsData.barrierReactive ?? "Test")
-                Text(viewModel.detailsData.dogReactive)
-                Text(viewModel.detailsData.doorRoutine ?? "Door Routine Error")
-                Text(viewModel.detailsData.resourceGuarder ?? "Resource Error")
-                Text(viewModel.detailsData.miscNotes ?? "Notes Error")
-                //viewModel.showTextViews()
+                VStack{
+                    Text(viewModel.detailsData.name)
+                        .font(Font.custom("ConcertOne-Regular", size: 28))
+                        .tracking(1.5)
+                        .padding([.leading, .trailing], 100)
+                        .padding([.top, .bottom], 20)
+                        .addBorder(Color("AppBlue"), cornerRadius: 10)
+                    Text(viewModel.detailsData.protocolDate)
+                    Divider()
+                        .frame(width: 350, height: 1)
+                        .overlay(Color.gray)
+                        .padding(.vertical)
+                }
+                VStack {
+                    viewModel.detailsData.barrierReactive.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.barrierReactive))
+                    viewModel.detailsData.dogReactive.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.dogReactive))
+                    viewModel.detailsData.strangerReactive.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.strangerReactive))
+                    viewModel.detailsData.leashReactive.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.leashReactive))
+                    viewModel.detailsData.catReactive.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.catReactive))
+                    Divider()
+                        .frame(width: 350, height: 1)
+                        .overlay(Color.gray)
+                        .padding(.vertical)
+                }
+                VStack {
+                    viewModel.detailsData.jumpyMouthy.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.jumpyMouthy))
+                    viewModel.detailsData.resourceGuarder.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.resourceGuarder))
+                    viewModel.detailsData.doorRoutine.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.doorRoutine)
+                    )
+                    viewModel.detailsData.placeRoutine.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.placeRoutine))
+                    viewModel.detailsData.miscNotes.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.miscNotes)
+                    )
+                }
             }
         }
         .onAppear{
@@ -55,12 +71,12 @@ struct DetailView: View {
 }
 
 extension View {
-     public func addBorder<S>(_ content: S, width: CGFloat = 1, cornerRadius: CGFloat) -> some View where S : ShapeStyle {
-         let roundedRect = RoundedRectangle(cornerRadius: cornerRadius)
-         return clipShape(roundedRect)
-              .overlay(roundedRect.strokeBorder(content, lineWidth: width))
-     }
- }
+    public func addBorder<S>(_ content: S, width: CGFloat = 1, cornerRadius: CGFloat) -> some View where S : ShapeStyle {
+        let roundedRect = RoundedRectangle(cornerRadius: cornerRadius)
+        return clipShape(roundedRect)
+            .overlay(roundedRect.strokeBorder(content, lineWidth: width))
+    }
+}
 
 //#Preview {
 //    DetailView()
