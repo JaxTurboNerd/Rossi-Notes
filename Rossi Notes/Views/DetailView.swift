@@ -30,43 +30,48 @@ struct DetailView: View {
                 }
             } else {
                 VStack{
+                    Spacer()
                     Text(viewModel.detailsData.name)
                         .font(Font.custom("ConcertOne-Regular", size: 28))
                         .tracking(1.5)
-                        .padding([.leading, .trailing], 100)
+                        .padding([.leading, .trailing], 120)
                         .padding([.top, .bottom], 20)
                         .addBorder(Color("AppBlue"), cornerRadius: 10)
-                    Text(viewModel.detailsData.protocolDate)
-                    Divider()
-                        .frame(width: 350, height: 1)
-                        .overlay(Color.gray)
+                    Text("Protocol Date: \(viewModel.detailsData.protocolDate)")
+                        .fontWeight(.bold)
                         .padding(.vertical)
-                }
-                VStack {
-                    viewModel.detailsData.barrierReactive.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.barrierReactive))
-                    viewModel.detailsData.dogReactive.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.dogReactive))
-                    viewModel.detailsData.strangerReactive.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.strangerReactive))
-                    viewModel.detailsData.leashReactive.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.leashReactive))
-                    viewModel.detailsData.catReactive.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.catReactive))
+                    Group {
+                        viewModel.detailsData.barrierReactive.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.barrierReactive))
+                        viewModel.detailsData.dogReactive.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.dogReactive))
+                        viewModel.detailsData.strangerReactive.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.strangerReactive))
+                        viewModel.detailsData.leashReactive.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.leashReactive))
+                        viewModel.detailsData.catReactive.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.catReactive))
+                    }
+                    .padding(.vertical, 2)
                     Divider()
-                        .frame(width: 350, height: 1)
+                        .frame(width: 350, height: 0.5)
                         .overlay(Color.gray)
-                        .padding(.vertical)
+                        .padding(.vertical, 3)
+                    Group {
+                        viewModel.detailsData.jumpyMouthy.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.jumpyMouthy))
+                        viewModel.detailsData.resourceGuarder.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.resourceGuarder))
+                        viewModel.detailsData.doorRoutine.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.doorRoutine)
+                        )
+                        viewModel.detailsData.placeRoutine.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.placeRoutine))
+                        viewModel.detailsData.miscNotes.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.miscNotes)
+                        )
+                    }
+                    .padding(.vertical, 2)
+                    Spacer()//possibly add minLength?
                 }
-                VStack {
-                    viewModel.detailsData.jumpyMouthy.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.jumpyMouthy))
-                    viewModel.detailsData.resourceGuarder.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.resourceGuarder))
-                    viewModel.detailsData.doorRoutine.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.doorRoutine)
-                    )
-                    viewModel.detailsData.placeRoutine.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.placeRoutine))
-                    viewModel.detailsData.miscNotes.isEmpty ? AnyView(EmptyView()) : AnyView(Text(viewModel.detailsData.miscNotes)
-                    )
-                }
+                .padding(10)
+                .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.black, lineWidth: 1))
             }
         }
         .onAppear{
             viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
         }
+        .padding(10)//adds padding to the outer-most view
     }
 }
 
