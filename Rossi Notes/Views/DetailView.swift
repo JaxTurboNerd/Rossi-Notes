@@ -27,11 +27,14 @@ struct DetailView: View {
                 }
             } else {
                 VStack{
+                    //Name:
                     NameView(name: viewModel.detailsData.name)
+                    //Date:
                     Text("Protocol Date: \(viewModel.detailsData.protocolDate)")
                         .font(.system(size: 20))
                         .fontWeight(.bold)
                         .padding(.vertical)
+                    //Details:
                     DetailGroupView(viewModel: viewModel)
                     Spacer()
                 }
@@ -45,15 +48,3 @@ struct DetailView: View {
         .padding(10)//adds padding to the outer-most view
     }
 }
-
-//extension View {
-//    public func addBorder<S>(_ content: S, width: CGFloat = 1, cornerRadius: CGFloat) -> some View where S : ShapeStyle {
-//        let roundedRect = RoundedRectangle(cornerRadius: cornerRadius)
-//        return clipShape(roundedRect)
-//            .overlay(roundedRect.strokeBorder(content, lineWidth: width))
-//    }
-//}
-
-//#Preview {
-//    DetailView()
-//}
