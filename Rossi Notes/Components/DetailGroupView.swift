@@ -20,10 +20,6 @@ struct DetailGroupView: View {
             viewModel.detailsData.catReactive.isEmpty ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsData.catReactive))
         }
         .padding(.vertical, 2)
-//        Divider()
-//            .frame(width: 350, height: 0.5)
-//            .overlay(Color.gray)
-//            .padding(.vertical, 3)
         Group {
             viewModel.detailsData.jumpyMouthy.isEmpty ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsData.jumpyMouthy))
             viewModel.detailsData.resourceGuarder.isEmpty ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsData.resourceGuarder))
@@ -36,7 +32,3 @@ struct DetailGroupView: View {
         .padding(.vertical, 2)
     }
 }
-
-//#Preview {
-//    DetailGroupView()
-//}

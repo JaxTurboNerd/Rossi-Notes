@@ -6,9 +6,6 @@
 //
 
 import SwiftUI
-//import Appwrite
-//import JSONCodable
-//import Foundation
 
 struct DetailView: View {
     @StateObject private var viewModel = DetailViewModel()
