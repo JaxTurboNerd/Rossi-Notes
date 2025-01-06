@@ -17,8 +17,7 @@ struct ProtocolPlusView: View {
                 if viewModel.isLoading {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle())
-                        .aspectRatio(contentMode: .fill)
-                        .frame(minWidth: 500, alignment: .center)
+                        .controlSize(.large)
                 } else if let error = viewModel.errorMessage {
                     VStack {
                         Text("Error: \(error)")
@@ -28,10 +27,12 @@ struct ProtocolPlusView: View {
                     }
                 } else {
                     List(viewModel.documents, id: \.id){document in
-                        //let name = document.data["name"] ?? "No Name"
-                        //Text(document.data["name"]?.description ?? "")
                         let name = document.data["name"]?.description ?? ""
+                        let id = document.data["$id"]?.description ?? ""
                         CardView(name: name)
+                            .overlay {
+                                NavigationLink(destination: DetailView(collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()})
+                            }
                     }
                     .navigationTitle("Protocol")
                     .navigationBarTitleDisplayMode(.inline)

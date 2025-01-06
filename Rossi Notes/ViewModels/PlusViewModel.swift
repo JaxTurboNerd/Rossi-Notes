@@ -20,7 +20,7 @@ class PlusViewModel: ObservableObject {
     
     // Constants
     private let databaseId = "66a04cba001cb48a5bd7"
-    private let collectionId = "66a402a0003ddfe36884"
+    let collectionId = "66a402a0003ddfe36884"
     
     init() {
         // Initialize Appwrite client

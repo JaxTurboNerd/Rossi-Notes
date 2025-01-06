@@ -23,6 +23,6 @@ struct CardView: View {
     }
 }
 
-#Preview {
-    CardView()
-}
+//#Preview {
+//    CardView()
+//}
