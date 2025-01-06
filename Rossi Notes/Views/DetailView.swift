@@ -29,10 +29,11 @@ struct DetailView: View {
                 VStack{
                     NameView(name: viewModel.detailsData.name)
                     Text("Protocol Date: \(viewModel.detailsData.protocolDate)")
+                        .font(.system(size: 20))
                         .fontWeight(.bold)
                         .padding(.vertical)
                     DetailGroupView(viewModel: viewModel)
-                    Spacer()//possibly add minLength?
+                    Spacer()
                 }
                 .padding(10)
                 .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.black, lineWidth: 1))
