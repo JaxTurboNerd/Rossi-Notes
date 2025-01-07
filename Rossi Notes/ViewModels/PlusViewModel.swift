@@ -21,6 +21,11 @@ class PlusViewModel: ObservableObject {
     private let databaseId = "66a04cba001cb48a5bd7"
     let collectionId = "66a402a0003ddfe36884"
     
+    //Initialize:
+    init(){
+        fetchDocuments()
+    }
+    
     func fetchDocuments() {
         isLoading = true
         errorMessage = nil

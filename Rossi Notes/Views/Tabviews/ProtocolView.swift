@@ -52,9 +52,9 @@ struct ProtocolView: View {
                 }
             }
         }
-        .onAppear {
-            viewModel.fetchDocuments()
-        }
+//        .onAppear {
+//            viewModel.fetchDocuments()
+//        }
     }
 }
 

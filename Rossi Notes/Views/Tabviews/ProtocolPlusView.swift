@@ -49,12 +49,12 @@ struct ProtocolPlusView: View {
                 }
             }
         }
-        .onAppear(){
-            viewModel.fetchDocuments()
-        }
+//        .onAppear(){
+//            viewModel.fetchDocuments()
+//        }
     }
 }
 
-#Preview {
-    ProtocolPlusView()
-}
+//#Preview {
+//    ProtocolPlusView()
+//}
