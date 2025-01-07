@@ -19,7 +19,7 @@ class Appwrite: ObservableObject {
     var avatars: Avatars
     var databases: Databases
     private var databaseId = "66a04cba001cb48a5bd7"
-//    private var plusCollectionId = "66a402a0003ddfe36884"
+//  private var plusCollectionId = "66a402a0003ddfe36884"
     
     public init() {
         self.client = Client()
