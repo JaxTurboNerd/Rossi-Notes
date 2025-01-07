@@ -10,9 +10,8 @@ import Appwrite
 import JSONCodable
 
 class PlusViewModel: ObservableObject {
-    private let client: Client
-    private let databases: Databases
-    
+    let appwrite = Appwrite()
+
     // Published properties for UI updates
     @Published public var documents: [Document<[String: AnyCodable]>] = []
     @Published public var isLoading = false
@@ -22,22 +21,13 @@ class PlusViewModel: ObservableObject {
     private let databaseId = "66a04cba001cb48a5bd7"
     let collectionId = "66a402a0003ddfe36884"
     
-    init() {
-        // Initialize Appwrite client
-        client = Client()
-            .setEndpoint("https://cloud.appwrite.io/v1")
-            .setProject("66a04859001d3df0988d")
-        
-        databases = Databases(client)
-    }
-    
     func fetchDocuments() {
         isLoading = true
         errorMessage = nil
         
         Task {
             do {
-                let response = try await databases.listDocuments(
+                let response = try await appwrite.databases.listDocuments(
                     databaseId: databaseId,
                     collectionId: collectionId,
                     queries: []

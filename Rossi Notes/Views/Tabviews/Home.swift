@@ -9,9 +9,8 @@ import SwiftUI
 
 struct Home: View {
     
-    @StateObject var user = Appwrite()
+    @ObservedObject var user = Appwrite()
     @State var isShowingHomeView = false
-    //let appwrite = Appwrite()
     
     var body: some View {
         NavigationStack {
