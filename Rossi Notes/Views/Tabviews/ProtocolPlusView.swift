@@ -49,9 +49,9 @@ struct ProtocolPlusView: View {
                 }
             }
         }
-//        .onAppear(){
-//            viewModel.fetchDocuments()
-//        }
+        .refreshable {
+            viewModel.refreshDocuments()
+        }
     }
 }
 
