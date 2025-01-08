@@ -12,12 +12,13 @@ struct NameView: View {
     var body: some View {
         Text(name ?? "")
             .font(Font.custom("ConcertOne-Regular", size: 28))
+            .foregroundColor(Color("AppBlue"))
             .tracking(1.25)
             .padding([.leading, .trailing], 120)
             .padding([.top, .bottom], 20)
             .background(
                 RoundedRectangle(cornerRadius: 10)
-                    .fill(Color.gray)
+                    .fill(Color("NameBackground"))
                     .shadow(color: Color.black.opacity(0.4), radius: 2, x: 2, y: 2)
             )
     }
