@@ -10,8 +10,7 @@ import Appwrite
 import JSONCodable
 
 final class ProtocolViewModel: ObservableObject {
-    private let client: Client
-    private let databases: Databases
+    let appwrite = Appwrite()
     
     // Published properties for UI updates
     @Published public var documents: [Document<[String: AnyCodable]>] = []
@@ -22,13 +21,9 @@ final class ProtocolViewModel: ObservableObject {
     private let databaseId = "66a04cba001cb48a5bd7"
     let collectionId = "66a04db400070bffec78"
     
-    init() {
-        // Initialize Appwrite client
-        client = Client()
-            .setEndpoint("https://cloud.appwrite.io/v1")
-            .setProject("66a04859001d3df0988d")
-        
-        databases = Databases(client)
+    //Initialize:
+    init(){
+        fetchDocuments()
     }
     
     func fetchDocuments() {
@@ -37,29 +32,15 @@ final class ProtocolViewModel: ObservableObject {
         
         Task {
             do {
-                let response = try await databases.listDocuments(
+                let response = try await appwrite.databases.listDocuments(
                     databaseId: databaseId,
                     collectionId: collectionId,
                     queries: []
                 )
                 //returns response of type: DocumentList<Dictionary<String, AnyCodable>>
-                //print(String(describing: response.toMap()))
                 await MainActor.run {
                     self.documents = response.documents
                     self.isLoading = false
-                    //self.sampleResponse = String(describing: response.toMap()) //returns a String literal
-                    //print(type(of: sampleResponse))
-                    //print(String(describing: documents[0].data["name"]?.value)) //prints: Optional("Peanut")
-                    //print(type(of: documents[0].data))//Dictionary<String: AnyCodable>
-//                    let sampleName = documents[0].data["name"]
-//                    print("sample name: \(sampleName ?? "No name")")
-                    //let sampleName = documents[0].data["name"]
-                    //print("sample data: \(sampleName ?? "no name")") //prints: Peanut
-                    //print("sample data 2: \(documents[0].data["leash_reactive"] ?? "no value")") //prints: false
-                    //iterate over the data dictionary:
-                    //let sampleData = documents[0].data
-                    //let createDate = documents[0].data["$createdAt"]
-                    //print("created date: \(createDate ?? "")")
                 }
                 
             } catch {

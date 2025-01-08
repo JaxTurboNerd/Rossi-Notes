@@ -11,7 +11,7 @@ import Foundation
 struct ProtocolView: View {
     
     @State private var showForm = false
-    @StateObject private var viewModel = ProtocolViewModel()
+    @ObservedObject private var viewModel = ProtocolViewModel()
     
     //Need to add navigation bar items on the top of the view
     var body: some View {
@@ -52,8 +52,8 @@ struct ProtocolView: View {
                 }
             }
         }
-        .onAppear {
-            viewModel.fetchDocuments()
+        .refreshable {
+            viewModel.refreshDocuments()
         }
     }
 }

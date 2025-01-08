@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ProtocolPlusView: View {
     @State private var showForm = false
-    @StateObject private var viewModel = PlusViewModel()
+    @ObservedObject private var viewModel = PlusViewModel()
     
     var body: some View {
         NavigationView {
@@ -49,12 +49,12 @@ struct ProtocolPlusView: View {
                 }
             }
         }
-        .onAppear(){
-            viewModel.fetchDocuments()
+        .refreshable {
+            viewModel.refreshDocuments()
         }
     }
 }
 
-#Preview {
-    ProtocolPlusView()
-}
+//#Preview {
+//    ProtocolPlusView()
+//}
