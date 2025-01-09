@@ -30,8 +30,7 @@ struct DetailView: View {
                             }
                         }
                     } else {
-                        ZStack {
-                            MainBackgroundView()
+                        VStack {
                             VStack{
                                 //Name:
                                 NameView(name: viewModel.detailsData.name)
@@ -42,15 +41,15 @@ struct DetailView: View {
                                     .padding(.vertical)
                                 //Details:
                                 DetailGroupView(viewModel: viewModel)
-                                Spacer()
                             }
                             .padding(10)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 10).stroke(Color.black, lineWidth: 1)
                                     .shadow(color: Color.black.opacity(0.4), radius: 2, x: 2, y: 2)
                             )
+                            .background(Color("BackgroundMain"))
+                            Spacer()
                         }
-                        
                     }
                 }
                 .onAppear{
