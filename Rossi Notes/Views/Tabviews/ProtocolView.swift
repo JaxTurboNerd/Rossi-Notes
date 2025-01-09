@@ -17,7 +17,7 @@ struct ProtocolView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                BackgroundView()
+                MainBackgroundView()
                 Group {
                     if viewModel.isLoading {
                         ProgressView()
@@ -48,7 +48,7 @@ struct ProtocolView: View {
                                     showForm = true
                                 }
                                 //Displays the protocol form to create a new note
-                                .sheet(isPresented: $showForm, content: {ProtocolForm()})
+                                .sheet(isPresented: $showForm, content: {CreateProtocolForm()})
                             })
                         }
                     }

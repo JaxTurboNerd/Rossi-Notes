@@ -15,7 +15,7 @@ struct Home: View {
     var body: some View {
         NavigationStack {
             ZStack{
-                BackgroundView()
+                MainBackgroundView()
                 VStack {
                     Spacer()
                     Text("Protocol Notes")
