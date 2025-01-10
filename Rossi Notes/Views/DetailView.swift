@@ -42,7 +42,7 @@ struct DetailView: View {
                                 //Details:
                                 DetailGroupView(viewModel: viewModel)
                             }
-                            .padding(10)
+                            .padding()
                             .overlay(
                                 RoundedRectangle(cornerRadius: 10).stroke(Color.black, lineWidth: 1)
                                     .shadow(color: Color.black.opacity(0.4), radius: 2, x: 2, y: 2)
@@ -52,10 +52,10 @@ struct DetailView: View {
                         }
                     }
                 }
+                .padding()//adds padding to the outer-most view
                 .onAppear{
                     viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
                 }
-                .padding(10)//adds padding to the outer-most view
             }
         }
         .toolbar {
