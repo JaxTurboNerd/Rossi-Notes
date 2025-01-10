@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ProtocolForm: View {
+struct CreateProtocolForm: View {
     
     @State var name = ""
     @State var protocolDate = Date.now
@@ -99,5 +99,5 @@ struct ProtocolForm: View {
 }
 
 #Preview {
-    ProtocolForm()
+    CreateProtocolForm()
 }
