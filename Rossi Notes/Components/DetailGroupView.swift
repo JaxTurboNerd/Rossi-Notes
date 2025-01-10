@@ -26,9 +26,9 @@ struct DetailGroupView: View {
             viewModel.detailsData.doorRoutine.isEmpty ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsData.doorRoutine)
             )
             viewModel.detailsData.placeRoutine.isEmpty ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsData.placeRoutine))
-            viewModel.detailsData.miscNotes.isEmpty ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsData.miscNotes)
-            )
+            viewModel.detailsData.miscNotes.isEmpty ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsData.miscNotes)            )
         }
+        .multilineTextAlignment(.center)
         .padding(.vertical, 2)
     }
 }

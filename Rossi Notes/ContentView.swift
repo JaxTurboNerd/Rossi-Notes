@@ -17,7 +17,7 @@ struct ContentView: View {
                 HomeTabView()
             } else {
                 ZStack {
-                    BackgroundView()
+                    MainBackgroundView()
                     VStack{
                         Spacer()
                         Text("Protcol Notes")
@@ -59,7 +59,7 @@ struct ContentView: View {
     }
 }
 
-struct BackgroundView: View {
+struct MainBackgroundView: View {
     
     var body: some View {
         Color("BackgroundMain")//custom color with dark mode support
