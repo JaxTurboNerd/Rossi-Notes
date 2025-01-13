@@ -7,6 +7,7 @@
 
 import Foundation
 import Appwrite
+import SwiftUICore
 
 final class CreateProtocolViewModel: ObservableObject {
     let appwrite = Appwrite()

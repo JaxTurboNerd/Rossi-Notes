@@ -10,10 +10,11 @@ import SwiftUI
 struct CreateProtocolForm: View {
     
     @StateObject private var viewModel = CreateProtocolViewModel()
+    @Binding var triggerRefresh: Bool
+    var collectionId: String
     
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
-    var collectionId: String
     
     var body: some View {
         NavigationStack {
@@ -50,17 +51,17 @@ struct CreateProtocolForm: View {
                     .foregroundColor(Color("AppBlue")))
                 {
                     TextField("Notes", text: $viewModel.notes, axis: .vertical)
-                    Button{
-                        //action:
-                        viewModel.createProtocol(collectionId: collectionId)
-                    } label: {
-                        Text("Submit")
-                            .frame(maxWidth: 250)
-                            .font(.headline)
-                    }
-                    .padding()
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.large)
+//                    Button{
+//                        //action:
+//                        viewModel.createProtocol(collectionId: collectionId)
+//                    } label: {
+//                        Text("Submit")
+//                            .frame(maxWidth: 250)
+//                            .font(.headline)
+//                    }
+//                    .padding()
+//                    .buttonStyle(.borderedProminent)
+//                    .controlSize(.large)
                     
                 }
             }
@@ -81,12 +82,13 @@ struct CreateProtocolForm: View {
                     Button("Submit"){
                         //Submit the form:
                         viewModel.createProtocol(collectionId: collectionId)
+                        dismiss.callAsFunction()
                     }
                 })
             }
-//            .onSubmit {
-//                viewModel.createProtocol(collectionId: collectionId)
-//            }
+            .onDisappear {
+                triggerRefresh = true
+            }
         }
     }
 }
