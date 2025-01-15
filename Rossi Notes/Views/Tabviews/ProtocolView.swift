@@ -37,7 +37,7 @@ struct ProtocolView: View {
                             let id = document.data["$id"]?.description ?? ""
                             CardView(name: name)
                                 .overlay {
-                                    NavigationLink(destination: DetailView(collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()})
+                                    NavigationLink(destination: DetailView(collectionId: viewModel.collectionId, documentId: id, triggerRefresh: $triggerRefresh), label: {EmptyView()})
                                 }
                         }
                         .navigationTitle("Protocol")
@@ -62,6 +62,9 @@ struct ProtocolView: View {
             viewModel.refreshDocuments()
             triggerRefresh = false
         })
+        .task {
+            
+        }
         .refreshable {
             viewModel.refreshDocuments()
         }
