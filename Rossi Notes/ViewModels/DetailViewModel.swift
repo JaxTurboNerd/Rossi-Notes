@@ -11,25 +11,16 @@ import Appwrite
 import JSONCodable
 
 class DetailViewModel: ObservableObject {
-    private let client: Client
-    private let databases: Databases
+    let appwrite = Appwrite()
     
     @Published var detailsData = DetailsModel()
     @Published var document: Document<[String: AnyCodable]>?
     @Published var isLoading = false
     @Published public var errorMessage: String?
     
-    private let databaseId = "66a04cba001cb48a5bd7"
-    public var collectionID = ""
+    @State var noteDeleted = false
     
-    init() {
-        // Initialize Appwrite client
-        client = Client()
-            .setEndpoint("https://cloud.appwrite.io/v1")
-            .setProject("66a04859001d3df0988d")
-        
-        databases = Databases(client)
-    }
+    private let databaseId = "66a04cba001cb48a5bd7"
     
     public func fetchDocument(collectionId: String ,documentId: String){
         isLoading = true
@@ -37,7 +28,7 @@ class DetailViewModel: ObservableObject {
         
         Task {
             do {
-                let response = try await databases.getDocument(
+                let response = try await appwrite.databases.getDocument(
                     databaseId: self.databaseId,
                     collectionId: collectionId,
                     documentId: documentId,
@@ -94,20 +85,26 @@ class DetailViewModel: ObservableObject {
             }
         }
     }
-    public func showTextViews() -> some View {
-//        if(detailsData.barrierReactive != nil) {
-//            print("barrier test")
-//        }
-//        if(detailsData.dogReactive.isEmpty) {
-//            print("Not dog reactive test")
-//        }
-//        let mirror = Mirror(reflecting: detailsData)
-//        for item in mirror.children {
-//            if let propertyName = item.label {
-//                //print("\(propertyName): \(item.value)")
-//                print("mirror value type: \(type(of: item.value))")
-//            }
-//        }
-        return Text("Test")
+    
+    public func deleteNote(collectionId: String, documentId: String){
+        Task {
+            do {
+                let successfulDelete = try await appwrite.databases.deleteDocument(
+                    databaseId: self.databaseId,
+                    collectionId: collectionId,
+                    documentId: documentId
+                    )
+                await MainActor.run {
+                    //do stuff here:
+                    noteDeleted = true
+                }
+            } catch {
+                await MainActor.run {
+                    self.errorMessage = error.localizedDescription
+                    print("delete document error \(String(describing: errorMessage))")
+                    self.isLoading = false
+                }
+            }
+        }
     }
 }

@@ -11,6 +11,8 @@ struct ProtocolPlusView: View {
     @State private var showForm = false
     @ObservedObject private var viewModel = PlusViewModel()
     
+    @State var triggerRefresh: Bool = false
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -33,7 +35,7 @@ struct ProtocolPlusView: View {
                             let id = document.data["$id"]?.description ?? ""
                             CardView(name: name)
                                 .overlay {
-                                    NavigationLink(destination: DetailView(collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()})
+                                    NavigationLink(destination: DetailView(collectionId: viewModel.collectionId, documentId: id, triggerRefresh: $triggerRefresh), label: {EmptyView()})
                                 }
                         }
                         .navigationTitle("Protocol")
@@ -45,13 +47,17 @@ struct ProtocolPlusView: View {
                                     showForm = true
                                 }
                                 //Displays the protocol form to create a new note
-                                .sheet(isPresented: $showForm, content: {CreateProtocolForm()})
+                                .sheet(isPresented: $showForm, content: {CreateProtocolForm(triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId)})
                             })
                         }
                     }
                 }
             }
         }
+        .onChange(of: triggerRefresh, {
+            viewModel.refreshDocuments()
+            triggerRefresh = false
+        })
         .refreshable {
             viewModel.refreshDocuments()
         }

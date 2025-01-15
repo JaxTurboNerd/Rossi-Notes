@@ -9,19 +9,9 @@ import SwiftUI
 
 struct CreateProtocolForm: View {
     
-    @State var name = ""
-    @State var protocolDate = Date.now
-    @State var dogReactive = false
-    @State var catReactive = false
-    @State var barrierReactive = false
-    @State var leashReactive = false
-    @State var jumpy = false
-    @State var resourceGuarder = false
-    @State var avoidStrangers = false
-    @State var placeRoutine = false
-    @State var doorRoutine = false
-    @State var looseLeash = false
-    @State var notes = ""
+    @StateObject private var viewModel = CreateProtocolViewModel()
+    @Binding var triggerRefresh: Bool
+    var collectionId: String
     
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
@@ -34,44 +24,44 @@ struct CreateProtocolForm: View {
                         .font(Font.custom("Urbanist-Medium", size: 16))
                         .foregroundColor(Color("AppBlue")))
                 {
-                    TextField("Name", text: $name)
-                    DatePicker("Protocol Date", selection: $protocolDate, displayedComponents: [.date])//shows only the date excludes time
+                    TextField("Name", text: $viewModel.name)
+                    DatePicker("Protocol Date", selection: $viewModel.protocolDate, displayedComponents: [.date])//shows only the date excludes time
                 }
                 Section(header: Text("Reactivities")
                     .font(Font.custom("Urbanist-Medium", size: 16))
                     .foregroundColor(Color("AppBlue")))
                 {
-                    Toggle("Dog", isOn: $dogReactive)
-                    Toggle("Cat", isOn: $catReactive)
-                    Toggle("Barrier", isOn: $barrierReactive)
-                    Toggle("Leash", isOn: $leashReactive)
+                    Toggle("Dog", isOn: $viewModel.dogReactive)
+                    Toggle("Cat", isOn: $viewModel.catReactive)
+                    Toggle("Barrier", isOn: $viewModel.barrierReactive)
+                    Toggle("Leash", isOn: $viewModel.leashReactive)
                 }
                 Section(header: Text("Miscellaneous")
                     .font(Font.custom("Urbanist-Medium", size: 16))
                     .foregroundColor(Color("AppBlue")))
                 {
-                    Toggle("Jumpy/Mouthy", isOn: $jumpy)
-                    Toggle("Resource Guarder", isOn: $resourceGuarder)
-                    Toggle("Avoid Strangers", isOn: $avoidStrangers)
-                    Toggle("Door Routine", isOn: $doorRoutine)
-                    Toggle("Loose Leash", isOn: $looseLeash)
+                    Toggle("Jumpy/Mouthy", isOn: $viewModel.jumpy)
+                    Toggle("Resource Guarder", isOn: $viewModel.resourceGuarder)
+                    Toggle("Avoid Strangers", isOn: $viewModel.avoidStrangers)
+                    Toggle("Door Routine", isOn: $viewModel.doorRoutine)
+                    Toggle("Loose Leash", isOn: $viewModel.looseLeash)
                 }
                 Section(header: Text("Notes")
                     .font(Font.custom("Urbanist-Medium", size: 16))
                     .foregroundColor(Color("AppBlue")))
                 {
-                    TextField("Notes", text: $notes, axis: .vertical)
-                    Button{
-                        //action:
-                        
-                    } label: {
-                        Text("Submit")
-                            .frame(maxWidth: 250)
-                            .font(.headline)
-                    }
-                    .padding()
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.large)
+                    TextField("Notes", text: $viewModel.notes, axis: .vertical)
+//                    Button{
+//                        //action:
+//                        viewModel.createProtocol(collectionId: collectionId)
+//                    } label: {
+//                        Text("Submit")
+//                            .frame(maxWidth: 250)
+//                            .font(.headline)
+//                    }
+//                    .padding()
+//                    .buttonStyle(.borderedProminent)
+//                    .controlSize(.large)
                     
                 }
             }
@@ -91,13 +81,18 @@ struct CreateProtocolForm: View {
                 ToolbarItem(placement: .topBarTrailing, content: {
                     Button("Submit"){
                         //Submit the form:
+                        viewModel.createProtocol(collectionId: collectionId)
+                        dismiss.callAsFunction()
                     }
                 })
+            }
+            .onDisappear {
+                triggerRefresh = true
             }
         }
     }
 }
 
-#Preview {
-    CreateProtocolForm()
-}
+//#Preview {
+//    CreateProtocolForm()
+//}

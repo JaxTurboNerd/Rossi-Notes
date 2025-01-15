@@ -11,7 +11,8 @@ import Foundation
 struct ProtocolView: View {
     
     @State private var showForm = false
-    @ObservedObject private var viewModel = ProtocolViewModel()
+    @StateObject private var viewModel = ProtocolViewModel()
+    @State var triggerRefresh: Bool = false
     
     //Need to add navigation bar items on the top of the view
     var body: some View {
@@ -36,7 +37,7 @@ struct ProtocolView: View {
                             let id = document.data["$id"]?.description ?? ""
                             CardView(name: name)
                                 .overlay {
-                                    NavigationLink(destination: DetailView(collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()})
+                                    NavigationLink(destination: DetailView(collectionId: viewModel.collectionId, documentId: id, triggerRefresh: $triggerRefresh), label: {EmptyView()})
                                 }
                         }
                         .navigationTitle("Protocol")
@@ -48,7 +49,7 @@ struct ProtocolView: View {
                                     showForm = true
                                 }
                                 //Displays the protocol form to create a new note
-                                .sheet(isPresented: $showForm, content: {CreateProtocolForm()})
+                                .sheet(isPresented: $showForm, content: {CreateProtocolForm(triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId)})
                             })
                         }
                     }
@@ -57,12 +58,15 @@ struct ProtocolView: View {
             }
             
         }
+        .onChange(of: triggerRefresh, {
+            viewModel.refreshDocuments()
+            triggerRefresh = false
+        })
+        .task {
+            
+        }
         .refreshable {
             viewModel.refreshDocuments()
         }
     }
 }
-
-//#Preview {
-//    ProtocolView()
-//}

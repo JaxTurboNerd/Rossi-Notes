@@ -9,9 +9,16 @@ import SwiftUI
 
 struct DetailView: View {
     @StateObject private var viewModel = DetailViewModel()
+    //@ObservedObject private var plusViewModel = PlusViewModel()
     @State private var showUpdateForm = false
+    
     var collectionId = ""
     var documentId = ""
+    @Binding var triggerRefresh: Bool
+    @State private var noteDeleted = false
+    //Used to dismiss the form:
+    @Environment(\.dismiss) private var dismiss
+
     
     var body: some View {
         NavigationView {
@@ -67,6 +74,22 @@ struct DetailView: View {
                 //Displays the update form:
                 .sheet(isPresented: $showUpdateForm, content: {Text("Update From in work!")})
             })
+            ToolbarItem(placement: .topBarTrailing,
+                        content: {
+                Button("Delete"){
+                    Task {
+                        viewModel.deleteNote(collectionId: collectionId, documentId: documentId)
+                        noteDeleted = true
+                        dismiss.callAsFunction()
+                    }
+                }
+                .foregroundStyle(Color.red)
+            })
+        }
+        .onDisappear{
+            if noteDeleted {
+                triggerRefresh = true
+            }
         }
     }
 }

@@ -81,7 +81,6 @@ struct SignIn: View {
 
                                         DispatchQueue.main.async {
                                             viewModel.response = String(describing: loginSession.toMap())
-                                            //print("response: \(viewModel.response)")
                                         }
                                     }
                                 } catch LoginTextfieldError.emptyEmail{
