@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct CreateProtocolForm: View {
+struct CreateView: View {
     
-    @StateObject private var viewModel = CreateProtocolViewModel()
+    @StateObject private var viewModel = CreateViewModel()
     @Binding var triggerRefresh: Bool
     var collectionId: String
     

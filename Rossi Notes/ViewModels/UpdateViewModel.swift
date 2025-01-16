@@ -1,4 +1,11 @@
 //
+//  UpdateViewModel.swift
+//  Rossi Notes
+//
+//  Created by Gregory Boyd on 1/16/25.
+//
+
+//
 //  CreateProtocolViewModel.swift
 //  Rossi Notes
 //
@@ -9,7 +16,7 @@ import Foundation
 import Appwrite
 import SwiftUICore
 
-final class CreateProtocolViewModel: ObservableObject {
+final class UpdateViewModel: ObservableObject {
     let appwrite = Appwrite()
     
     @Published var documentId = ID.unique()
@@ -31,21 +38,21 @@ final class CreateProtocolViewModel: ObservableObject {
     
     private let databaseId = "66a04cba001cb48a5bd7"
     
-    func createProtocol(collectionId: String){
+    func updateProtocol(collectionId: String){
         isSubmitting = true
         errorMessage = nil
         
-        let newProtocol = Protocol(name: name, protocol_date: protocolDate, dog_reactive: dogReactive, cat_reactive: catReactive, barrier_reactive: barrierReactive, leash_reactive: leashReactive, jumpy_mouthy: jumpy, resource_guarder: resourceGuarder, stranger_reactive: avoidStrangers, place_routine: placeRoutine, door_routine: doorRoutine, misc_notes: notes)
+        let updateProtocol = Protocol(name: name, protocol_date: protocolDate, dog_reactive: dogReactive, cat_reactive: catReactive, barrier_reactive: barrierReactive, leash_reactive: leashReactive, jumpy_mouthy: jumpy, resource_guarder: resourceGuarder, stranger_reactive: avoidStrangers, place_routine: placeRoutine, door_routine: doorRoutine, misc_notes: notes)
         
         Task {
             do {
                 let encoder = JSONEncoder()
                 encoder.dateEncodingStrategy = .iso8601
-                guard let data = try? encoder.encode(newProtocol) else {return}
+                guard let data = try? encoder.encode(updateProtocol) else {return}
                
                 //convert data to json string:
                 let dataString = String(data: data, encoding: .utf8)
-                let response = try await appwrite.databases.createDocument(
+                let response = try await appwrite.databases.updateDocument(
                     databaseId: databaseId,
                     collectionId: collectionId,
                     documentId: documentId,
@@ -65,3 +72,4 @@ final class CreateProtocolViewModel: ObservableObject {
         }
     }
 }
+

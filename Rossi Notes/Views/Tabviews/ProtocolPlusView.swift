@@ -47,7 +47,7 @@ struct ProtocolPlusView: View {
                                     showForm = true
                                 }
                                 //Displays the protocol form to create a new note
-                                .sheet(isPresented: $showForm, content: {CreateProtocolForm(triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId)})
+                                .sheet(isPresented: $showForm, content: {CreateView(triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId)})
                             })
                         }
                     }
