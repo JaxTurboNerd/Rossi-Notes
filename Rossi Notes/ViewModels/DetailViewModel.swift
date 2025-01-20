@@ -33,7 +33,7 @@ class DetailViewModel: ObservableObject {
                     queries: [] // optional
                 )
                     self.isLoading = false
-                    setDetailsModel(document: response)
+                setDetailsModel(response: response)
             } catch {
                 await MainActor.run {
                     self.errorMessage = error.localizedDescription
@@ -56,20 +56,20 @@ class DetailViewModel: ObservableObject {
         return dateFormatter.string(from: formatedDate)
     }
     
-    private func setDetailsModel(response: Dictionary<String, AnyCodable>){
-        detailsModel.id = response["$id"]?.value as! String
-        detailsModel.name = response["name"]?.value as! String
-        detailsModel.protocolDate = response["protocol_date"]?.value as! Date
-        detailsModel.jumpyMouthy = response["jumpy_mouthy"]?.value as! Bool
-        detailsModel.dogReactive = response["dog_reactive"]?.value as! Bool
-        detailsModel.catReactive = response["cat_reactive"]?.value as! Bool
-        detailsModel.leashReactive = response["leash_reactive"]?.value as! Bool
-        detailsModel.barrierReactive = response["barrier_reactive"]?.value as! Bool
-        detailsModel.doorRoutine = response["door_routine"]?.value as! Bool
-        detailsModel.placeRoutine = response["place_routine"]?.value as! Bool
-        detailsModel.resourceGuarder = response["resource_guarder"]?.value as! Bool
-        detailsModel.strangerReactive = response["stranger_reactive"]?.value as! Bool
-        detailsModel.miscNotes = response["misc_notes"]?.value as! String
+    private func setDetailsModel(response: Document<[String: AnyCodable]>){
+        detailsModel.id = response.data["$id"]?.value as! String
+        detailsModel.name = response.data["name"]?.value as! String
+        detailsModel.protocolDate = response.data["protocol_date"]?.value as! Date
+        detailsModel.jumpyMouthy = response.data["jumpy_mouthy"]?.value as! Bool
+        detailsModel.dogReactive = response.data["dog_reactive"]?.value as! Bool
+        detailsModel.catReactive = response.data["cat_reactive"]?.value as! Bool
+        detailsModel.leashReactive = response.data["leash_reactive"]?.value as! Bool
+        detailsModel.barrierReactive = response.data["barrier_reactive"]?.value as! Bool
+        detailsModel.doorRoutine = response.data["door_routine"]?.value as! Bool
+        detailsModel.placeRoutine = response.data["place_routine"]?.value as! Bool
+        detailsModel.resourceGuarder = response.data["resource_guarder"]?.value as! Bool
+        detailsModel.strangerReactive = response.data["stranger_reactive"]?.value as! Bool
+        detailsModel.miscNotes = response.data["misc_notes"]?.value as! String
     }
     
     
