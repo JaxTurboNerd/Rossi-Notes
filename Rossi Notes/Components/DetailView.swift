@@ -9,7 +9,6 @@ import SwiftUI
 
 struct DetailView: View {
     @StateObject private var viewModel = DetailViewModel()
-    //@ObservedObject private var plusViewModel = PlusViewModel()
     @State private var showUpdateForm = false
     
     var collectionId = ""

@@ -7,7 +7,7 @@
 
 import Foundation
 
-@Observable class DetailsModel: Identifiable {
+@Observable class DetailsModel: Identifiable, Codable {
     var id: String = ""
     var name: String = ""
     var dogReactive: String = ""
