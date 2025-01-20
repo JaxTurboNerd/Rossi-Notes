@@ -35,10 +35,10 @@ struct ProtocolView: View {
                         List(viewModel.documents, id: \.id){document in
                             let name = document.data["name"]?.description ?? ""
                             let id = document.data["$id"]?.description ?? ""
-                            let documentDetail = document.description.data(using: .utf8)
+                            //let documentDetail = document.description.data(using: .utf8)
                             CardView(name: name)
                                 .overlay {
-                                    NavigationLink(destination: DetailView(collectionId: viewModel.collectionId, documentDetails: documentDetail, documentId: id, triggerRefresh: $triggerRefresh), label: {EmptyView()})
+                                    NavigationLink(destination: DetailView(collectionId: viewModel.collectionId, documentId: id, triggerRefresh: $triggerRefresh), label: {EmptyView()})
                                 }
                         }
                         .navigationTitle("Protocol")

@@ -25,7 +25,7 @@ struct UpdateView: View {
                     .foregroundColor(Color("AppBlue")))
                 {
                     TextField("Name", text: $noteDetails.name)
-                    DatePicker("Protocol Date", selection: $viewModel.protocolDate, displayedComponents: [.date])//shows only the date excludes time
+                    DatePicker("Protocol Date", selection: $noteDetails.protocolDate, displayedComponents: [.date])//shows only the date excludes time
                 }
                 Section(header: Text("Reactivities")
                     .font(Font.custom("Urbanist-Medium", size: 16))
@@ -42,15 +42,14 @@ struct UpdateView: View {
                 {
                     Toggle("Jumpy/Mouthy", isOn: $noteDetails.jumpyMouthy)
                     Toggle("Resource Guarder", isOn: $noteDetails.resourceGuarder)
-                    Toggle("Avoid Strangers", isOn: $noteDetails.avoidStrangers)
+                    Toggle("Avoid Strangers", isOn: $noteDetails.strangerReactive)
                     Toggle("Door Routine", isOn: $noteDetails.doorRoutine)
-                    Toggle("Loose Leash", isOn: $noteDetails.looseLeash)
                 }
                 Section(header: Text("Notes")
                     .font(Font.custom("Urbanist-Medium", size: 16))
                     .foregroundColor(Color("AppBlue")))
                 {
-                    TextField("Notes", text: $noteDetails.notes, axis: .vertical)
+                    TextField("Notes", text: $noteDetails.miscNotes, axis: .vertical)
                     Button{
                         //action:
                         

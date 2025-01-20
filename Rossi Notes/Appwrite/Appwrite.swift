@@ -29,8 +29,6 @@ class Appwrite: ObservableObject {
         self.account = Account(client)
         self.avatars = Avatars(client)
         self.databases = Databases(client)
-        
-        
     }
     
     @Published var user: User<[String: AnyCodable]>?

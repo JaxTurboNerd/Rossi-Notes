@@ -38,38 +38,38 @@ import Foundation
 //}
 
 @Observable class DetailsModel: Identifiable, ObservableObject {
-    var id: String
-    var name: String
-    var dogReactive: Bool
-    var barrierReactive: Bool
-    var miscNotes: String
-    var protocolDate: Date
-    var catReactive: Bool
-    var resourceGuarder: Bool
-    var strangerReactive: Bool
-    var jumpyMouthy: Bool
-    var doorRoutine: Bool
-    var placeRoutine: Bool
-    var leashReactive: Bool
-    var creatorName: String
+    var id: String = ""
+    var name: String = ""
+    var dogReactive: Bool = false
+    var barrierReactive: Bool = false
+    var miscNotes: String = ""
+    var protocolDate: Date = Date.now
+    var catReactive: Bool = false
+    var resourceGuarder: Bool = false
+    var strangerReactive: Bool = false
+    var jumpyMouthy: Bool = false
+    var doorRoutine: Bool = false
+    var placeRoutine: Bool = false
+    var leashReactive: Bool = false
+    var creatorName: String = ""
     
     //possibly initialize the object with the instance document.data?
-    init(id: String, name: String, dogReactive: Bool, barrierReactive: Bool, miscNotes: String, protocolDate: Date, catReactive: Bool, resourceGuarder: Bool, strangerReactive: Bool, jumpyMouthy: Bool, doorRoutine: Bool, placeRoutine: Bool, leashReactive: Bool, creatorName: String) {
-        self.id = id
-        self.name = name
-        self.dogReactive = dogReactive
-        self.barrierReactive = barrierReactive
-        self.miscNotes = miscNotes
-        self.protocolDate = protocolDate
-        self.catReactive = catReactive
-        self.resourceGuarder = resourceGuarder
-        self.strangerReactive = strangerReactive
-        self.jumpyMouthy = jumpyMouthy
-        self.doorRoutine = doorRoutine
-        self.placeRoutine = placeRoutine
-        self.leashReactive = leashReactive
-        self.creatorName = creatorName
-    }
+//    init(id: String, name: String, dogReactive: Bool, barrierReactive: Bool, miscNotes: String, protocolDate: Date, catReactive: Bool, resourceGuarder: Bool, strangerReactive: Bool, jumpyMouthy: Bool, doorRoutine: Bool, placeRoutine: Bool, leashReactive: Bool, creatorName: String) {
+//        self.id = id
+//        self.name = name
+//        self.dogReactive = dogReactive
+//        self.barrierReactive = barrierReactive
+//        self.miscNotes = miscNotes
+//        self.protocolDate = protocolDate
+//        self.catReactive = catReactive
+//        self.resourceGuarder = resourceGuarder
+//        self.strangerReactive = strangerReactive
+//        self.jumpyMouthy = jumpyMouthy
+//        self.doorRoutine = doorRoutine
+//        self.placeRoutine = placeRoutine
+//        self.leashReactive = leashReactive
+//        self.creatorName = creatorName
+//    }
     //then create function to return string value types to be used by the view:
 }
 

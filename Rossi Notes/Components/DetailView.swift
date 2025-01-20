@@ -12,11 +12,9 @@ struct DetailView: View {
     @State private var showUpdateForm = false
     
     var collectionId = ""
-    var documentDetails = ""
     var documentId = ""
     @Binding var triggerRefresh: Bool
     @State private var noteDeleted = false
-    
     
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
@@ -42,9 +40,9 @@ struct DetailView: View {
                         VStack {
                             VStack{
                                 //Name:
-                                NameView(name: viewModel.detailsData?.name)
+                                NameView(name: viewModel.detailsModel.name)
                                 //Date:
-                                Text("Protocol Date: \(viewModel.detailsData?.protocolDate)")
+                                Text("Protocol Date: \(viewModel.detailsModel.protocolDate)")
                                     .font(.system(size: 20))
                                     .fontWeight(.bold)
                                     .padding(.vertical)
@@ -62,9 +60,9 @@ struct DetailView: View {
                     }
                 }
                 .padding()//adds padding to the outer-most view
-                .onAppear{
-                    viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
-                }
+//                .onAppear{
+//                    viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
+//                }
             }
         }
         .toolbar {
@@ -74,7 +72,7 @@ struct DetailView: View {
                     showUpdateForm = true
                 }
                 //Displays the update form:
-                .sheet(isPresented: $showUpdateForm, content: {UpdateView(noteDetails: , triggerRefresh: $triggerRefresh, collectionId: collectionId)})
+                .sheet(isPresented: $showUpdateForm, content: {UpdateView(noteDetails: viewModel.detailsModel, triggerRefresh: $triggerRefresh, collectionId: collectionId)})
             })
             ToolbarItem(placement: .topBarTrailing,
                         content: {
