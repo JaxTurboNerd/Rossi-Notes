@@ -73,6 +73,8 @@ class DetailViewModel: ObservableObject {
     }
     
     
+    
+    
     public func deleteNote(collectionId: String, documentId: String){
         Task {
             do {
