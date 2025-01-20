@@ -9,13 +9,15 @@ import SwiftUI
 
 struct DetailView: View {
     @StateObject private var viewModel = DetailViewModel()
-    //@ObservedObject private var plusViewModel = PlusViewModel()
     @State private var showUpdateForm = false
     
     var collectionId = ""
+    var documentDetails = ""
     var documentId = ""
     @Binding var triggerRefresh: Bool
     @State private var noteDeleted = false
+    
+    
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
 
@@ -40,9 +42,9 @@ struct DetailView: View {
                         VStack {
                             VStack{
                                 //Name:
-                                NameView(name: viewModel.detailsData.name)
+                                NameView(name: viewModel.detailsData?.name)
                                 //Date:
-                                Text("Protocol Date: \(viewModel.detailsData.protocolDate)")
+                                Text("Protocol Date: \(viewModel.detailsData?.protocolDate)")
                                     .font(.system(size: 20))
                                     .fontWeight(.bold)
                                     .padding(.vertical)
@@ -72,7 +74,7 @@ struct DetailView: View {
                     showUpdateForm = true
                 }
                 //Displays the update form:
-                .sheet(isPresented: $showUpdateForm, content: {Text("Update From in work!")})
+                .sheet(isPresented: $showUpdateForm, content: {UpdateView(noteDetails: , triggerRefresh: $triggerRefresh, collectionId: collectionId)})
             })
             ToolbarItem(placement: .topBarTrailing,
                         content: {

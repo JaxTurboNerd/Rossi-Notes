@@ -13,7 +13,7 @@ struct DetailGroupView: View {
     
     var body: some View {
         Group {
-            viewModel.detailsData.barrierReactive.isEmpty ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsData.barrierReactive))
+            viewModel.detailsData.barrierReactive ? AnyView(DetailLineView(detail: viewModel.detailsData?.barrierReactive)) : AnyView(EmptyView())
             viewModel.detailsData.dogReactive.isEmpty ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsData.dogReactive))
             viewModel.detailsData.strangerReactive.isEmpty ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsData.strangerReactive))
             viewModel.detailsData.leashReactive.isEmpty ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsData.leashReactive))

@@ -10,6 +10,7 @@ import SwiftUI
 struct UpdateView: View {
     
     @StateObject private var viewModel = UpdateViewModel()
+    @StateObject var noteDetails: DetailsModel
     @Binding var triggerRefresh: Bool
     var collectionId: String
     
@@ -23,33 +24,33 @@ struct UpdateView: View {
                     .font(Font.custom("Urbanist-Medium", size: 16))
                     .foregroundColor(Color("AppBlue")))
                 {
-                    TextField("Name", text: $viewModel.name)
+                    TextField("Name", text: $noteDetails.name)
                     DatePicker("Protocol Date", selection: $viewModel.protocolDate, displayedComponents: [.date])//shows only the date excludes time
                 }
                 Section(header: Text("Reactivities")
                     .font(Font.custom("Urbanist-Medium", size: 16))
                     .foregroundColor(Color("AppBlue")))
                 {
-                    Toggle("Dog", isOn: $viewModel.dogReactive)
-                    Toggle("Cat", isOn: $viewModel.catReactive)
-                    Toggle("Barrier", isOn: $viewModel.barrierReactive)
-                    Toggle("Leash", isOn: $viewModel.leashReactive)
+                    Toggle("Dog", isOn: $noteDetails.dogReactive)
+                    Toggle("Cat", isOn: $noteDetails.catReactive)
+                    Toggle("Barrier", isOn: $noteDetails.barrierReactive)
+                    Toggle("Leash", isOn: $noteDetails.leashReactive)
                 }
                 Section(header: Text("Miscellaneous")
                     .font(Font.custom("Urbanist-Medium", size: 16))
                     .foregroundColor(Color("AppBlue")))
                 {
-                    Toggle("Jumpy/Mouthy", isOn: $viewModel.jumpy)
-                    Toggle("Resource Guarder", isOn: $viewModel.resourceGuarder)
-                    Toggle("Avoid Strangers", isOn: $viewModel.avoidStrangers)
-                    Toggle("Door Routine", isOn: $viewModel.doorRoutine)
-                    Toggle("Loose Leash", isOn: $viewModel.looseLeash)
+                    Toggle("Jumpy/Mouthy", isOn: $noteDetails.jumpyMouthy)
+                    Toggle("Resource Guarder", isOn: $noteDetails.resourceGuarder)
+                    Toggle("Avoid Strangers", isOn: $noteDetails.avoidStrangers)
+                    Toggle("Door Routine", isOn: $noteDetails.doorRoutine)
+                    Toggle("Loose Leash", isOn: $noteDetails.looseLeash)
                 }
                 Section(header: Text("Notes")
                     .font(Font.custom("Urbanist-Medium", size: 16))
                     .foregroundColor(Color("AppBlue")))
                 {
-                    TextField("Notes", text: $viewModel.notes, axis: .vertical)
+                    TextField("Notes", text: $noteDetails.notes, axis: .vertical)
                     Button{
                         //action:
                         
