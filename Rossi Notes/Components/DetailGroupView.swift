@@ -13,20 +13,20 @@ struct DetailGroupView: View {
     
     var body: some View {
         Group {
-            viewModel.detailsModel.barrierReactive ? AnyView(DetailLineView(detail: viewModel.detailsData.barrierReactive)) : AnyView(EmptyView())
-            viewModel.detailsModel.dogReactive.isEmpty ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsData.dogReactive))
-            viewModel.detailsModel.strangerReactive.isEmpty ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsData.strangerReactive))
-            viewModel.detailsModel.leashReactive.isEmpty ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsModel.leashReactive))
-            viewModel.detailsModel.catReactive.isEmpty ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsModel.catReactive))
+            viewModel.detailsModel.barrierReactive ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.barrierReactive)) : AnyView(EmptyView())
+            viewModel.detailsModel.dogReactive ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsStringModel.dogReactive))
+            viewModel.detailsModel.strangerReactive ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsStringModel.strangerReactive))
+            viewModel.detailsModel.leashReactive ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsStringModel.leashReactive))
+            viewModel.detailsModel.catReactive ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsStringModel.catReactive))
         }
         .padding(.vertical, 2)
         Group {
-            viewModel.detailsModel.jumpyMouthy.isEmpty ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsData.jumpyMouthy))
-            viewModel.detailsModel.resourceGuarder.isEmpty ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsData.resourceGuarder))
-            viewModel.detailsModel.doorRoutine.isEmpty ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsData.doorRoutine)
+            viewModel.detailsModel.jumpyMouthy ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsStringModel.jumpyMouthy))
+            viewModel.detailsModel.resourceGuarder ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsStringModel.resourceGuarder))
+            viewModel.detailsModel.doorRoutine ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsStringModel.doorRoutine)
             )
-            viewModel.detailsModel.placeRoutine.isEmpty ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsData.placeRoutine))
-            viewModel.detailsModel.miscNotes.isEmpty ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsData.miscNotes)            )
+            viewModel.detailsModel.placeRoutine ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsStringModel.placeRoutine))
+            viewModel.detailsModel.miscNotes.isEmpty ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsStringModel.miscNotes)            )
         }
         .multilineTextAlignment(.center)
         .padding(.vertical, 2)
