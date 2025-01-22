@@ -17,8 +17,11 @@ class DetailViewModel: ObservableObject {
     @Published var errorMessage: String?
     @State var noteDeleted = false
     @Published var document: Document<[String: AnyCodable]>?
+    //stored values from the api getDocument response:
     @Published var detailsModel = DetailsModel()
+    //This model used to display string values from the details model:
     @Published var detailsStringModel = DetailsStringModel()
+    @Published var formattedStringDate = ""
     
     private let databaseId = "66a04cba001cb48a5bd7"
     
@@ -37,6 +40,8 @@ class DetailViewModel: ObservableObject {
                 await MainActor.run {
                     self.isLoading = false
                     setDetailsModel(response: response)
+                    formattedStringDate = formatDate(from: detailsModel.protocolDate)
+                    setDetailsStringModel(responseData: response.data)
                 }
             } catch {
                 await MainActor.run {
@@ -47,23 +52,32 @@ class DetailViewModel: ObservableObject {
         }
     }
     
-    //will need to rework from a Date object?
-    private func formatDate(from dateString: String) -> String {
-        let isoDateFormatter = ISO8601DateFormatter()
-        isoDateFormatter.formatOptions = .withFullDate
-        let formatedDate = isoDateFormatter.date(from: dateString) ?? Date.now
-        
+    //formats the date string value to a formatted value of the Month/DD/YYYY:
+    private func formatDate(from date: Date) -> String {
         //Non-ISO Date formatting, which is what is needed?
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         
-        return dateFormatter.string(from: formatedDate)
+        //return dateFormatter.string(from: formattedDate)
+        return dateFormatter.string(from: date)
+    }
+    
+    //Used to convert the response date string value to type Date:
+    private func formatDateString(from dateString: String) -> Date {
+        let isoDateFormatter = ISO8601DateFormatter()
+        isoDateFormatter.formatOptions = .withFullDate
+        let formattedDate = isoDateFormatter.date(from: dateString) ?? Date.now
+        
+        return formattedDate
     }
     
     private func setDetailsModel(response: Document<[String: AnyCodable]>){
+        //formats the response date value (string) to a Date object:
+        let protocolDateObject = formatDateString(from: response.data["protocol_date"]?.value as! String)
+        //set the detailsModel instance values;
         detailsModel.id = response.data["$id"]?.value as! String
         detailsModel.name = response.data["name"]?.value as! String
-        detailsModel.protocolDate = response.data["protocol_date"]?.value as! Date
+        detailsModel.protocolDate = protocolDateObject
         detailsModel.jumpyMouthy = response.data["jumpy_mouthy"]?.value as! Bool
         detailsModel.dogReactive = response.data["dog_reactive"]?.value as! Bool
         detailsModel.catReactive = response.data["cat_reactive"]?.value as! Bool
@@ -76,16 +90,17 @@ class DetailViewModel: ObservableObject {
         detailsModel.miscNotes = response.data["misc_notes"]?.value as! String
     }
     
-    
-    private func decodeResponse(response: Dictionary<String, AnyCodable>){
+    //This function sets the string values from the api response to a model instance to be
+    //displayed in the DetailLineView:
+    private func setDetailsStringModel(responseData: Dictionary<String, AnyCodable>){
         //assign response data values to the data model:
-        //            detailsData.id = response["$id"]?.value as! String
-        //            detailsData.name = response["name"]?.value as! String
-        detailsStringModel.miscNotes = response["misc_notes"]?.value as! String
-        let date = response["protocol_date"]?.value as! String
+        detailsStringModel.id = responseData["$id"]?.value as! String
+        detailsStringModel.name = responseData["name"]?.value as! String
+        detailsStringModel.miscNotes = responseData["misc_notes"]?.value as! String
+        let date = responseData["protocol_date"]?.value as! String
         detailsStringModel.protocolDate = detailsStringModel.formatDate(from: date)
         
-        for(key, value) in response {
+        for(key, value) in responseData {
             if (value == true){
                 switch key {
                 case "leash_reactive":

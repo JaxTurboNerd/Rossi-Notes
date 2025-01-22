@@ -42,7 +42,7 @@ struct DetailView: View {
                                 //Name:
                                 NameView(name: viewModel.detailsModel.name)
                                 //Date:
-                                Text("Protocol Date: \(viewModel.detailsModel.protocolDate)")
+                                Text("Protocol Date: \(viewModel.formattedStringDate)")
                                     .font(.system(size: 20))
                                     .fontWeight(.bold)
                                     .padding(.vertical)
@@ -60,9 +60,9 @@ struct DetailView: View {
                     }
                 }
                 .padding()//adds padding to the outer-most view
-//                .onAppear{
-//                    viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
-//                }
+                .onAppear{
+                    viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
+                }
             }
         }
         .toolbar {
