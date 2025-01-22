@@ -15,7 +15,6 @@ class DetailViewModel: ObservableObject {
     
     @Published var isLoading = false
     @Published var errorMessage: String?
-    @State var noteDeleted = false
     @Published var document: Document<[String: AnyCodable]>?
     //stored values from the api getDocument response:
     @Published var detailsModel = DetailsModel()
@@ -139,7 +138,6 @@ class DetailViewModel: ObservableObject {
                 )
                 await MainActor.run {
                     //do stuff here:
-                    noteDeleted = true
                 }
             } catch {
                 await MainActor.run {
