@@ -72,7 +72,7 @@ struct DetailView: View {
                     showUpdateForm = true
                 }
                 //Displays the update form:
-                .sheet(isPresented: $showUpdateForm, content: {UpdateView(noteDetails: viewModel.detailsModel, triggerRefresh: $triggerRefresh, collectionId: collectionId)})
+                .sheet(isPresented: $showUpdateForm, content: {UpdateView(noteDetails: viewModel.detailsModel, triggerRefresh: $triggerRefresh, collectionId: collectionId, documentId: documentId)})
             })
             ToolbarItem(placement: .topBarTrailing,
                         content: {

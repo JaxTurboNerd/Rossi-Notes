@@ -9,10 +9,10 @@ import SwiftUI
 
 struct UpdateView: View {
     
-    @StateObject private var viewModel = UpdateViewModel()
     @StateObject var noteDetails: DetailsModel
     @Binding var triggerRefresh: Bool
-    var collectionId: String
+    var collectionId = ""
+    var documentId = ""
     
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
@@ -77,6 +77,8 @@ struct UpdateView: View {
                 ToolbarItem(placement: .topBarTrailing, content: {
                     Button("Update"){
                         //Submit the form:
+                        @StateObject var viewModel = UpdateViewModel(data: noteDetails)
+                        viewModel.updateProtocol(collectionId: collectionId, documentId: documentId)
                     }
                 })
             }

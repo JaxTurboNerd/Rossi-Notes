@@ -11,6 +11,7 @@ struct CreateView: View {
     
     @StateObject private var viewModel = CreateViewModel()
     @Binding var triggerRefresh: Bool
+    @State private var noteAdded = false
     var collectionId: String
     
     //Used to dismiss the form:
@@ -80,14 +81,19 @@ struct CreateView: View {
                 })
                 ToolbarItem(placement: .topBarTrailing, content: {
                     Button("Submit"){
-                        //Submit the form:
-                        viewModel.createProtocol(collectionId: collectionId)
-                        dismiss.callAsFunction()
+                        Task {
+                            //Submit the form:
+                            viewModel.createProtocol(collectionId: collectionId)
+                            dismiss.callAsFunction()
+                            noteAdded = true
+                        }
                     }
                 })
             }
             .onDisappear {
-                triggerRefresh = true
+                if noteAdded {
+                    triggerRefresh = true
+                }
             }
         }
     }
