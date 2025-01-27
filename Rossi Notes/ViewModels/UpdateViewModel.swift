@@ -21,15 +21,11 @@ final class UpdateViewModel: ObservableObject {
     
     @Published public var isSubmitting = false
     @Published public var errorMessage: String?
-    @Published var noteDetails: DetailsModel
+    //@Published var noteDetails: DetailsModel
     
     private let databaseId = "66a04cba001cb48a5bd7"
     
-    init(data: DetailsModel){
-        self.noteDetails = data
-    }
-    
-    func updateProtocol(collectionId: String, documentId: String){
+    func updateProtocol(collectionId: String, documentId: String, noteDetails: DetailsModel){
         isSubmitting = true
         errorMessage = nil
         

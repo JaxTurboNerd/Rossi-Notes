@@ -68,7 +68,7 @@ struct DetailView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing,
                         content: {
-                Button("Edit Note"){
+                Button("Update"){
                     showUpdateForm = true
                 }
                 //Displays the update form:
