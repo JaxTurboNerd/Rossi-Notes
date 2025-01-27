@@ -12,8 +12,11 @@ struct UpdateView: View {
     @StateObject var viewModel = UpdateViewModel()
     @StateObject var noteDetails: DetailsModel
     @Binding var triggerRefresh: Bool
+    @Binding var triggerUpdate: Bool
+    
     var collectionId = ""
     var documentId = ""
+    
     
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
