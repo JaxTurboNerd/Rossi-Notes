@@ -12,7 +12,6 @@ struct UpdateView: View {
     @StateObject var viewModel = UpdateViewModel()
     @StateObject var noteDetails: DetailsModel
     @Binding var triggerRefresh: Bool
-    @Binding var triggerUpdate: Bool
     
     var collectionId = ""
     var documentId = ""
@@ -80,8 +79,11 @@ struct UpdateView: View {
                 })
                 ToolbarItem(placement: .topBarTrailing, content: {
                     Button("Update"){
-                        //Submit the form:
-                        viewModel.updateProtocol(collectionId: collectionId, documentId: documentId, noteDetails: noteDetails)
+                        Task {
+                            //Submit the form:
+                            viewModel.updateProtocol(collectionId: collectionId, documentId: documentId, noteDetails: noteDetails)
+                            dismiss.callAsFunction()
+                        }
                     }
                 })
             }
