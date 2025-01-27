@@ -63,9 +63,6 @@ struct ProtocolView: View {
             viewModel.refreshDocuments()
             triggerRefresh = false
         })
-        .task {
-            
-        }
         .refreshable {
             viewModel.refreshDocuments()
         }

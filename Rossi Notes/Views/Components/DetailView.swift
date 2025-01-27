@@ -16,6 +16,7 @@ struct DetailView: View {
     //Do not move the two lines below up near the other @State vars:
     @Binding var triggerRefresh: Bool
     @State private var noteDeleted = false
+    @State var triggerUpdate = false
     
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
@@ -70,7 +71,7 @@ struct DetailView: View {
                     showUpdateForm = true
                 }
                 //Displays the update form:
-                .sheet(isPresented: $showUpdateForm, content: {UpdateView(noteDetails: viewModel.detailsModel, triggerRefresh: $triggerRefresh, collectionId: collectionId, documentId: documentId)})
+                .sheet(isPresented: $showUpdateForm, content: {UpdateView(noteDetails: viewModel.detailsModel, triggerRefresh: $triggerRefresh, triggerUpdate: $triggerUpdate, collectionId: collectionId, documentId: documentId)})
             })
             ToolbarItem(placement: .topBarTrailing,
                         content: {
@@ -93,6 +94,10 @@ struct DetailView: View {
                 triggerRefresh = true
             }
         }
+        .onChange(of: triggerUpdate, {
+            viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
+            triggerUpdate = false
+        })
     }
 }
 
