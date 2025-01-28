@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>DATABASE_ID</key>
+	<string>${DATABASE_ID}</string>
+	<key>PLUS_COLL_ID</key>
+	<string>${PLUS_COLL_ID}</string>
+	<key>PRTOTOCOL_COLL_ID</key>
+	<string>${PROTOCOL_COLL_ID}</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>ConcertOne-Regular.ttf</string>
