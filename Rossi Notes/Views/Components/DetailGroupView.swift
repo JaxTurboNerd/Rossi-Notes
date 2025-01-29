@@ -26,6 +26,7 @@ struct DetailGroupView: View {
             viewModel.detailsModel.doorRoutine ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.doorRoutine)) : AnyView(EmptyView())
             viewModel.detailsModel.placeRoutine ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.placeRoutine)) : AnyView(EmptyView())
             viewModel.detailsModel.miscNotes.isEmpty ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsStringModel.miscNotes))
+
         }
         .multilineTextAlignment(.center)
         .padding(.vertical, 2)

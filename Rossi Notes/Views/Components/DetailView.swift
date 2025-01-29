@@ -17,7 +17,7 @@ struct DetailView: View {
     @Binding var triggerRefresh: Bool
     @State private var noteDeleted = false
     @State var triggerUpdate = false
-    
+
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
 
