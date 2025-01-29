@@ -13,8 +13,11 @@ struct DetailView: View {
     
     var collectionId = ""
     var documentId = ""
+    //Do not move the two lines below up near the other @State vars:
     @Binding var triggerRefresh: Bool
     @State private var noteDeleted = false
+    @State var triggerUpdate = false
+
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
 
@@ -39,9 +42,9 @@ struct DetailView: View {
                         VStack {
                             VStack{
                                 //Name:
-                                NameView(name: viewModel.detailsData.name)
+                                NameView(name: viewModel.detailsModel.name)
                                 //Date:
-                                Text("Protocol Date: \(viewModel.detailsData.protocolDate)")
+                                Text("Protocol Date: \(viewModel.formattedStringDate)")
                                     .font(.system(size: 20))
                                     .fontWeight(.bold)
                                     .padding(.vertical)
@@ -59,24 +62,22 @@ struct DetailView: View {
                     }
                 }
                 .padding()//adds padding to the outer-most view
-                .onAppear{
-                    viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
-                }
             }
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing,
                         content: {
-                Button("Edit Note"){
+                Button("Update"){
                     showUpdateForm = true
                 }
                 //Displays the update form:
-                .sheet(isPresented: $showUpdateForm, content: {Text("Update From in work!")})
+                .sheet(isPresented: $showUpdateForm, content: {UpdateView(noteDetails: viewModel.detailsModel, triggerRefresh: $triggerRefresh, triggerUpdate: $triggerUpdate, collectionId: collectionId, documentId: documentId)})
             })
             ToolbarItem(placement: .topBarTrailing,
                         content: {
                 Button("Delete"){
                     Task {
+                        //should add do/catch?
                         viewModel.deleteNote(collectionId: collectionId, documentId: documentId)
                         noteDeleted = true
                         dismiss.callAsFunction()
@@ -85,11 +86,18 @@ struct DetailView: View {
                 .foregroundStyle(Color.red)
             })
         }
+        .onAppear{
+            viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
+        }
         .onDisappear{
             if noteDeleted {
                 triggerRefresh = true
             }
         }
+        .onChange(of: triggerUpdate, {
+            viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
+            triggerUpdate = false
+        })
     }
 }
 

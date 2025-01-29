@@ -13,12 +13,14 @@ import JSONCodable
 class DetailViewModel: ObservableObject {
     let appwrite = Appwrite()
     
-    @Published var detailsData = DetailsModel()
-    @Published var document: Document<[String: AnyCodable]>?
     @Published var isLoading = false
-    @Published public var errorMessage: String?
-    
-    @State var noteDeleted = false
+    @Published var errorMessage: String?
+    @Published var document: Document<[String: AnyCodable]>?
+    //stored values from the api getDocument response:
+    @Published var detailsModel = DetailsModel()
+    //This model used to display string values from the details model:
+    @Published var detailsStringModel = DetailsStringModel()
+    @Published var formattedStringDate = ""
     
     private let databaseId = "66a04cba001cb48a5bd7"
     
@@ -35,11 +37,11 @@ class DetailViewModel: ObservableObject {
                     queries: [] // optional
                 )
                 await MainActor.run {
-                    self.document = response
                     self.isLoading = false
-                    decodeResponse(response: document?.data ?? ["Error": AnyCodable("error")])
+                    setDetailsModel(response: response)
+                    formattedStringDate = formatDate(from: detailsModel.protocolDate)
+                    setDetailsStringModel(responseData: response.data)
                 }
-                
             } catch {
                 await MainActor.run {
                     self.errorMessage = error.localizedDescription
@@ -49,35 +51,75 @@ class DetailViewModel: ObservableObject {
         }
     }
     
-    private func decodeResponse(response: Dictionary<String, AnyCodable>){
-        //assign response data values to the data model:
-        detailsData.id = response["$id"]?.value as! String
-        detailsData.name = response["name"]?.value as! String
-        detailsData.miscNotes = response["misc_notes"]?.value as! String
-        let date = response["protocol_date"]?.value as! String
-        detailsData.protocolDate = detailsData.formatDate(from: date)
+    //formats the date string value to a formatted value of the Month/DD/YYYY:
+    private func formatDate(from date: Date) -> String {
+        //Non-ISO Date formatting, which is what is needed?
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
         
-        for(key, value) in response {
+        //return dateFormatter.string(from: formattedDate)
+        return dateFormatter.string(from: date)
+    }
+    
+    //Used to convert the response date string value to type Date:
+    private func formatDateString(from dateString: String) -> Date {
+        let isoDateFormatter = ISO8601DateFormatter()
+        isoDateFormatter.formatOptions = .withFullDate
+        let formattedDate = isoDateFormatter.date(from: dateString) ?? Date.now
+        
+        return formattedDate
+    }
+    
+    private func setDetailsModel(response: Document<[String: AnyCodable]>){
+        //formats the response date value (string) to a Date object:
+        let protocolDateObject = formatDateString(from: response.data["protocol_date"]?.value as! String)
+        //set the detailsModel instance values;
+        detailsModel.id = response.data["$id"]?.value as! String
+        detailsModel.name = response.data["name"]?.value as! String
+        detailsModel.protocolDate = protocolDateObject
+        detailsModel.jumpyMouthy = response.data["jumpy_mouthy"]?.value as! Bool
+        detailsModel.dogReactive = response.data["dog_reactive"]?.value as! Bool
+        detailsModel.catReactive = response.data["cat_reactive"]?.value as! Bool
+        detailsModel.leashReactive = response.data["leash_reactive"]?.value as! Bool
+        detailsModel.barrierReactive = response.data["barrier_reactive"]?.value as! Bool
+        detailsModel.doorRoutine = response.data["door_routine"]?.value as! Bool
+        detailsModel.placeRoutine = response.data["place_routine"]?.value as! Bool
+        detailsModel.resourceGuarder = response.data["resource_guarder"]?.value as! Bool
+        detailsModel.strangerReactive = response.data["stranger_reactive"]?.value as! Bool
+        detailsModel.miscNotes = response.data["misc_notes"]?.value as! String
+    }
+    
+    //This function sets the string values from the api response to a model instance to be
+    //displayed in the DetailLineView:
+    private func setDetailsStringModel(responseData: Dictionary<String, AnyCodable>){
+        //assign response data values to the data model:
+        detailsStringModel.id = responseData["$id"]?.value as! String
+        detailsStringModel.name = responseData["name"]?.value as! String
+        detailsStringModel.miscNotes = responseData["misc_notes"]?.value as! String
+        let date = responseData["protocol_date"]?.value as! String
+        detailsStringModel.protocolDate = detailsStringModel.formatDate(from: date)
+        
+        for(key, value) in responseData {
             if (value == true){
                 switch key {
                 case "leash_reactive":
-                    detailsData.leashReactive = "Leash Reactive"
+                    detailsStringModel.leashReactive = "Leash Reactive"
                 case "cat_reactive":
-                    detailsData.catReactive = "Cat Reactive"
+                    detailsStringModel.catReactive = "Cat Reactive"
                 case "resource_guarder":
-                    detailsData.resourceGuarder = "Resource Guarder"
+                    detailsStringModel.resourceGuarder = "Resource Guarder"
                 case "stranger_reactive":
-                    detailsData.strangerReactive = "Stranger Reactive"
+                    detailsStringModel.strangerReactive = "Stranger Reactive"
                 case "door_routine":
-                    detailsData.doorRoutine = "Practice Door Routine"
+                    detailsStringModel.doorRoutine = "Practice Door Routine"
                 case "barrier_reactive":
-                    detailsData.barrierReactive = "Barrier Reactive"
+                    detailsStringModel.barrierReactive = "Barrier Reactive"
                 case "dog_reactive":
-                    detailsData.dogReactive = "Dog Reactive"
+                    detailsStringModel.dogReactive = "Dog Reactive"
                 case "place_routine":
-                    detailsData.placeRoutine = "Practice Place Routine"
+                    detailsStringModel.placeRoutine = "Practice Place Routine"
                 case "jumpy_mouthy":
-                    detailsData.jumpyMouthy = "Jumpy/Mouthy"
+                    detailsStringModel.jumpyMouthy = "Jumpy/Mouthy"
                 default:
                     return
                     
@@ -93,10 +135,9 @@ class DetailViewModel: ObservableObject {
                     databaseId: self.databaseId,
                     collectionId: collectionId,
                     documentId: documentId
-                    )
+                )
                 await MainActor.run {
                     //do stuff here:
-                    noteDeleted = true
                 }
             } catch {
                 await MainActor.run {

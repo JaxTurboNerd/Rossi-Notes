@@ -7,21 +7,16 @@
 
 import SwiftUI
 
-struct UpdateForm: View {
+struct UpdateView: View {
     
-    @State var name = ""
-    @State var protocolDate = Date.now
-    @State var dogReactive = false
-    @State var catReactive = false
-    @State var barrierReactive = false
-    @State var leashReactive = false
-    @State var jumpy = false
-    @State var resourceGuarder = false
-    @State var avoidStrangers = false
-    @State var placeRoutine = false
-    @State var doorRoutine = false
-    @State var looseLeash = false
-    @State var notes = ""
+    @StateObject var viewModel = UpdateViewModel()
+    @StateObject var noteDetails: DetailsModel
+    @Binding var triggerRefresh: Bool
+    @Binding var triggerUpdate: Bool
+    
+    var collectionId = ""
+    var documentId = ""
+    
     
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
@@ -33,33 +28,32 @@ struct UpdateForm: View {
                     .font(Font.custom("Urbanist-Medium", size: 16))
                     .foregroundColor(Color("AppBlue")))
                 {
-                    TextField("Name", text: $name)
-                    DatePicker("Protocol Date", selection: $protocolDate, displayedComponents: [.date])//shows only the date excludes time
+                    TextField("Name", text: $noteDetails.name)
+                    DatePicker("Protocol Date", selection: $noteDetails.protocolDate, displayedComponents: [.date])//shows only the date excludes time
                 }
                 Section(header: Text("Reactivities")
                     .font(Font.custom("Urbanist-Medium", size: 16))
                     .foregroundColor(Color("AppBlue")))
                 {
-                    Toggle("Dog", isOn: $dogReactive)
-                    Toggle("Cat", isOn: $catReactive)
-                    Toggle("Barrier", isOn: $barrierReactive)
-                    Toggle("Leash", isOn: $leashReactive)
+                    Toggle("Dog", isOn: $noteDetails.dogReactive)
+                    Toggle("Cat", isOn: $noteDetails.catReactive)
+                    Toggle("Barrier", isOn: $noteDetails.barrierReactive)
+                    Toggle("Leash", isOn: $noteDetails.leashReactive)
                 }
                 Section(header: Text("Miscellaneous")
                     .font(Font.custom("Urbanist-Medium", size: 16))
                     .foregroundColor(Color("AppBlue")))
                 {
-                    Toggle("Jumpy/Mouthy", isOn: $jumpy)
-                    Toggle("Resource Guarder", isOn: $resourceGuarder)
-                    Toggle("Avoid Strangers", isOn: $avoidStrangers)
-                    Toggle("Door Routine", isOn: $doorRoutine)
-                    Toggle("Loose Leash", isOn: $looseLeash)
+                    Toggle("Jumpy/Mouthy", isOn: $noteDetails.jumpyMouthy)
+                    Toggle("Resource Guarder", isOn: $noteDetails.resourceGuarder)
+                    Toggle("Avoid Strangers", isOn: $noteDetails.strangerReactive)
+                    Toggle("Door Routine", isOn: $noteDetails.doorRoutine)
                 }
                 Section(header: Text("Notes")
                     .font(Font.custom("Urbanist-Medium", size: 16))
                     .foregroundColor(Color("AppBlue")))
                 {
-                    TextField("Notes", text: $notes, axis: .vertical)
+                    TextField("Notes", text: $noteDetails.miscNotes, axis: .vertical)
                     Button{
                         //action:
                         
@@ -86,7 +80,12 @@ struct UpdateForm: View {
                 })
                 ToolbarItem(placement: .topBarTrailing, content: {
                     Button("Update"){
-                        //Submit the form:
+                        Task {
+                            //Submit the form:
+                            viewModel.updateProtocol(collectionId: collectionId, documentId: documentId, noteDetails: noteDetails)
+                            triggerUpdate = true
+                            dismiss.callAsFunction()
+                        }
                     }
                 })
             }
@@ -95,6 +94,6 @@ struct UpdateForm: View {
     
 }
 
-#Preview {
-    UpdateForm()
-}
+//#Preview {
+//    UpdateView()
+//}

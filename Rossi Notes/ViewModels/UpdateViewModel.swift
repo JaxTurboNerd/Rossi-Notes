@@ -1,4 +1,11 @@
 //
+//  UpdateViewModel.swift
+//  Rossi Notes
+//
+//  Created by Gregory Boyd on 1/16/25.
+//
+
+//
 //  CreateProtocolViewModel.swift
 //  Rossi Notes
 //
@@ -9,43 +16,31 @@ import Foundation
 import Appwrite
 import SwiftUICore
 
-final class CreateProtocolViewModel: ObservableObject {
+final class UpdateViewModel: ObservableObject {
     let appwrite = Appwrite()
     
-    @Published var documentId = ID.unique()
-    @Published var name = ""
-    @Published var protocolDate = Date.now
-    @Published var dogReactive = false
-    @Published var catReactive = false
-    @Published var barrierReactive = false
-    @Published var leashReactive = false
-    @Published var jumpy = false
-    @Published var resourceGuarder = false
-    @Published var avoidStrangers = false
-    @Published var placeRoutine = false
-    @Published var doorRoutine = false
-    @Published var looseLeash = false
-    @Published var notes = ""
     @Published public var isSubmitting = false
     @Published public var errorMessage: String?
+    //@Published var noteDetails: DetailsModel
     
     private let databaseId = "66a04cba001cb48a5bd7"
     
-    func createProtocol(collectionId: String){
+    func updateProtocol(collectionId: String, documentId: String, noteDetails: DetailsModel){
         isSubmitting = true
         errorMessage = nil
         
-        let newProtocol = Protocol(name: name, protocol_date: protocolDate, dog_reactive: dogReactive, cat_reactive: catReactive, barrier_reactive: barrierReactive, leash_reactive: leashReactive, jumpy_mouthy: jumpy, resource_guarder: resourceGuarder, stranger_reactive: avoidStrangers, place_routine: placeRoutine, door_routine: doorRoutine, misc_notes: notes)
+        //not working:  all values are the default values:
+        let updateProtocol = Protocol(name: noteDetails.name, protocol_date: noteDetails.protocolDate, dog_reactive: noteDetails.dogReactive, cat_reactive: noteDetails.catReactive, barrier_reactive: noteDetails.barrierReactive, leash_reactive: noteDetails.leashReactive, jumpy_mouthy: noteDetails.jumpyMouthy, resource_guarder: noteDetails.resourceGuarder, stranger_reactive: noteDetails.strangerReactive, place_routine: noteDetails.placeRoutine, door_routine: noteDetails .doorRoutine, misc_notes: noteDetails.miscNotes)
         
         Task {
             do {
                 let encoder = JSONEncoder()
                 encoder.dateEncodingStrategy = .iso8601
-                guard let data = try? encoder.encode(newProtocol) else {return}
+                guard let data = try? encoder.encode(updateProtocol) else {return}
                
                 //convert data to json string:
                 let dataString = String(data: data, encoding: .utf8)
-                let response = try await appwrite.databases.createDocument(
+                let response = try await appwrite.databases.updateDocument(
                     databaseId: databaseId,
                     collectionId: collectionId,
                     documentId: documentId,
@@ -65,3 +60,4 @@ final class CreateProtocolViewModel: ObservableObject {
         }
     }
 }
+

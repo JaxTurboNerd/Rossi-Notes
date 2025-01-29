@@ -6,7 +6,7 @@
 	<string>${DATABASE_ID}</string>
 	<key>PLUS_COLL_ID</key>
 	<string>${PLUS_COLL_ID}</string>
-	<key>PRTOTOCOL_COLL_ID</key>
+	<key>PROTOCOL_COLL_ID</key>
 	<string>${PROTOCOL_COLL_ID}</string>
 	<key>UIAppFonts</key>
 	<array>
