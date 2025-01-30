@@ -21,6 +21,7 @@ class DetailViewModel: ObservableObject {
     //This model used to display string values from the details model:
     @ObservedObject var detailsStringModel = DetailsStringModel()
     @Published var formattedStringDate = ""
+    @State var noteWillDelete = false
     
     private let databaseId = "66a04cba001cb48a5bd7"
     
@@ -131,13 +132,14 @@ class DetailViewModel: ObservableObject {
     public func deleteNote(collectionId: String, documentId: String){
         Task {
             do {
-                let successfulDelete = try await appwrite.databases.deleteDocument(
+                let response = try await appwrite.databases.deleteDocument(
                     databaseId: self.databaseId,
                     collectionId: collectionId,
                     documentId: documentId
                 )
                 await MainActor.run {
                     //do stuff here:
+                    noteWillDelete = true
                 }
             } catch {
                 await MainActor.run {

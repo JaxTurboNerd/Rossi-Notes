@@ -78,7 +78,6 @@ struct DetailView: View {
                         content: {
                 Button("Delete"){
                     Task {
-                        //should add do/catch?
                         viewModel.deleteNote(collectionId: collectionId, documentId: documentId)
                         noteDeleted = true
                         dismiss.callAsFunction()
