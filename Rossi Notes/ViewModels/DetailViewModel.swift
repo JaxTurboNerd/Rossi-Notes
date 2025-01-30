@@ -19,7 +19,7 @@ class DetailViewModel: ObservableObject {
     //stored values from the api getDocument response:
     @ObservedObject var detailsModel = DetailsModel()
     //This model used to display string values from the details model:
-    @Published var detailsStringModel = DetailsStringModel()
+    @ObservedObject var detailsStringModel = DetailsStringModel()
     @Published var formattedStringDate = ""
     
     private let databaseId = "66a04cba001cb48a5bd7"
