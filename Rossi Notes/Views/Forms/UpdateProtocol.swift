@@ -12,6 +12,7 @@ struct UpdateView: View {
     @StateObject var viewModel = UpdateViewModel()
     @StateObject var noteDetails: DetailsModel
     @Binding var triggerRefresh: Bool
+    @Binding var noteUpdated: Bool
     
     var collectionId = ""
     var documentId = ""
@@ -82,6 +83,7 @@ struct UpdateView: View {
                         Task {
                             //Submit the form:
                             viewModel.updateProtocol(collectionId: collectionId, documentId: documentId, noteDetails: noteDetails)
+                            noteUpdated = true
                             dismiss.callAsFunction()
                         }
                     }
