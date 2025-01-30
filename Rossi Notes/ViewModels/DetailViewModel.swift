@@ -17,9 +17,9 @@ class DetailViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var document: Document<[String: AnyCodable]>?
     //stored values from the api getDocument response:
-    @Published var detailsModel = DetailsModel()
+    @ObservedObject var detailsModel = DetailsModel()
     //This model used to display string values from the details model:
-    @Published var detailsStringModel = DetailsStringModel()
+    @ObservedObject var detailsStringModel = DetailsStringModel()
     @Published var formattedStringDate = ""
     
     private let databaseId = "66a04cba001cb48a5bd7"
