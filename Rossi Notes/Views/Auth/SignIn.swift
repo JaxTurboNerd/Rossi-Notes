@@ -75,7 +75,7 @@ struct SignIn: View {
                                         let loginSession = try await user.signIn(viewModel.email, viewModel.password)
                                         async let authUser = user.getAccount()
                                         async let userAvatar = user.getInitials()
-                                        let (fetchedAuthUser, fetchedUserAvatar) = try await(authUser, userAvatar)
+//                                        let (fetchedAuthUser, fetchedUserAvatar) = try await(authUser, userAvatar)
                                         user.isLoggedIn = true
                                         showHomeTabView = true
 
@@ -166,8 +166,4 @@ private func checkLoginFields(_ email: String, _ password: String) throws -> Boo
         throw LoginTextfieldError.emptyPassword
     }
     return true
-}
-
-#Preview {
-    SignIn()
 }

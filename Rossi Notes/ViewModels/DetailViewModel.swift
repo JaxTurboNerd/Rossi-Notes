@@ -37,6 +37,7 @@ class DetailViewModel: ObservableObject {
                     documentId: documentId,
                     queries: [] // optional
                 )
+                self.document = response
                 await MainActor.run {
                     self.isLoading = false
                     setDetailsModel(response: response)

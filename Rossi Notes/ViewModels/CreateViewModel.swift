@@ -8,9 +8,11 @@
 import Foundation
 import Appwrite
 import SwiftUICore
+import JSONCodable
 
 final class CreateViewModel: ObservableObject {
     let appwrite = Appwrite()
+    @Published var document: Document<[String: AnyCodable]>?
     
     @Published var documentId = ID.unique()
     @Published var name = ""
@@ -52,6 +54,7 @@ final class CreateViewModel: ObservableObject {
                     data: dataString as Any //required JSON Object
                 )
                 await MainActor.run {
+                    self.document = response
                     self.isSubmitting = false
                 }
             
