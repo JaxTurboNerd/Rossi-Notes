@@ -107,8 +107,8 @@ struct SignIn: View {
                         .padding()
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
-                        .alert(isPresented: viewModel.$showAlert){
-                            Alert(title: Text("Login Error"), message: Text(viewModel.errorMessage ?? "error"), dismissButton: .default(Text("OK")))
+                        .alert(isPresented: $showAlert){
+                            Alert(title: Text("Login Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
                         }
                     }
                     .navigationDestination(isPresented: $showHomeTabView, destination: {HomeTabView()})
