@@ -8,15 +8,13 @@
 import SwiftUI
 
 struct SignIn: View {
-    @ObservedObject var viewModel = LoginViewModel()
-    @StateObject var user = Appwrite()
+    @StateObject var viewModel = LoginViewModel()
+    //@StateObject var user = Appwrite()
     @State var isShowingSignUp = false
     @State var showHomeTabView = false
     
-    @State private var isLoading = false
     @State private var showAlert = false
     @State private var alertMessage = ""
-    
     @FocusState var emailIsFocused: Bool
     @FocusState var passwordIsFocused: Bool
     
@@ -67,44 +65,35 @@ struct SignIn: View {
                             //action:
                             Task {
                                 do {
+                                    viewModel.isSubmitting = true
                                     let isValidFields = try checkLoginFields(viewModel.email, viewModel.password)
-                                    
                                     if isValidFields {
-                                        isLoading = true
-                                        //returns a Session Object
-                                        let loginSession = try await user.signIn(viewModel.email, viewModel.password)
-                                        async let authUser = user.getAccount()
-                                        async let userAvatar = user.getInitials()
-//                                        let (fetchedAuthUser, fetchedUserAvatar) = try await(authUser, userAvatar)
-                                        user.isLoggedIn = true
+                                        viewModel.signIn(viewModel.email, viewModel.password)
+                                        viewModel.isLoggedIn = true
                                         showHomeTabView = true
-
-                                        DispatchQueue.main.async {
-                                            viewModel.response = String(describing: loginSession.toMap())
-                                        }
+                                        //get account/initials?
                                     }
                                 } catch LoginTextfieldError.emptyEmail{
-                                    isLoading = false
+                                    viewModel.isSubmitting = false
                                     emailIsFocused = true
                                     alertMessage = "Please enter your email"
                                     showAlert = true
                                 } catch LoginTextfieldError.emptyPassword {
-                                    isLoading = false
+                                    viewModel.isSubmitting = false
                                     passwordIsFocused = true
                                     alertMessage = "Please enter your password"
                                     showAlert = true
                                 } catch {
-                                    isLoading = false
+                                    viewModel.isSubmitting = false
                                     alertMessage = "An error logging in occured"
                                     showAlert = true
                                     DispatchQueue.main.async {
                                         viewModel.response = error.localizedDescription
                                     }
                                 }
-                                
                             }
                         } label: {
-                            if isLoading {
+                            if viewModel.isSubmitting {
                                 ProgressView()
                                     .progressViewStyle(CircularProgressViewStyle())
                                     .aspectRatio(contentMode: .fit)
@@ -118,8 +107,8 @@ struct SignIn: View {
                         .padding()
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
-                        .alert(isPresented: $showAlert){
-                            Alert(title: Text("Login Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                        .alert(isPresented: viewModel.$showAlert){
+                            Alert(title: Text("Login Error"), message: Text(viewModel.errorMessage ?? "error"), dismissButton: .default(Text("OK")))
                         }
                     }
                     .navigationDestination(isPresented: $showHomeTabView, destination: {HomeTabView()})
