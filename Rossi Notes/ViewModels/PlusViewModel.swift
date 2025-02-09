@@ -10,7 +10,7 @@ import Appwrite
 import JSONCodable
 
 class PlusViewModel: ObservableObject {
-    let appwrite = Appwrite()
+    @EnvironmentObject var appwrite: Appwrite
 
     // Published properties for UI updates
     @Published public var documents: [Document<[String: AnyCodable]>] = []

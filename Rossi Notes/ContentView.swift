@@ -14,7 +14,7 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             if user.isLoggedIn {
-                HomeTabView()
+                Home()
             } else {
                 ZStack {
                     MainBackgroundView()

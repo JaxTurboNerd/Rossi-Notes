@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SignIn: View {
     @StateObject var viewModel = LoginViewModel()
-    //@StateObject var user = Appwrite()
+    @EnvironmentObject var appwrite: Appwrite
     @State var isShowingSignUp = false
     @State var showHomeTabView = false
     
@@ -69,7 +69,7 @@ struct SignIn: View {
                                     let isValidFields = try checkLoginFields(viewModel.email, viewModel.password)
                                     if isValidFields {
                                         viewModel.signIn(viewModel.email, viewModel.password)
-                                        viewModel.isLoggedIn = true
+                                        appwrite.isLoggedIn = true
                                         showHomeTabView = true
                                         //get account/initials?
                                     }

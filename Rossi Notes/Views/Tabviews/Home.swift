@@ -9,7 +9,7 @@ import SwiftUI
 
 struct Home: View {
     
-    @ObservedObject var user = Appwrite()
+    @EnvironmentObject var user: Appwrite
     @State var isShowingHomeView = false
     
     var body: some View {
@@ -43,11 +43,16 @@ struct Home: View {
                         Task {
                             do {
                                 try await user.onLogout()
+                                clearSession()
                                 user.isLoggedIn = false
                                 isShowingHomeView = true
                                 
                             } catch {
-                                print("logout error")
+                                await MainActor.run {
+                                    let errorMessage = error.localizedDescription
+                                    print("Create document error \(String(describing: errorMessage))")
+                                    //self.isSubmitting = false
+                                }
                             }
                         }
                         
@@ -72,6 +77,12 @@ struct Home: View {
         }
         .navigationBarBackButtonHidden()
     }
+}
+
+private func clearSession(){
+    // Remove session details from UserDefaults or Keychain
+    UserDefaults.standard.removeObject(forKey: "userId")
+    UserDefaults.standard.removeObject(forKey: "sessionSecret")
 }
 
 #Preview {

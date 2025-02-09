@@ -11,7 +11,7 @@ import Appwrite
 import JSONCodable
 
 class DetailViewModel: ObservableObject {
-    let appwrite = Appwrite()
+    @EnvironmentObject var appwrite: Appwrite
     
     @Published var isLoading = false
     @Published var errorMessage: String?

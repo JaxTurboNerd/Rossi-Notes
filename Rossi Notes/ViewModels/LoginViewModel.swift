@@ -12,20 +12,22 @@ import NIOCore
 import SwiftUI
 
 class LoginViewModel: ObservableObject {
-    let appwrite = Appwrite()
+    //let appwrite = Appwrite()
+    @EnvironmentObject var appwrite: Appwrite
     
     @Published var email: String = "gboyd69@yahoo.com"
     @Published var password: String = "11Gunner$"
     @Published var response: String = ""
     //@Published var session: Session?
-    @Published var user: User<[String: AnyCodable]>?
+    //@Published var user: User<[String: AnyCodable]>?
     @Published var errorMessage: String?
     @Published var isSubmitting = false
-    @Published var isLoggedIn = false
+    //@Published var isLoggedIn = false
     @State var showAlert = false
     
     public func getAccount() async throws -> User<[String: AnyCodable]>{
         return try await appwrite.account.get()
+        //or use?: appwrite.getAccount()
     }
     
     public func signIn(_ email: String,_ password: String){
@@ -37,14 +39,15 @@ class LoginViewModel: ObservableObject {
                     email: email,
                     password: password
                 )
-                self.persistSession(session)
+                persistSession(session)
                 await MainActor.run {
-                    self.isLoggedIn = true
+                    self.appwrite.isLoggedIn = true
                 }
             } catch {
                 await MainActor.run {
                     self.errorMessage = error.localizedDescription
                     print("Create document error \(String(describing: errorMessage))")
+                    self.appwrite.isLoggedIn = false
                     self.isSubmitting = false
                 }
             }
@@ -55,6 +58,24 @@ class LoginViewModel: ObservableObject {
         // Save session details to UserDefaults or Keychain for persistence
         UserDefaults.standard.set(session.userId, forKey: "userId")
         UserDefaults.standard.set(session.secret, forKey: "sessionSecret")
+    }
+    
+    private func checkSession(){
+        guard let userId = UserDefaults.standard.string(forKey: "userId"),
+              let sessionSecret = UserDefaults.standard.string(forKey: "sessionSecret") else {return}
+        Task {
+            do {
+                let session = try await appwrite.getAccount()
+                await MainActor.run {
+                    self.appwrite.isLoggedIn = true
+                }
+
+            } catch {
+                self.errorMessage = error.localizedDescription
+                self.appwrite.isLoggedIn = false
+                //clear session?
+            }
+        }
     }
     
     public func getInitials() async throws -> ByteBuffer {

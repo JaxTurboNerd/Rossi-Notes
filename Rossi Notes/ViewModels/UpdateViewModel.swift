@@ -18,7 +18,7 @@ import SwiftUICore
 import JSONCodable
 
 final class UpdateViewModel: ObservableObject {
-    let appwrite = Appwrite()
+    @EnvironmentObject var appwrite: Appwrite
     
     @Published public var isSubmitting = false
     @Published public var errorMessage: String?

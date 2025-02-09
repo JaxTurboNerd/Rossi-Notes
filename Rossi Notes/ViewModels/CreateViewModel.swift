@@ -11,7 +11,7 @@ import SwiftUICore
 import JSONCodable
 
 final class CreateViewModel: ObservableObject {
-    let appwrite = Appwrite()
+    @EnvironmentObject var appwrite: Appwrite
     @Published var document: Document<[String: AnyCodable]>?
     
     @Published var documentId = ID.unique()
