@@ -9,8 +9,9 @@ import SwiftUI
 
 struct SignUp: View {
     
-    @ObservedObject var viewModel = SignUpViewModel()
+    @StateObject private var viewModel: SignUpViewModel
     @EnvironmentObject var user: Appwrite
+    @StateObject private var authServices: AuthServices
     @State private var isLoading = false
     @State var isShowingSignIn = false
     @State var showHomeTabView = false
@@ -23,6 +24,11 @@ struct SignUp: View {
     @FocusState var emailIsFocused: Bool
     @FocusState var passwordIsFocused: Bool
     @FocusState var password2IsFocused: Bool
+    
+    init(authServices: AuthServices) {
+        _viewModel = StateObject(wrappedValue: SignUpViewModel(authServices: authServices))
+        _authServices = StateObject(wrappedValue: authServices)
+    }
     
     var body: some View {
         NavigationStack {
@@ -197,7 +203,7 @@ struct SignUp: View {
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
                     }
-                    .navigationDestination(isPresented: $isShowingSignIn, destination: {SignIn()})
+                    .navigationDestination(isPresented: $isShowingSignIn, destination: {SignIn(authServices: authServices)})
                 }
                 .padding()
                 
@@ -245,6 +251,6 @@ private func checkSignUpFields(
 }
 
 
-#Preview {
-    SignUp()
-}
+//#Preview {
+//    SignUp()
+//}

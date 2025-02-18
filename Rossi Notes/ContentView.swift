@@ -6,14 +6,21 @@
 //
 
 import SwiftUI
+import Appwrite
 
 struct ContentView: View {
-    @EnvironmentObject var user: Appwrite
+    //@EnvironmentObject var user: Appwrite
+    @StateObject private var authServices: AuthServices
     @State var isShowingSignIn = false
+    
+    init(client: Client){
+        _authServices = StateObject(wrappedValue: AuthServices(client: client))
+    }
     
     var body: some View {
         NavigationStack {
-            if user.isLoggedIn {
+            //Use Group?
+            if authServices.isAuthenticated {
                 Home()
             } else {
                 ZStack {
@@ -47,7 +54,7 @@ struct ContentView: View {
                             .buttonStyle(.borderedProminent)
                             .controlSize(.large)
                         }
-                        .navigationDestination(isPresented: $isShowingSignIn, destination: {SignIn()})
+                        .navigationDestination(isPresented: $isShowingSignIn, destination: {SignIn(authServices: authServices)})
                         Spacer()
                     }
                     .padding()
@@ -67,6 +74,6 @@ struct MainBackgroundView: View {
     }
 }
 
-#Preview {
-    ContentView()
-}
+//#Preview {
+//    ContentView()
+//}

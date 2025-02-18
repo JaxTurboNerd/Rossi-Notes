@@ -48,8 +48,8 @@ final class UpdateViewModel: ObservableObject {
                     documentId: documentId,
                     data: dataString as Any //required JSON Object
                 )
-                self.document = response
                 await MainActor.run {
+                    self.document = response
                     self.isSubmitting = false
                 }
             

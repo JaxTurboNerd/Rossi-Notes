@@ -9,7 +9,7 @@ import SwiftUI
 
 struct Home: View {
     
-    @EnvironmentObject var user: Appwrite
+    @EnvironmentObject var user: Appwrite //will need to change
     @State var isShowingHomeView = false
     
     var body: some View {
@@ -72,7 +72,7 @@ struct Home: View {
                     
                 }
                 .padding()
-                .navigationDestination(isPresented: $isShowingHomeView, destination: {ContentView()})
+                .navigationDestination(isPresented: $isShowingHomeView, destination: {ContentView(client: user.client)})
             }
         }
         .navigationBarBackButtonHidden()

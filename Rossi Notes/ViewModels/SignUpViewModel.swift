@@ -13,4 +13,10 @@ class SignUpViewModel: ObservableObject {
     @Published var email = ""
     @Published var password = ""
     @Published var passwordConfirm = ""
+    
+    private let authServices: AuthServices
+    
+    init(authServices: AuthServices){
+        self.authServices = authServices
+    }
 }

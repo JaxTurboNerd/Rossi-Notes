@@ -9,9 +9,13 @@ import SwiftUI
 
 struct ProtocolPlusView: View {
     @State private var showForm = false
-    @ObservedObject private var viewModel = PlusViewModel()
+    @StateObject var viewModel: PlusViewModel
     
     @State var triggerRefresh: Bool = false
+    
+    init(){
+        _viewModel = StateObject(wrappedValue: PlusViewModel())
+    }
     
     var body: some View {
         NavigationView {

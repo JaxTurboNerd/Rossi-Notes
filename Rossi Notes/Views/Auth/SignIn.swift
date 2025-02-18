@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct SignIn: View {
-    @StateObject var viewModel = LoginViewModel()
-    @EnvironmentObject var appwrite: Appwrite
+    @StateObject private var viewModel: LoginViewModel
+    //@EnvironmentObject var appwrite: Appwrite
+    @StateObject private var authServices: AuthServices
     @State var isShowingSignUp = false
     @State var showHomeTabView = false
     
@@ -17,7 +18,10 @@ struct SignIn: View {
     @State private var alertMessage = ""
     @FocusState var emailIsFocused: Bool
     @FocusState var passwordIsFocused: Bool
-    
+    init(authServices: AuthServices) {
+        _viewModel = StateObject(wrappedValue: LoginViewModel(authServices: authServices))
+        _authServices = StateObject(wrappedValue: authServices)
+    }
     
     var body: some View {
         NavigationStack {
@@ -65,26 +69,26 @@ struct SignIn: View {
                             //action:
                             Task {
                                 do {
-                                    viewModel.isSubmitting = true
+                                    viewModel.isLoading = true
                                     let isValidFields = try checkLoginFields(viewModel.email, viewModel.password)
                                     if isValidFields {
-                                        viewModel.signIn(viewModel.email, viewModel.password)
-                                        appwrite.isLoggedIn = true
+                                        await viewModel.signIn()
+                                        //appwrite.isLoggedIn = true
                                         showHomeTabView = true
                                         //get account/initials?
                                     }
                                 } catch LoginTextfieldError.emptyEmail{
-                                    viewModel.isSubmitting = false
+                                    viewModel.isLoading = false
                                     emailIsFocused = true
                                     alertMessage = "Please enter your email"
                                     showAlert = true
                                 } catch LoginTextfieldError.emptyPassword {
-                                    viewModel.isSubmitting = false
+                                    viewModel.isLoading = false
                                     passwordIsFocused = true
                                     alertMessage = "Please enter your password"
                                     showAlert = true
                                 } catch {
-                                    viewModel.isSubmitting = false
+                                    viewModel.isLoading = false
                                     alertMessage = "An error logging in occured"
                                     showAlert = true
                                     DispatchQueue.main.async {
@@ -93,7 +97,7 @@ struct SignIn: View {
                                 }
                             }
                         } label: {
-                            if viewModel.isSubmitting {
+                            if viewModel.isLoading {
                                 ProgressView()
                                     .progressViewStyle(CircularProgressViewStyle())
                                     .aspectRatio(contentMode: .fit)
@@ -132,7 +136,7 @@ struct SignIn: View {
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
                     }
-                    .navigationDestination(isPresented: $isShowingSignUp, destination: {SignUp()})
+                    .navigationDestination(isPresented: $isShowingSignUp, destination: {SignUp(authServices: authServices)})
                 }
             }
             .ignoresSafeArea(.all)

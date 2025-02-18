@@ -11,8 +11,12 @@ import Foundation
 struct ProtocolView: View {
     
     @State private var showForm = false
-    @ObservedObject private var viewModel = ProtocolViewModel()
+    @StateObject var viewModel: ProtocolViewModel
     @State var triggerRefresh: Bool = false
+    
+    init(){
+        _viewModel = StateObject(wrappedValue: ProtocolViewModel)
+    }
     
     //Need to add navigation bar items on the top of the view
     var body: some View {
