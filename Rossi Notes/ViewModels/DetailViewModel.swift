@@ -11,7 +11,7 @@ import Appwrite
 import JSONCodable
 
 class DetailViewModel: ObservableObject {
-    let appwrite = Appwrite()
+    private let appwrite: Appwrite
     
     @Published var isLoading = false
     @Published var errorMessage: String?
@@ -23,7 +23,10 @@ class DetailViewModel: ObservableObject {
     @Published var formattedStringDate = ""
     @State var noteWillDelete = false
     
-    private let databaseId = "66a04cba001cb48a5bd7"
+    //private let databaseId = "66a04cba001cb48a5bd7"
+    init(appwrite: Appwrite){
+        self.appwrite = appwrite
+    }
     
     public func fetchDocument(collectionId: String ,documentId: String){
         isLoading = true
@@ -31,23 +34,25 @@ class DetailViewModel: ObservableObject {
         
         Task {
             do {
-                let response = try await appwrite.databases.getDocument(
-                    databaseId: self.databaseId,
-                    collectionId: collectionId,
-                    documentId: documentId,
-                    queries: [] // optional
-                )
-                self.document = response
+                let document = try await appwrite.listDocument(collectionId, documentId)
+//                let response = try await appwrite.databases.getDocument(
+//                    databaseId: self.databaseId,
+//                    collectionId: collectionId,
+//                    documentId: documentId,
+//                    queries: [] // optional
+//                )
+                self.document = document
                 await MainActor.run {
                     self.isLoading = false
-                    setDetailsModel(response: response)
+                    setDetailsModel(response: document!)
                     formattedStringDate = formatDate(from: detailsModel.protocolDate)
-                    setDetailsStringModel(responseData: response.data)
+                    setDetailsStringModel(responseData: document!.data)
                 }
             } catch {
                 await MainActor.run {
                     self.errorMessage = error.localizedDescription
-                    self.isLoading = false
+                    //self.isLoading = false
+                    
                 }
             }
         }
@@ -133,11 +138,12 @@ class DetailViewModel: ObservableObject {
     public func deleteNote(collectionId: String, documentId: String){
         Task {
             do {
-                let response = try await appwrite.databases.deleteDocument(
-                    databaseId: self.databaseId,
-                    collectionId: collectionId,
-                    documentId: documentId
-                )
+//                let response = try await appwrite.databases.deleteDocument(
+//                    databaseId: self.databaseId,
+//                    collectionId: collectionId,
+//                    documentId: documentId
+//                )
+                let response = try await appwrite.deleteDocument(collectionId, documentId)
                 await MainActor.run {
                     //do stuff here:
                     noteWillDelete = true

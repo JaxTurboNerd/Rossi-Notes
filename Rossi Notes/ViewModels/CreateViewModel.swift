@@ -11,9 +11,9 @@ import SwiftUICore
 import JSONCodable
 
 final class CreateViewModel: ObservableObject {
-    let appwrite = Appwrite()
-    @Published var document: Document<[String: AnyCodable]>?
+    private let appwrite: Appwrite
     
+    @Published var document: Document<[String: AnyCodable]>?
     @Published var documentId = ID.unique()
     @Published var name = ""
     @Published var protocolDate = Date.now
@@ -31,7 +31,11 @@ final class CreateViewModel: ObservableObject {
     @Published public var isSubmitting = false
     @Published public var errorMessage: String?
     
-    private let databaseId = "66a04cba001cb48a5bd7"
+    //private let databaseId = "66a04cba001cb48a5bd7"
+    
+    init(appwrite: Appwrite){
+        self.appwrite = appwrite
+    }
     
     func createProtocol(collectionId: String){
         isSubmitting = true
@@ -47,12 +51,13 @@ final class CreateViewModel: ObservableObject {
                
                 //convert data to json string:
                 let dataString = String(data: data, encoding: .utf8)
-                let response = try await appwrite.databases.createDocument(
-                    databaseId: databaseId,
-                    collectionId: collectionId,
-                    documentId: documentId,
-                    data: dataString as Any //required JSON Object
-                )
+//                let response = try await appwrite.databases.createDocument(
+//                    databaseId: databaseId,
+//                    collectionId: collectionId,
+//                    documentId: documentId,
+//                    data: dataString as Any //required JSON Object
+//                )
+                let response = try await appwrite.createDocument(collectionId, documentId, dataString ?? "")
                 await MainActor.run {
                     self.document = response
                     self.isSubmitting = false

@@ -9,17 +9,21 @@ import SwiftUI
 
 struct UpdateView: View {
     
-    @StateObject var viewModel = UpdateViewModel()
+    @StateObject var viewModel: UpdateViewModel
     @StateObject var noteDetails: DetailsModel
+    @EnvironmentObject private var appwrite: Appwrite
     @Binding var triggerRefresh: Bool
     @Binding var noteUpdated: Bool
     
     var collectionId = ""
     var documentId = ""
     
-    
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
+    
+//    init(appwrite: Appwrite){
+//        _viewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite))
+//    }
     
     var body: some View {
         NavigationStack {

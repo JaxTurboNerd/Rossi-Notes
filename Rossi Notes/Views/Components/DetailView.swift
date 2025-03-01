@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct DetailView: View {
-    @StateObject private var viewModel = DetailViewModel()
+    @StateObject private var viewModel: DetailViewModel
+    @StateObject private var updateViewModel: UpdateViewModel
+    @EnvironmentObject private var appwrite: Appwrite
     @State private var showUpdateForm = false
     
     var collectionId = ""
@@ -21,6 +23,11 @@ struct DetailView: View {
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
     
+    init(appwrite: Appwrite, triggerRefresh: Binding<Bool>){
+        _viewModel = StateObject(wrappedValue: DetailViewModel(appwrite: appwrite))
+        _updateViewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite))
+        _triggerRefresh = triggerRefresh
+    }
     
     var body: some View {
         NavigationView {
@@ -77,7 +84,7 @@ struct DetailView: View {
                         viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
                         noteUpdated = false
                     }},
-                       content: {UpdateView(noteDetails: viewModel.detailsModel, triggerRefresh: $triggerRefresh, noteUpdated: $noteUpdated, collectionId: collectionId, documentId: documentId)})
+                       content: {UpdateView(viewModel: updateViewModel, noteDetails: viewModel.detailsModel, triggerRefresh: $triggerRefresh, noteUpdated: $noteUpdated, collectionId: collectionId, documentId: documentId)})
             })
             ToolbarItem(placement: .topBarTrailing,
                         content: {

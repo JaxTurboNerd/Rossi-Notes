@@ -9,11 +9,11 @@ import SwiftUI
 
 @main
 struct Rossi_NotesApp: App {
+    let appwrite = Appwrite()
     var body: some Scene {
         WindowGroup {
-            let user = Appwrite()
-            ContentView()
-                .environmentObject(user)
+            ContentView(user: appwrite)
+                .environmentObject(appwrite)
         }
     }
 }

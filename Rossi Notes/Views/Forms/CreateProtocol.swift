@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CreateView: View {
     
-    @StateObject private var viewModel = CreateViewModel()
+    @StateObject private var viewModel: CreateViewModel
     @Binding var triggerRefresh: Bool
     @State private var noteAdded = false
     var collectionId: String
