@@ -34,7 +34,6 @@ struct ProtocolPlusView: View {
                                 let id = document.data["$id"]?.description ?? ""
                                 CardView(name: name)
                                     .overlay {
-//                                        NavigationLink(destination: DetailView(collectionId: viewModel.collectionId, documentId: id, triggerRefresh: $triggerRefresh), label: {EmptyView()})
                                         NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()})
                                     }
                             }

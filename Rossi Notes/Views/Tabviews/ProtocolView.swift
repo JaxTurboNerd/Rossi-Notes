@@ -37,7 +37,6 @@ struct ProtocolView: View {
                         List(viewModel.documents, id: \.id){document in
                             let name = document.data["name"]?.description ?? ""
                             let id = document.data["$id"]?.description ?? ""
-                            //let documentDetail = document.description.data(using: .utf8)
                             CardView(name: name)
                                 .overlay {
                                     NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()})
@@ -51,8 +50,6 @@ struct ProtocolView: View {
                                 Button("Add Note"){
                                     showForm = true
                                 }
-                                //Displays the protocol form to create a new note
-//                                .sheet(isPresented: $showForm, content: {CreateView(triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId)})
                                 .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, triggerRefresh: $triggerRefresh)})
                             })
                         }
