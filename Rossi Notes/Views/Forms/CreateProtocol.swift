@@ -10,12 +10,19 @@ import SwiftUI
 struct CreateView: View {
     
     @StateObject private var viewModel: CreateViewModel
-    @Binding var triggerRefresh: Bool
     @State private var noteAdded = false
     var collectionId: String
     
+    @Binding var triggerRefresh: Bool
+    
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
+    
+    init(appwrite: Appwrite, collectionId: String, triggerRefresh: Binding<Bool>){
+        _viewModel = StateObject(wrappedValue: CreateViewModel(appwrite: appwrite))
+        self.collectionId = collectionId
+        _triggerRefresh = triggerRefresh
+    }
     
     var body: some View {
         NavigationStack {

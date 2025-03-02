@@ -10,6 +10,7 @@ import Foundation
 import Appwrite
 import JSONCodable
 
+@MainActor
 class DetailViewModel: ObservableObject {
     private let appwrite: Appwrite
     

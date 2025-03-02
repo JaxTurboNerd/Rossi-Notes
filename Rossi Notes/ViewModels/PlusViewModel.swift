@@ -9,6 +9,7 @@ import SwiftUI
 import Appwrite
 import JSONCodable
 
+@MainActor
 class PlusViewModel: ObservableObject {
     private let appwrite: Appwrite
 

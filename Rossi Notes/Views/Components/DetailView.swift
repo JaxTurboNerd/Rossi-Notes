@@ -10,11 +10,10 @@ import SwiftUI
 struct DetailView: View {
     @StateObject private var viewModel: DetailViewModel
     @StateObject private var updateViewModel: UpdateViewModel
-    @EnvironmentObject private var appwrite: Appwrite
     @State private var showUpdateForm = false
     
-    var collectionId = ""
-    var documentId = ""
+    var collectionId: String
+    var documentId: String
     //Do not move the two lines below up near the other @State vars:
     @Binding var triggerRefresh: Bool
     @State private var noteDeleted = false
@@ -23,10 +22,12 @@ struct DetailView: View {
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
     
-    init(appwrite: Appwrite, triggerRefresh: Binding<Bool>){
+    init(appwrite: Appwrite, triggerRefresh: Binding<Bool>, collectionId: String, documentId: String){
         _viewModel = StateObject(wrappedValue: DetailViewModel(appwrite: appwrite))
         _updateViewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite))
         _triggerRefresh = triggerRefresh
+        self.collectionId = collectionId
+        self.documentId = documentId
     }
     
     var body: some View {

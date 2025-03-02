@@ -17,6 +17,8 @@ import Appwrite
 import SwiftUICore
 import JSONCodable
 
+
+@MainActor
 final class UpdateViewModel: ObservableObject {
     private let appwrite: Appwrite
     

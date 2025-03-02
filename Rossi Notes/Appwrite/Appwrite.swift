@@ -12,6 +12,7 @@ import AppwriteModels
 import JSONCodable
 import NIOCore
 
+@MainActor
 class Appwrite: ObservableObject {
     //initialize appwrite:
     private let client: Client

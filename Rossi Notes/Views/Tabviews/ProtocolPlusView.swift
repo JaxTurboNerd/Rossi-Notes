@@ -14,7 +14,7 @@ struct ProtocolPlusView: View {
     private var appwrite: Appwrite
     
     init(appwrite: Appwrite){
-        _viewModel = StateObject(wrappedValue: PlusViewModel(appwrite: appwrite))
+       _viewModel = StateObject(wrappedValue: PlusViewModel(appwrite: appwrite))
         self.appwrite = appwrite
     }
         
@@ -29,15 +29,15 @@ struct ProtocolPlusView: View {
                             .controlSize(.large)
                     } else {
                         Group {
-//                            List(viewModel.documents, id: \.id){document in
-//                                let name = document.data["name"]?.description ?? ""
-//                                let id = document.data["$id"]?.description ?? ""
-//                                CardView(name: name)
-//                                    .overlay {
+                            List(viewModel.documents, id: \.id){document in
+                                let name = document.data["name"]?.description ?? ""
+                                let id = document.data["$id"]?.description ?? ""
+                                CardView(name: name)
+                                    .overlay {
 //                                        NavigationLink(destination: DetailView(collectionId: viewModel.collectionId, documentId: id, triggerRefresh: $triggerRefresh), label: {EmptyView()})
-//                                    }
-//                            }
-                            DocumentList(appwrite: appwrite)
+                                        NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()})
+                                    }
+                            }
                             .navigationTitle("Protocol")
                             .navigationBarTitleDisplayMode(.inline)
                             .toolbar {
@@ -47,7 +47,9 @@ struct ProtocolPlusView: View {
                                         showForm = true
                                     }
                                     //Displays the protocol form to create a new note
-                                    .sheet(isPresented: $showForm, content: {CreateView(triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId)})
+//                                    .sheet(isPresented: $showForm, content: {CreateView(triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId)})
+                                    .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, triggerRefresh: $triggerRefresh)})
+
                                 })
                             }
                             

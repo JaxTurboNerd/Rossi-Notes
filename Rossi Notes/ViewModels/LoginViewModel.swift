@@ -10,6 +10,7 @@ import Appwrite
 import JSONCodable
 import NIOCore
 
+@MainActor
 class LoginViewModel: ObservableObject {
     private let appwrite: Appwrite
     

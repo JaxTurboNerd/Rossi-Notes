@@ -10,6 +10,7 @@ import Appwrite
 import SwiftUICore
 import JSONCodable
 
+@MainActor
 final class CreateViewModel: ObservableObject {
     private let appwrite: Appwrite
     
