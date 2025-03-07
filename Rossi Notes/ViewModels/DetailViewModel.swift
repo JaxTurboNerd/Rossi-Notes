@@ -79,7 +79,7 @@ class DetailViewModel: ObservableObject {
         //formats the response date value (string) to a Date object:
         let protocolDateObject = formatDateString(from: response.data["protocol_date"]?.value as! String)
         //set the detailsModel instance values;
-        //detailsModel.id = response.data["$id"]?.value as! String
+        detailsModel?.id = response.data["$id"]?.value as! String
         detailsModel?.name = response.data["name"]?.value as! String
         detailsModel?.protocolDate = protocolDateObject
         detailsModel?.jumpyMouthy = response.data["jumpy_mouthy"]?.value as! Bool
