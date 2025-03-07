@@ -10,7 +10,6 @@ import Foundation
 
 struct ProtocolView: View {
     
-    //@ObservedObject private var viewModel = ProtocolViewModel()
     @StateObject var viewModel: ProtocolViewModel
     @State var triggerRefresh: Bool = false
     @State private var showForm = false

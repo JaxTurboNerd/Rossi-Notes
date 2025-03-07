@@ -34,6 +34,7 @@ struct CreateView: View {
                 {
                     TextField("Name", text: $viewModel.name)
                     DatePicker("Protocol Date", selection: $viewModel.protocolDate, displayedComponents: [.date])//shows only the date excludes time
+                        .datePickerStyle(.compact)
                 }
                 Section(header: Text("Reactivities")
                     .font(Font.custom("Urbanist-Medium", size: 16))

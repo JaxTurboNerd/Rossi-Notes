@@ -10,10 +10,12 @@ import SwiftUI
 @main
 struct Rossi_NotesApp: App {
     let appwrite = Appwrite()
+    @StateObject private var detailsModel = DetailsModel()
     var body: some Scene {
         WindowGroup {
             ContentView(user: appwrite)
                 .environmentObject(appwrite)
+                .environmentObject(detailsModel)
         }
     }
 }

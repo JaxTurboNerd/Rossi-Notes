@@ -21,16 +21,18 @@ import JSONCodable
 @MainActor
 final class UpdateViewModel: ObservableObject {
     private let appwrite: Appwrite
+    var noteDetails: DetailsModel?
     
     @Published public var isSubmitting = false
     @Published public var errorMessage: String?
     @Published var document: Document<[String: AnyCodable]>?
-
-    //@Published var noteDetails: DetailsModel
     
-    //private let databaseId = "66a04cba001cb48a5bd7"
     init(appwrite: Appwrite){
         self.appwrite = appwrite
+    }
+    
+    public func modelSetup(_ model: DetailsModel){
+        self.noteDetails = model
     }
     
     func updateProtocol(collectionId: String, documentId: String, noteDetails: DetailsModel){

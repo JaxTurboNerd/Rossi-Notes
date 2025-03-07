@@ -10,20 +10,24 @@ import SwiftUI
 struct UpdateView: View {
     
     @StateObject var viewModel: UpdateViewModel
-    @StateObject var noteDetails: DetailsModel
-    @EnvironmentObject private var appwrite: Appwrite
+    @EnvironmentObject var noteDetails: DetailsModel
     @Binding var triggerRefresh: Bool
     @Binding var noteUpdated: Bool
     
-    var collectionId = ""
-    var documentId = ""
+    var collectionId: String
+    var documentId: String
     
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
     
-//    init(appwrite: Appwrite){
-//        _viewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite))
-//    }
+    //view initializer:
+    init(appwrite: Appwrite, triggerRefresh: Binding<Bool>, noteUpdated: Binding<Bool>, collectionId: String, documentId: String){
+        _viewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite))
+        _triggerRefresh = triggerRefresh
+        _noteUpdated = noteUpdated
+        self.collectionId = collectionId
+        self.documentId = documentId
+    }
     
     var body: some View {
         NavigationStack {
@@ -34,6 +38,7 @@ struct UpdateView: View {
                 {
                     TextField("Name", text: $noteDetails.name)
                     DatePicker("Protocol Date", selection: $noteDetails.protocolDate, displayedComponents: [.date])//shows only the date excludes time
+                        .datePickerStyle(.compact)
                 }
                 Section(header: Text("Reactivities")
                     .font(Font.custom("Urbanist-Medium", size: 16))
@@ -93,11 +98,10 @@ struct UpdateView: View {
                     }
                 })
             }
+            .task {
+                viewModel.modelSetup(noteDetails)
+            }
         }
     }
     
 }
-
-//#Preview {
-//    UpdateView()
-//}

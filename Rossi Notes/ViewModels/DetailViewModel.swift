@@ -13,20 +13,23 @@ import JSONCodable
 @MainActor
 class DetailViewModel: ObservableObject {
     private let appwrite: Appwrite
+    var detailsModel: DetailsModel?
     
     @Published var isLoading = false
     @Published var errorMessage: String?
     @Published var document: Document<[String: AnyCodable]>?
-    //stored values from the api getDocument response:
-    @ObservedObject var detailsModel = DetailsModel()
     //This model used to display string values from the details model:
     @ObservedObject var detailsStringModel = DetailsStringModel()
     @Published var formattedStringDate = ""
     @State var noteWillDelete = false
-    
-    //private let databaseId = "66a04cba001cb48a5bd7"
+
     init(appwrite: Appwrite){
         self.appwrite = appwrite
+    }
+    
+    //This function is intended to inject an instance of the DetailsModel:
+    public func modelSetup(_ model: DetailsModel){
+        self.detailsModel = model
     }
     
     public func fetchDocument(collectionId: String ,documentId: String){
@@ -36,23 +39,17 @@ class DetailViewModel: ObservableObject {
         Task {
             do {
                 let document = try await appwrite.listDocument(collectionId, documentId)
-//                let response = try await appwrite.databases.getDocument(
-//                    databaseId: self.databaseId,
-//                    collectionId: collectionId,
-//                    documentId: documentId,
-//                    queries: [] // optional
-//                )
                 self.document = document
                 await MainActor.run {
                     self.isLoading = false
                     setDetailsModel(response: document!)
-                    formattedStringDate = formatDate(from: detailsModel.protocolDate)
+                    formattedStringDate = formatDate(from: detailsModel?.protocolDate ?? Date.now)
                     setDetailsStringModel(responseData: document!.data)
                 }
             } catch {
                 await MainActor.run {
                     self.errorMessage = error.localizedDescription
-                    //self.isLoading = false
+                    self.isLoading = false
                     
                 }
             }
@@ -82,19 +79,19 @@ class DetailViewModel: ObservableObject {
         //formats the response date value (string) to a Date object:
         let protocolDateObject = formatDateString(from: response.data["protocol_date"]?.value as! String)
         //set the detailsModel instance values;
-        detailsModel.id = response.data["$id"]?.value as! String
-        detailsModel.name = response.data["name"]?.value as! String
-        detailsModel.protocolDate = protocolDateObject
-        detailsModel.jumpyMouthy = response.data["jumpy_mouthy"]?.value as! Bool
-        detailsModel.dogReactive = response.data["dog_reactive"]?.value as! Bool
-        detailsModel.catReactive = response.data["cat_reactive"]?.value as! Bool
-        detailsModel.leashReactive = response.data["leash_reactive"]?.value as! Bool
-        detailsModel.barrierReactive = response.data["barrier_reactive"]?.value as! Bool
-        detailsModel.doorRoutine = response.data["door_routine"]?.value as! Bool
-        detailsModel.placeRoutine = response.data["place_routine"]?.value as! Bool
-        detailsModel.resourceGuarder = response.data["resource_guarder"]?.value as! Bool
-        detailsModel.strangerReactive = response.data["stranger_reactive"]?.value as! Bool
-        detailsModel.miscNotes = response.data["misc_notes"]?.value as! String
+        //detailsModel.id = response.data["$id"]?.value as! String
+        detailsModel?.name = response.data["name"]?.value as! String
+        detailsModel?.protocolDate = protocolDateObject
+        detailsModel?.jumpyMouthy = response.data["jumpy_mouthy"]?.value as! Bool
+        detailsModel?.dogReactive = response.data["dog_reactive"]?.value as! Bool
+        detailsModel?.catReactive = response.data["cat_reactive"]?.value as! Bool
+        detailsModel?.leashReactive = response.data["leash_reactive"]?.value as! Bool
+        detailsModel?.barrierReactive = response.data["barrier_reactive"]?.value as! Bool
+        detailsModel?.doorRoutine = response.data["door_routine"]?.value as! Bool
+        detailsModel?.placeRoutine = response.data["place_routine"]?.value as! Bool
+        detailsModel?.resourceGuarder = response.data["resource_guarder"]?.value as! Bool
+        detailsModel?.strangerReactive = response.data["stranger_reactive"]?.value as! Bool
+        detailsModel?.miscNotes = response.data["misc_notes"]?.value as! String
     }
     
     //This function sets the string values from the api response to a model instance to be

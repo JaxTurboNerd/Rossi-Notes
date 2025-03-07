@@ -32,8 +32,6 @@ final class CreateViewModel: ObservableObject {
     @Published public var isSubmitting = false
     @Published public var errorMessage: String?
     
-    //private let databaseId = "66a04cba001cb48a5bd7"
-    
     init(appwrite: Appwrite){
         self.appwrite = appwrite
     }
@@ -52,12 +50,6 @@ final class CreateViewModel: ObservableObject {
                
                 //convert data to json string:
                 let dataString = String(data: data, encoding: .utf8)
-//                let response = try await appwrite.databases.createDocument(
-//                    databaseId: databaseId,
-//                    collectionId: collectionId,
-//                    documentId: documentId,
-//                    data: dataString as Any //required JSON Object
-//                )
                 let response = try await appwrite.createDocument(collectionId, documentId, dataString ?? "")
                 await MainActor.run {
                     self.document = response
