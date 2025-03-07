@@ -16,7 +16,7 @@ struct DetailView: View {
     
     var collectionId: String
     var documentId: String
-    //Do not move the two lines below up near the other @State vars:
+    //Do not move the two lines below up near the other @State vars (causes odd errors):
     @Binding var triggerRefresh: Bool
     @State private var noteDeleted = false
     @State var noteUpdated = false
