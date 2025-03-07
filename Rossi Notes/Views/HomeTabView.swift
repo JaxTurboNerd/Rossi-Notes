@@ -9,6 +9,11 @@ import SwiftUI
 
 struct HomeTabView: View {
     //@Binding var isLoggedIn: Bool
+    @StateObject private var appwrite: Appwrite
+    
+    init(appwrite: Appwrite){
+        _appwrite = StateObject(wrappedValue: Appwrite())
+    }
     
     var body: some View {
         TabView {
@@ -16,11 +21,11 @@ struct HomeTabView: View {
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }
-            ProtocolView()
+            ProtocolView(appwrite: appwrite)
                 .tabItem {
                     Label("Protocol", systemImage: "dog")
                 }
-            ProtocolPlusView()
+            ProtocolPlusView(appwrite: appwrite)
                 .tabItem {
                     Label("Protocol +", systemImage: "cross")
                 }
@@ -29,6 +34,6 @@ struct HomeTabView: View {
     }
 }
 
-#Preview {
-    HomeTabView()
-}
+//#Preview {
+//    HomeTabView()
+//}

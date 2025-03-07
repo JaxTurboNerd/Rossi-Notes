@@ -8,11 +8,14 @@
 import SwiftUI
 
 struct DetailView: View {
-    @StateObject private var viewModel = DetailViewModel()
+    @StateObject private var viewModel: DetailViewModel
+    @StateObject private var updateViewModel: UpdateViewModel
+    @EnvironmentObject private var detailsModel: DetailsModel
+    private var appwrite: Appwrite
     @State private var showUpdateForm = false
     
-    var collectionId = ""
-    var documentId = ""
+    var collectionId: String
+    var documentId: String
     //Do not move the two lines below up near the other @State vars:
     @Binding var triggerRefresh: Bool
     @State private var noteDeleted = false
@@ -21,6 +24,14 @@ struct DetailView: View {
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
     
+    init(appwrite: Appwrite, triggerRefresh: Binding<Bool>, collectionId: String, documentId: String){
+        _viewModel = StateObject(wrappedValue: DetailViewModel(appwrite: appwrite))
+        _updateViewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite))
+        _triggerRefresh = triggerRefresh
+        self.appwrite = appwrite
+        self.collectionId = collectionId
+        self.documentId = documentId
+    }
     
     var body: some View {
         NavigationView {
@@ -42,7 +53,8 @@ struct DetailView: View {
                         VStack {
                             VStack{
                                 //Name:
-                                NameView(name: viewModel.detailsModel.name)
+                                //NameView(name: viewModel.detailsModel.name)
+                                NameView(name: detailsModel.name)
                                 //Date:
                                 Text("Protocol Date: \(viewModel.formattedStringDate)")
                                     .font(.system(size: 20))
@@ -77,7 +89,8 @@ struct DetailView: View {
                         viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
                         noteUpdated = false
                     }},
-                       content: {UpdateView(noteDetails: viewModel.detailsModel, triggerRefresh: $triggerRefresh, noteUpdated: $noteUpdated, collectionId: collectionId, documentId: documentId)})
+                       content: {UpdateView(appwrite: appwrite, triggerRefresh: $triggerRefresh, noteUpdated: $noteUpdated, collectionId: collectionId, documentId: documentId)}
+                )
             })
             ToolbarItem(placement: .topBarTrailing,
                         content: {
@@ -91,7 +104,8 @@ struct DetailView: View {
                 .foregroundStyle(Color.red)
             })
         }
-        .onAppear{
+        .task {
+            viewModel.modelSetup(detailsModel)
             viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
         }
         .onDisappear{

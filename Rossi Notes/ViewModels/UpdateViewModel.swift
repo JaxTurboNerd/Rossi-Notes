@@ -17,16 +17,23 @@ import Appwrite
 import SwiftUICore
 import JSONCodable
 
+
+@MainActor
 final class UpdateViewModel: ObservableObject {
-    let appwrite = Appwrite()
+    private let appwrite: Appwrite
+    var noteDetails: DetailsModel?
     
     @Published public var isSubmitting = false
     @Published public var errorMessage: String?
     @Published var document: Document<[String: AnyCodable]>?
-
-    //@Published var noteDetails: DetailsModel
     
-    private let databaseId = "66a04cba001cb48a5bd7"
+    init(appwrite: Appwrite){
+        self.appwrite = appwrite
+    }
+    
+    public func modelSetup(_ model: DetailsModel){
+        self.noteDetails = model
+    }
     
     func updateProtocol(collectionId: String, documentId: String, noteDetails: DetailsModel){
         isSubmitting = true
@@ -42,12 +49,12 @@ final class UpdateViewModel: ObservableObject {
                
                 //convert data to json string:
                 let dataString = String(data: data, encoding: .utf8)
-                let response = try await appwrite.databases.updateDocument(
-                    databaseId: databaseId,
-                    collectionId: collectionId,
-                    documentId: documentId,
-                    data: dataString as Any //required JSON Object
-                )
+//                let response = try await appwrite.updateDocument(
+//                    collectionId: collectionId,
+//                    documentId: documentId,
+//                    data: dataString//required JSON Object
+//                )
+                let response = try await appwrite.updateDocument(collectionId, documentId, dataString ?? "")
                 self.document = response
                 await MainActor.run {
                     self.isSubmitting = false

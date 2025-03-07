@@ -9,8 +9,8 @@ import SwiftUI
 
 struct SignUp: View {
     
-    @ObservedObject var viewModel = SignUpViewModel()
-    @EnvironmentObject var user: Appwrite
+    @StateObject var viewModel: SignUpViewModel
+    @EnvironmentObject var appwrite: Appwrite
     @State private var isLoading = false
     @State var isShowingSignIn = false
     @State var showHomeTabView = false
@@ -23,6 +23,10 @@ struct SignUp: View {
     @FocusState var emailIsFocused: Bool
     @FocusState var passwordIsFocused: Bool
     @FocusState var password2IsFocused: Bool
+    
+    init(appwrite: Appwrite){
+        _viewModel = StateObject(wrappedValue: SignUpViewModel(appwrite: appwrite))
+    }
     
     var body: some View {
         NavigationStack {
@@ -116,10 +120,11 @@ struct SignUp: View {
                             do {
                                 let isValidFields = try checkSignUpFields(viewModel.firstName, viewModel.lastName, viewModel.email, viewModel.password, viewModel.passwordConfirm)
                                 if isValidFields {
-                                    isLoading = true
-                                    let newUser = try await user.createAccount(viewModel.firstName, viewModel.lastName, viewModel.email, viewModel.password)
-                                    let authUser = try await user.getAccount()
-                                    user.isLoggedIn = true
+                                    viewModel.isSubmitting = true
+                                    viewModel.signUp()
+//                                    let newUser = try await user.createAccount(viewModel.firstName, viewModel.lastName, viewModel.email, viewModel.password)
+//                                    let authUser = try await user.getAccount()
+//                                    user.isLoggedIn = true
                                     showHomeTabView = true
                                 }
                             } catch SignUpTextfieldError.emptyFname {
@@ -176,7 +181,7 @@ struct SignUp: View {
                     .alert(isPresented: $showAlert){
                         Alert(title: Text("Account Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
                     }
-                    .navigationDestination(isPresented: $showHomeTabView, destination: {HomeTabView()})
+                    .navigationDestination(isPresented: $showHomeTabView, destination: {HomeTabView(appwrite: appwrite)})
                     Divider()
                         .frame(width: 350, height: 2)
                         .overlay(Color("AppBlue"))
@@ -197,7 +202,7 @@ struct SignUp: View {
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
                     }
-                    .navigationDestination(isPresented: $isShowingSignIn, destination: {SignIn()})
+                    .navigationDestination(isPresented: $isShowingSignIn, destination: {SignIn(appwrite: appwrite)})
                 }
                 .padding()
                 
@@ -242,9 +247,4 @@ private func checkSignUpFields(
     }
     
     return true
-}
-
-
-#Preview {
-    SignUp()
 }

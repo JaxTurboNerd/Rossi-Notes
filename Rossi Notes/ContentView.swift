@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct ContentView: View {
-    @EnvironmentObject var user: Appwrite
+    @StateObject var user: Appwrite
     @State var isShowingSignIn = false
     
     var body: some View {
         NavigationStack {
-            if user.isLoggedIn {
-                HomeTabView()
+            if user.isAuthenticated {
+                HomeTabView(appwrite: user)
             } else {
                 ZStack {
                     MainBackgroundView()
@@ -47,7 +47,7 @@ struct ContentView: View {
                             .buttonStyle(.borderedProminent)
                             .controlSize(.large)
                         }
-                        .navigationDestination(isPresented: $isShowingSignIn, destination: {SignIn()})
+                        .navigationDestination(isPresented: $isShowingSignIn, destination: {SignIn(appwrite: user)})
                         Spacer()
                     }
                     .padding()
@@ -67,6 +67,6 @@ struct MainBackgroundView: View {
     }
 }
 
-#Preview {
-    ContentView()
-}
+//#Preview {
+//    ContentView()
+//}

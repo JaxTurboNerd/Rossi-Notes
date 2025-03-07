@@ -43,7 +43,7 @@ struct Home: View {
                         Task {
                             do {
                                 try await user.onLogout()
-                                user.isLoggedIn = false
+                                user.isAuthenticated = false
                                 isShowingHomeView = true
                                 
                             } catch {
@@ -67,7 +67,7 @@ struct Home: View {
                     
                 }
                 .padding()
-                .navigationDestination(isPresented: $isShowingHomeView, destination: {ContentView()})
+                .navigationDestination(isPresented: $isShowingHomeView, destination: {ContentView(user: user)})
             }
         }
         .navigationBarBackButtonHidden()

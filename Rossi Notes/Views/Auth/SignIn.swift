@@ -8,17 +8,22 @@
 import SwiftUI
 
 struct SignIn: View {
-    @ObservedObject var viewModel = LoginViewModel()
-    @StateObject var user = Appwrite()
+    @StateObject private var viewModel: LoginViewModel
+    @EnvironmentObject private var appwrite: Appwrite
+    //@StateObject var user = Appwrite()
     @State var isShowingSignUp = false
     @State var showHomeTabView = false
     
-    @State private var isLoading = false
+    //@State private var isLoading = false
     @State private var showAlert = false
     @State private var alertMessage = ""
     
     @FocusState var emailIsFocused: Bool
     @FocusState var passwordIsFocused: Bool
+    
+    init(appwrite: Appwrite){
+        _viewModel = StateObject(wrappedValue: LoginViewModel(appwrite: appwrite))
+    }
     
     
     var body: some View {
@@ -70,41 +75,33 @@ struct SignIn: View {
                                     let isValidFields = try checkLoginFields(viewModel.email, viewModel.password)
                                     
                                     if isValidFields {
-                                        isLoading = true
                                         //returns a Session Object
-                                        let loginSession = try await user.signIn(viewModel.email, viewModel.password)
-                                        async let authUser = user.getAccount()
-                                        async let userAvatar = user.getInitials()
-//                                        let (fetchedAuthUser, fetchedUserAvatar) = try await(authUser, userAvatar)
-                                        user.isLoggedIn = true
+                                        viewModel.isSubmitting = true
+                                        viewModel.signIn()
                                         showHomeTabView = true
-
-                                        DispatchQueue.main.async {
-                                            viewModel.response = String(describing: loginSession.toMap())
-                                        }
                                     }
                                 } catch LoginTextfieldError.emptyEmail{
-                                    isLoading = false
+                                    viewModel.isSubmitting = false
                                     emailIsFocused = true
                                     alertMessage = "Please enter your email"
                                     showAlert = true
                                 } catch LoginTextfieldError.emptyPassword {
-                                    isLoading = false
+                                    viewModel.isSubmitting = false
                                     passwordIsFocused = true
                                     alertMessage = "Please enter your password"
                                     showAlert = true
                                 } catch {
-                                    isLoading = false
+                                    viewModel.isSubmitting = false
                                     alertMessage = "An error logging in occured"
                                     showAlert = true
-                                    DispatchQueue.main.async {
+                                    await MainActor.run {
                                         viewModel.response = error.localizedDescription
                                     }
                                 }
                                 
                             }
                         } label: {
-                            if isLoading {
+                            if viewModel.isSubmitting {
                                 ProgressView()
                                     .progressViewStyle(CircularProgressViewStyle())
                                     .aspectRatio(contentMode: .fit)
@@ -122,7 +119,7 @@ struct SignIn: View {
                             Alert(title: Text("Login Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
                         }
                     }
-                    .navigationDestination(isPresented: $showHomeTabView, destination: {HomeTabView()})
+                    .navigationDestination(isPresented: $showHomeTabView, destination: {HomeTabView(appwrite: appwrite)})
                     Divider()
                         .frame(width: 350, height: 2)
                         .overlay(Color("AppBlue"))
@@ -143,7 +140,7 @@ struct SignIn: View {
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
                     }
-                    .navigationDestination(isPresented: $isShowingSignUp, destination: {SignUp()})
+                    .navigationDestination(isPresented: $isShowingSignUp, destination: {SignUp(appwrite: appwrite)})
                 }
             }
             .ignoresSafeArea(.all)

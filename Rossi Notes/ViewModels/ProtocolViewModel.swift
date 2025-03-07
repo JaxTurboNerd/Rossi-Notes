@@ -9,8 +9,9 @@ import SwiftUI
 import Appwrite
 import JSONCodable
 
+@MainActor
 final class ProtocolViewModel: ObservableObject {
-    let appwrite = Appwrite()
+    private let appwrite: Appwrite
     
     // Published properties for UI updates
     @Published public var documents: [Document<[String: AnyCodable]>] = []
@@ -22,7 +23,8 @@ final class ProtocolViewModel: ObservableObject {
     let collectionId = "66a04db400070bffec78"
     
     //Initialize:
-    init(){
+    init(appwrite: Appwrite){
+        self.appwrite = appwrite
         fetchDocuments()
     }
     
@@ -32,14 +34,15 @@ final class ProtocolViewModel: ObservableObject {
         
         Task {
             do {
-                let response = try await appwrite.databases.listDocuments(
-                    databaseId: databaseId,
-                    collectionId: collectionId,
-                    queries: []
-                )
+//                let response = try await appwrite.databases.listDocuments(
+//                    databaseId: databaseId,
+//                    collectionId: collectionId,
+//                    queries: []
+//                )
+                let response = try await appwrite.listDocuments(collectionId)
                 //returns response of type: DocumentList<Dictionary<String, AnyCodable>>
                 await MainActor.run {
-                    self.documents = response.documents
+                    self.documents = response!.documents
                     self.isLoading = false
                 }
                 

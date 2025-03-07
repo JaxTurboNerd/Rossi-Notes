@@ -10,62 +10,34 @@ import Appwrite
 import JSONCodable
 import NIOCore
 
+@MainActor
 class LoginViewModel: ObservableObject {
-    let appwrite = Appwrite()
+    private let appwrite: Appwrite
     
     @Published var email: String = "gboyd69@yahoo.com"
     @Published var password: String = "11Gunner$"
     @Published var response: String = ""
     //@Published var session: Session?
-    @Published var user: User<[String: AnyCodable]>?
+    //@Published var user: User<[String: AnyCodable]>?
     @Published var errorMessage: String?
     @Published var isSubmitting = false
-    @Published var isLoggedIn = false
+    //@Published var isLoggedIn = false
     
-    //    func signIn(email: String, password: String) async -> User<[String: AnyCodable]> {
-    //        isSubmitting = true
-    //        errorMessage = nil
-    //
-    //        Task {
-    //            do {
-    //                let session = try await appwrite.signIn(email, password)
-    //                async let authUser = appwrite.getAccount()
-    //
-    //                await MainActor.run {
-    //                    self.isSubmitting = false
-    //                }
-    //            } catch {
-    //                await MainActor.run {
-    //                    self.errorMessage = error.localizedDescription
-    //                    print("Create document error \(String(describing: errorMessage))")
-    //                    self.isSubmitting = false
-    //                }
-    //            }
-    //        }
-    //
-    //    }
-    
-    public func getAccount() async throws -> User<[String: AnyCodable]>{
-        return try await appwrite.account.get()
+    init(appwrite: Appwrite){
+        self.appwrite = appwrite
     }
-    
-    public func signIn(_ email: String,_ password: String){
+        
+    @MainActor
+    public func signIn(){
+        self.isSubmitting = true
+        self.errorMessage = nil
+        
         Task {
             do {
-                let session = try await appwrite.account.createEmailPasswordSession(
-                    email: email,
-                    password: password
-                )
-                await MainActor.run {
-                    self.isLoggedIn = true
-                }
+                let session = try await appwrite.signIn(email, password)
                 self.persistSession(session)
             } catch {
-                await MainActor.run {
-                    self.errorMessage = error.localizedDescription
-                    print("Create document error \(String(describing: errorMessage))")
-                    self.isSubmitting = false
-                }
+                errorMessage = error.localizedDescription
             }
         }
     }
@@ -76,16 +48,16 @@ class LoginViewModel: ObservableObject {
         UserDefaults.standard.set(session.secret, forKey: "sessionSecret")
     }
     
-    public func getInitials() async throws -> ByteBuffer {
-        //returns a ByteBuffer Object
-        let bytes = try await appwrite.avatars.getInitials(width: 40)
-        return bytes
-    }
+    //    public func getInitials() async throws -> ByteBuffer {
+    //        //returns a ByteBuffer Object
+    //        let bytes = try await appwrite.avatars.getInitials(width: 40)
+    //        return bytes
+    //    }
     
     enum LoginTextfieldError: Error {
         case emptyEmail, emptyPassword
     }
-
+    
     private func checkLoginFields(_ email: String, _ password: String) throws -> Bool {
         if email.isEmpty {
             throw LoginTextfieldError.emptyEmail
@@ -94,5 +66,5 @@ class LoginViewModel: ObservableObject {
         }
         return true
     }
-
+    
 }

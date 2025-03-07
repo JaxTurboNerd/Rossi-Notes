@@ -9,13 +9,20 @@ import SwiftUI
 
 struct CreateView: View {
     
-    @StateObject private var viewModel = CreateViewModel()
-    @Binding var triggerRefresh: Bool
+    @StateObject private var viewModel: CreateViewModel
     @State private var noteAdded = false
     var collectionId: String
     
+    @Binding var triggerRefresh: Bool
+    
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
+    
+    init(appwrite: Appwrite, collectionId: String, triggerRefresh: Binding<Bool>){
+        _viewModel = StateObject(wrappedValue: CreateViewModel(appwrite: appwrite))
+        self.collectionId = collectionId
+        _triggerRefresh = triggerRefresh
+    }
     
     var body: some View {
         NavigationStack {
@@ -27,6 +34,7 @@ struct CreateView: View {
                 {
                     TextField("Name", text: $viewModel.name)
                     DatePicker("Protocol Date", selection: $viewModel.protocolDate, displayedComponents: [.date])//shows only the date excludes time
+                        .datePickerStyle(.compact)
                 }
                 Section(header: Text("Reactivities")
                     .font(Font.custom("Urbanist-Medium", size: 16))
