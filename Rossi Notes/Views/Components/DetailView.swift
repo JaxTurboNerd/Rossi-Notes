@@ -16,7 +16,7 @@ struct DetailView: View {
     
     var collectionId: String
     var documentId: String
-    //Do not move the two lines below up near the other @State vars:
+    //Do not move the two lines below up near the other @State vars (causes odd errors):
     @Binding var triggerRefresh: Bool
     @State private var noteDeleted = false
     @State var noteUpdated = false
@@ -42,20 +42,14 @@ struct DetailView: View {
                         ProgressView()
                             .progressViewStyle(CircularProgressViewStyle())
                             .controlSize(.large)
-                    } else if let error = viewModel.errorMessage {
-                        VStack {
-                            Text("Error: \(error)")
-                            Button("Retry") {
-                                viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
-                            }
-                        }
                     } else {
                         VStack {
                             VStack{
-                                //Name:
-                                //NameView(name: viewModel.detailsModel.name)
-                                NameView(name: detailsModel.name)
-                                //Date:
+                                //Display the pet name:
+                                NameView(name: viewModel.detailsModel?.name)
+                                    .frame(maxWidth: .infinity, minHeight: 10, maxHeight:70 ,alignment: .center)
+                                //NameView(name: detailsModel.name)
+                                //Display the protocol date:
                                 Text("Protocol Date: \(viewModel.formattedStringDate)")
                                     .font(.system(size: 20))
                                     .fontWeight(.bold)
@@ -123,3 +117,8 @@ struct NameBackgroundView: View {
             .ignoresSafeArea(.all)
     }
 }
+
+//#Preview {
+//    @Previewable var previewAppwrite = Appwrite()
+//    DetailView(appwrite: previewAppwrite, triggerRefresh: .constant(false), collectionId: "66a04db400070bffec78", documentId: "6799d9ab2ce631c69eee")
+//}

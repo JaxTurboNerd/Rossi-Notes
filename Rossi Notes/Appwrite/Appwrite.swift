@@ -20,7 +20,6 @@ class Appwrite: ObservableObject {
     private let avatars: Avatars
     private let databases: Databases
     private var databaseId = "66a04cba001cb48a5bd7"
-    //private var plusCollectionId = "66a402a0003ddfe36884"
     @Published var currentUser: User<[String: AnyCodable]>?
     //@Published var session: Session?
     @Published var document: Document<[String: AnyCodable]>?
