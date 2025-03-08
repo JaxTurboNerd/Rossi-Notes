@@ -11,13 +11,15 @@ struct NameView: View {
     var name: String?
     var body: some View {
         Text(name ?? "")
+            .frame(maxWidth: .infinity, minHeight: 20, maxHeight:70 ,alignment: .center)
             .font(Font.custom("ConcertOne-Regular", size: 28))
+            .multilineTextAlignment(.center)
             .foregroundColor(Color("AppBlue"))
             .tracking(1.25)
-            .padding([.leading, .trailing], 120)
-            .padding([.top, .bottom], 20)
+            .padding([.leading, .trailing], 20)
+            .padding([.top, .bottom], 10)
             .background(
-                RoundedRectangle(cornerRadius: 10)
+                RoundedRectangle(cornerRadius: 20)
                     .fill(Color("NameBackground"))
                     .shadow(color: Color.black.opacity(0.4), radius: 2, x: 2, y: 2)
             )
@@ -25,5 +27,5 @@ struct NameView: View {
 }
 
 #Preview {
-    NameView(name: "Artie")
+    NameView(name: "Lila")
 }
