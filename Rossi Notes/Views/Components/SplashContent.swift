@@ -12,23 +12,23 @@ enum AnimationPhase: CaseIterable {
     
     var opacity: Double {
         switch self {
-        case .beginning: 1.0
-        case .middle: 0.5
-        case .end: 1.0
+        case .beginning: 0.5
+        case .middle: 1.0
+        case .end: 0.5
         }
     }
     
     var scale: Double {
         switch self {
         case .beginning, .end: 0.8
-        case .middle: 1.2
+        case .middle: 1.1
         }
     }
     
     var animation: Animation {
         switch self {
-        case .beginning, .end: .bouncy(duration: 0.5)
-        case .middle: .easeInOut(duration: 1.0)
+        case .beginning, .end: .bouncy(duration: 0.75)
+        case .middle: .easeInOut(duration: 1.5)
         }
     }
 }
@@ -42,8 +42,8 @@ struct SplashContent: View {
         ZStack {
             MainBackgroundView()
             VStack {
-                Text("Rossi Notes App")
-                    .font(.title)
+                Text("Rossi Notes")
+                    .font(Font.custom("ConcertOne-Regular", size: 34))
                     .padding(.top)
                 Image("Splashscreen")
                     .resizable()
@@ -56,12 +56,12 @@ struct SplashContent: View {
                     } animation: { phase in
                         phase.animation
                     }
+                Text("A way to easily share dog walking protocol information")
+                    .font(Font.custom("Urbanist-Medium", size: 20))
+                    .multilineTextAlignment(.center)
                 Spacer()
             }
             .padding()
-            .onAppear {
-                
-            }
         }
     }
 }
