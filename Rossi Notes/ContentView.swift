@@ -13,7 +13,9 @@ struct ContentView: View {
     
     var body: some View {
         NavigationStack {
-            if user.isAuthenticated {
+            if user.isLoading {
+                ProgressView()
+            } else if user.isAuthenticated {
                 HomeTabView(appwrite: user)
             } else {
                 ZStack {
@@ -67,6 +69,7 @@ struct MainBackgroundView: View {
     }
 }
 
-//#Preview {
-//    ContentView()
-//}
+#Preview {
+    @Previewable @StateObject var appwrite = Appwrite()
+    ContentView(user: appwrite)
+}

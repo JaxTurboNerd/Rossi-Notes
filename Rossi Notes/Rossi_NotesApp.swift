@@ -13,9 +13,12 @@ struct Rossi_NotesApp: App {
     @StateObject private var detailsModel = DetailsModel()
     var body: some Scene {
         WindowGroup {
-            ContentView(user: appwrite)
+            SplashView(appwrite: appwrite)
                 .environmentObject(appwrite)
                 .environmentObject(detailsModel)
+//            ContentView(user: appwrite)
+//                .environmentObject(appwrite)
+//                .environmentObject(detailsModel)
         }
     }
 }
