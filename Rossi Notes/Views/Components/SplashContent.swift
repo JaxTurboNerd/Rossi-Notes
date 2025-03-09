@@ -18,7 +18,11 @@ struct SplashContent: View {
             VStack {
                 Text("Rossi Notes App")
                     .font(.title)
+                    .padding(.top)
                 Image("Splashscreen")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .padding()
                 Spacer()
             }
             .padding()

@@ -32,6 +32,5 @@ struct SplashView: View {
 
 #Preview {
     @Previewable @StateObject var appwrite = Appwrite()
-    
     SplashView(appwrite: appwrite)
 }
