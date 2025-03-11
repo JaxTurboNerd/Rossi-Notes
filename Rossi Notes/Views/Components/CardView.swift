@@ -6,8 +6,6 @@
 //
 
 import SwiftUI
-import Appwrite
-import JSONCodable
 
 struct CardView: View {
     var name: String = ""

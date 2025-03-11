@@ -16,9 +16,6 @@ struct Rossi_NotesApp: App {
             SplashView(appwrite: appwrite)
                 .environmentObject(appwrite)
                 .environmentObject(detailsModel)
-//            ContentView(user: appwrite)
-//                .environmentObject(appwrite)
-//                .environmentObject(detailsModel)
         }
     }
 }
