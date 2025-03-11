@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct NameView: View {
-    var name: String?
+    var name: String
+    
     var body: some View {
-        Text(name ?? "")
+        Text(name)
             .frame(maxWidth: .infinity, minHeight: 60, maxHeight:70 ,alignment: .center)
             .font(Font.custom("ConcertOne-Regular", size: 28))
             .tracking(2)

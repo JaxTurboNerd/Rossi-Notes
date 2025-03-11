@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct DetailLineView: View {
-    var detail: String?
+    var detail: String
+    
     var body: some View {
-        Text(detail ?? "")
+        Text(detail)
             .font(Font.custom("Urbanist-Medium", size: 18))
         Divider()
             .frame(width: 350, height: 0.5)
