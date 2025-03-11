@@ -46,9 +46,7 @@ struct DetailView: View {
                         VStack {
                             VStack{
                                 //Display the pet name:
-                                NameView(name: viewModel.detailsModel?.name)
-                                    .frame(maxWidth: .infinity, minHeight: 10, maxHeight:70 ,alignment: .center)
-                                //NameView(name: detailsModel.name)
+                                CardView(name: viewModel.detailsModel?.name ?? "")
                                 //Display the protocol date:
                                 Text("Protocol Date: \(viewModel.formattedStringDate)")
                                     .font(.system(size: 20))

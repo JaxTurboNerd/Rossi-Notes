@@ -17,11 +17,8 @@ class LoginViewModel: ObservableObject {
     @Published var email: String = "gboyd69@yahoo.com"
     @Published var password: String = "11Gunner$"
     @Published var response: String = ""
-    //@Published var session: Session?
-    //@Published var user: User<[String: AnyCodable]>?
     @Published var errorMessage: String?
     @Published var isSubmitting = false
-    //@Published var isLoggedIn = false
     
     init(appwrite: Appwrite){
         self.appwrite = appwrite

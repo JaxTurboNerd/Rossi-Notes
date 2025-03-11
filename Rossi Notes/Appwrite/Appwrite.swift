@@ -27,6 +27,7 @@ class Appwrite: ObservableObject {
     @Published var updatedDocument: Document<[String: AnyCodable]>?
     @Published var documentList: DocumentList<[String: AnyCodable]>?
     @Published var isAuthenticated = false
+    @Published var isLoading = false
     
     public init() {
         self.client = Client()
@@ -40,16 +41,19 @@ class Appwrite: ObservableObject {
     }
     
     func checkAuthStatus() {
+        isLoading = true
         Task {
             do {
                 currentUser = try await account.get()
                 await MainActor.run {
                     self.isAuthenticated = true
+                    self.isLoading = false
                 }
             } catch {
                 await MainActor.run {
                     self.isAuthenticated = false
                     self.currentUser = nil
+                    self.isLoading = false
                 }
             }
         }
