@@ -197,9 +197,9 @@ enum AuthError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .signInFailed(let message):
-            return "Sign in failed: \(message)"
+            return "\(message)"
         case .signOutFailed(let message):
-            return "Sign out failed: \(message)"
+            return "\(message)"
         }
     }
 }
