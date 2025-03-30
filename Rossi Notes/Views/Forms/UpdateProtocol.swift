@@ -63,18 +63,6 @@ struct UpdateView: View {
                     .foregroundColor(Color("AppBlue")))
                 {
                     TextField("Notes", text: $noteDetails.miscNotes, axis: .vertical)
-                    Button{
-                        //action:
-                        
-                    } label: {
-                        Text("Submit")
-                            .frame(maxWidth: 250)
-                            .font(.headline)
-                    }
-                    .padding()
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.large)
-                    
                 }
             }
             .navigationTitle("Protocol")

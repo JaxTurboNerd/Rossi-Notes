@@ -8,13 +8,11 @@
 import SwiftUI
 
 struct SignIn: View {
-    @StateObject private var viewModel: LoginViewModel
+    @ObservedObject private var viewModel: LoginViewModel
     @EnvironmentObject private var appwrite: Appwrite
-    //@StateObject var user = Appwrite()
     @State var isShowingSignUp = false
     @State var showHomeTabView = false
     
-    //@State private var isLoading = false
     @State private var showAlert = false
     @State private var alertMessage = ""
     
@@ -22,9 +20,8 @@ struct SignIn: View {
     @FocusState var passwordIsFocused: Bool
     
     init(appwrite: Appwrite){
-        _viewModel = StateObject(wrappedValue: LoginViewModel(appwrite: appwrite))
+        _viewModel = ObservedObject(wrappedValue: LoginViewModel(appwrite: appwrite))
     }
-    
     
     var body: some View {
         NavigationStack {
@@ -58,7 +55,7 @@ struct SignIn: View {
                             .foregroundColor(.white)
                             .font(Font.custom("Urbanist-Regular", size: 20))
                         
-                        SecureField("password:", text: $viewModel.password, onCommit: {})
+                        SecureField("password:", text: $viewModel.password)
                             .textFieldStyle(.roundedBorder)
                             .focused($passwordIsFocused)
                             .overlay(
@@ -75,10 +72,16 @@ struct SignIn: View {
                                     let isValidFields = try checkLoginFields(viewModel.email, viewModel.password)
                                     
                                     if isValidFields {
-                                        //returns a Session Object
                                         viewModel.isSubmitting = true
-                                        viewModel.signIn()
-                                        showHomeTabView = true
+                                        //need guard or if let for the sign in:??
+                                        do {
+                                            try await viewModel.signIn()
+                                            showHomeTabView = true
+                                        } catch {
+                                            viewModel.isSubmitting = false
+                                            alertMessage = error.localizedDescription
+                                            showAlert = true
+                                        }
                                     }
                                 } catch LoginTextfieldError.emptyEmail{
                                     viewModel.isSubmitting = false
@@ -92,11 +95,8 @@ struct SignIn: View {
                                     showAlert = true
                                 } catch {
                                     viewModel.isSubmitting = false
-                                    alertMessage = "An error logging in occured"
+                                    alertMessage = viewModel.errorMessage ?? "An error occured"
                                     showAlert = true
-                                    await MainActor.run {
-                                        viewModel.response = error.localizedDescription
-                                    }
                                 }
                                 
                             }
