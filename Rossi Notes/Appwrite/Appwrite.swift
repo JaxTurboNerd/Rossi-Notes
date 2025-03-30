@@ -204,4 +204,22 @@ enum AuthError: LocalizedError {
     }
 }
 
+enum CreateUserError: LocalizedError {
+    case failed(String)
+    case invalidEmail(String)
+    case invalidPassword(String)
+    
+    var errorDescription: String? {
+        switch self {
+        case .failed(let message):
+            return "\(message)"
+        case .invalidEmail(let message):
+            return "\(message)"
+        case .invalidPassword(let message):
+            return "\(message)"
+        }
+    }
+}
+
+
 
