@@ -26,17 +26,14 @@ class SignUpViewModel: ObservableObject {
     }
     
     @MainActor
-    public func signUp(){
+    public func signUp() async throws {
         self.isSubmitting = true
         self.errorMessage = nil
-        
-        Task {
-            do {
-                user = try await appwrite.createAccount(firstName, lastName, email, password)
-            } catch {
-                errorMessage = error.localizedDescription
-                print(error.localizedDescription)
-            }
+        do {
+            user = try await appwrite.createAccount(firstName, lastName, email, password)
+        } catch {
+            throw CreateUserError.failed(error.localizedDescription)
         }
+        
     }
 }

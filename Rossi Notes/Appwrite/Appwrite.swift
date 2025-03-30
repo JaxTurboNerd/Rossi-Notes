@@ -26,6 +26,7 @@ class Appwrite: ObservableObject {
     @Published var createdDocument: Document<[String: AnyCodable]>?
     @Published var updatedDocument: Document<[String: AnyCodable]>?
     @Published var documentList: DocumentList<[String: AnyCodable]>?
+    @Published var newUser: User<[String: AnyCodable]>?
     @Published var isAuthenticated = false
     @Published var isLoading = false
     
@@ -60,19 +61,14 @@ class Appwrite: ObservableObject {
     }
     
     //creates a new account
-    public func createAccount(
-        _ firstName: String,
-        _ lastName: String,
-        _ email: String,
-        _ password: String
-    ) async throws -> User<[String: AnyCodable]> {
-        let name = firstName + " " + lastName
-        return try await account.create(
-            userId: ID.unique(),
-            email: email,
-            password: password,
-            name: name
-        )
+    public func createAccount(_ firstName: String, _ lastName: String, _ email: String,_ password: String) async throws -> User<[String: AnyCodable]> {
+        do {
+            let name = firstName + " " + lastName
+            newUser = try await account.create(userId: ID.unique(), email: email, password: password, name: name)
+        } catch {
+            throw CreateUserError.failed(error.localizedDescription)
+        }
+        return newUser!
     }
     
     public func getAccount() async throws -> User<[String: AnyCodable]>{
