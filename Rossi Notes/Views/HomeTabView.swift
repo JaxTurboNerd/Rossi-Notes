@@ -17,7 +17,7 @@ struct HomeTabView: View {
     
     var body: some View {
         TabView {
-            Home()
+            Home(appwrite: appwrite)
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }

@@ -121,11 +121,15 @@ struct SignUp: View {
                                 let isValidFields = try checkSignUpFields(viewModel.firstName, viewModel.lastName, viewModel.email, viewModel.password, viewModel.passwordConfirm)
                                 if isValidFields {
                                     viewModel.isSubmitting = true
-                                    viewModel.signUp()
-//                                    let newUser = try await user.createAccount(viewModel.firstName, viewModel.lastName, viewModel.email, viewModel.password)
-//                                    let authUser = try await user.getAccount()
-//                                    user.isLoggedIn = true
-                                    showHomeTabView = true
+                                    do {
+                                        try await viewModel.signUp()
+                                        viewModel.isSubmitting = false
+                                        showHomeTabView = true
+                                    } catch {
+                                        viewModel.isSubmitting = false
+                                        alertMessage = error.localizedDescription
+                                        showAlert = true
+                                    }
                                 }
                             } catch SignUpTextfieldError.emptyFname {
                                 isLoading = false

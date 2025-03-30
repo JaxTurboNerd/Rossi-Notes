@@ -9,8 +9,14 @@ import SwiftUI
 
 struct Home: View {
     
-    @ObservedObject var user = Appwrite()
+    @StateObject var viewModel: HomeTabViewModel
     @State var isShowingHomeView = false
+    private var appwrite: Appwrite
+    
+    init(appwrite: Appwrite) {
+        _viewModel = StateObject(wrappedValue: HomeTabViewModel(appwrite: appwrite))
+        self.appwrite = appwrite
+    }
     
     var body: some View {
         NavigationStack {
@@ -41,14 +47,9 @@ struct Home: View {
                     Button{
                         //action:
                         Task {
-                            do {
-                                try await user.onLogout()
-                                user.isAuthenticated = false
-                                isShowingHomeView = true
-                                
-                            } catch {
-                                print("logout error")
-                            }
+                            viewModel.signOut()
+                            appwrite.isAuthenticated = false
+                            isShowingHomeView = true
                         }
                         
                     } label: {
@@ -67,13 +68,13 @@ struct Home: View {
                     
                 }
                 .padding()
-                .navigationDestination(isPresented: $isShowingHomeView, destination: {ContentView(user: user)})
+                .navigationDestination(isPresented: $isShowingHomeView, destination: {ContentView(user: appwrite)})
             }
         }
         .navigationBarBackButtonHidden()
     }
 }
 
-#Preview {
-    Home()
-}
+//#Preview {
+//    Home()
+//}

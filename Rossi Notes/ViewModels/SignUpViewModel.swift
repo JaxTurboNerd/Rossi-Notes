@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import Appwrite
+import JSONCodable
 
 @MainActor
 class SignUpViewModel: ObservableObject {
@@ -15,26 +17,23 @@ class SignUpViewModel: ObservableObject {
     @Published var email = ""
     @Published var password = ""
     @Published var passwordConfirm = ""
-    
     @Published var errorMessage: String?
     @Published var isSubmitting = false
+    @Published var user: User<[String: AnyCodable]>?
     
     init(appwrite: Appwrite){
         self.appwrite = appwrite
     }
     
     @MainActor
-    public func signUp(){
+    public func signUp() async throws {
         self.isSubmitting = true
         self.errorMessage = nil
-        
-        Task {
-            do {
-                let newUser = try await appwrite.createAccount(firstName, lastName, email, password)
-            } catch {
-                errorMessage = error.localizedDescription
-                print(error.localizedDescription)
-            }
+        do {
+            user = try await appwrite.createAccount(firstName, lastName, email, password)
+        } catch {
+            throw CreateUserError.failed(error.localizedDescription)
         }
+        
     }
 }
