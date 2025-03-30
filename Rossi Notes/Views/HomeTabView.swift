@@ -8,11 +8,12 @@
 import SwiftUI
 
 struct HomeTabView: View {
-    //@Binding var isLoggedIn: Bool
-    @StateObject private var appwrite: Appwrite
+//    @StateObject private var appwrite: Appwrite
+    private var appwrite: Appwrite
     
     init(appwrite: Appwrite){
-        _appwrite = StateObject(wrappedValue: Appwrite())
+//        _appwrite = StateObject(wrappedValue: Appwrite())
+        self.appwrite = appwrite
     }
     
     var body: some View {
@@ -34,6 +35,7 @@ struct HomeTabView: View {
     }
 }
 
-//#Preview {
-//    HomeTabView()
-//}
+#Preview {
+    let appwrite = Appwrite()
+    HomeTabView(appwrite: appwrite)
+}

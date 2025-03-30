@@ -66,6 +66,7 @@ class Appwrite: ObservableObject {
             let name = firstName + " " + lastName
             newUser = try await account.create(userId: ID.unique(), email: email, password: password, name: name)
         } catch {
+//            print("localized error: \(error.localizedDescription)")
             throw CreateUserError.failed(error.localizedDescription)
         }
         return newUser!
