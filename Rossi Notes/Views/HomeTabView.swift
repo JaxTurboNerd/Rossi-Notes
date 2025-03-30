@@ -8,11 +8,9 @@
 import SwiftUI
 
 struct HomeTabView: View {
-//    @StateObject private var appwrite: Appwrite
     private var appwrite: Appwrite
     
     init(appwrite: Appwrite){
-//        _appwrite = StateObject(wrappedValue: Appwrite())
         self.appwrite = appwrite
     }
     
