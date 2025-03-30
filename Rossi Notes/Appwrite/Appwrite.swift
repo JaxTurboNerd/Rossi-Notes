@@ -110,7 +110,7 @@ class Appwrite: ObservableObject {
     
     public func onLogout() async throws {
         do {
-            try await account.deleteSession(sessionId: "current")
+            let _ = try await account.deleteSession(sessionId: "current")
             await MainActor.run {
                 self.currentUser = nil
                 self.isAuthenticated = false

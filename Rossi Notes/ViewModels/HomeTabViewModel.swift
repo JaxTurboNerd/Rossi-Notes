@@ -20,19 +20,16 @@ class HomeTabViewModel: ObservableObject {
     }
     
     @MainActor
-    public func signOut(){
+    public func signOut() async throws {
         self.isSubmitting = true
         
-        Task {
-            do {
-                try await appwrite.onLogout()
-                //delete session from user defaults:
-                deleteSession()
-                self.isSubmitting = false
-            } catch {
-                print(error.localizedDescription)
-                self.errorMessage = error.localizedDescription
-            }
+        do {
+            try await appwrite.onLogout()
+            //delete session from user defaults:
+            deleteSession()
+            self.isSubmitting = false
+        } catch {
+            throw AuthError.signOutFailed(error.localizedDescription)
         }
     }
     
