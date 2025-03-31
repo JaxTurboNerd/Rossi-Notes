@@ -13,6 +13,9 @@ struct Home: View {
     @State var isShowingHomeView = false
     private var appwrite: Appwrite
     
+    @State private var showAlert = false
+    @State private var alertMessage = ""
+    
     init(appwrite: Appwrite) {
         _viewModel = StateObject(wrappedValue: HomeTabViewModel(appwrite: appwrite))
         self.appwrite = appwrite
@@ -42,14 +45,20 @@ struct Home: View {
                         .background(Color("AppBlue"))
                         .foregroundColor(.white)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
-                    Spacer(minLength: 250)
+                    Spacer(minLength: 150)
                     
                     Button{
                         //action:
                         Task {
-                            viewModel.signOut()
-                            appwrite.isAuthenticated = false
-                            isShowingHomeView = true
+                            do {
+                                try await viewModel.signOut()
+                                appwrite.isAuthenticated = false
+                                isShowingHomeView = true
+                            } catch {
+                                viewModel.isSubmitting = false
+                                alertMessage = error.localizedDescription
+                                showAlert = true
+                            }
                         }
                         
                     } label: {
@@ -75,6 +84,7 @@ struct Home: View {
     }
 }
 
-//#Preview {
-//    Home()
-//}
+#Preview {
+    let appwwrite = Appwrite()
+    Home(appwrite: appwwrite)
+}
