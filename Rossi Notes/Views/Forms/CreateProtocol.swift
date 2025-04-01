@@ -11,6 +11,8 @@ struct CreateView: View {
     
     @StateObject private var viewModel: CreateViewModel
     @State private var noteAdded = false
+    @State private var alertMessage = ""
+    @State private var showAlert = false
     var collectionId: String
     
     @Binding var triggerRefresh: Bool
@@ -60,18 +62,6 @@ struct CreateView: View {
                     .foregroundColor(Color("AppBlue")))
                 {
                     TextField("Notes", text: $viewModel.notes, axis: .vertical)
-//                    Button{
-//                        //action:
-//                        viewModel.createProtocol(collectionId: collectionId)
-//                    } label: {
-//                        Text("Submit")
-//                            .frame(maxWidth: 250)
-//                            .font(.headline)
-//                    }
-//                    .padding()
-//                    .buttonStyle(.borderedProminent)
-//                    .controlSize(.large)
-                    
                 }
             }
             .onTapGesture {
@@ -91,9 +81,15 @@ struct CreateView: View {
                     Button("Submit"){
                         Task {
                             //Submit the form:
-                            viewModel.createProtocol(collectionId: collectionId)
-                            dismiss.callAsFunction()
-                            noteAdded = true
+                            do {
+                                try await viewModel.createProtocol(collectionId: collectionId)
+                                dismiss.callAsFunction()
+                                noteAdded = true
+                            } catch {
+                                viewModel.isSubmitting = false
+                                alertMessage = error.localizedDescription
+                                showAlert = true
+                            }
                         }
                     }
                 })
@@ -102,6 +98,9 @@ struct CreateView: View {
                 if noteAdded {
                     triggerRefresh = true
                 }
+            }
+            .alert(isPresented: $showAlert){
+                Alert(title: Text("Create Protocol"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
             }
         }
     }

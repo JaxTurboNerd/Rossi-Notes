@@ -7,7 +7,6 @@
 
 import Foundation
 import Appwrite
-import SwiftUICore
 import JSONCodable
 
 @MainActor
@@ -36,33 +35,55 @@ final class CreateViewModel: ObservableObject {
         self.appwrite = appwrite
     }
     
-    func createProtocol(collectionId: String){
+    @MainActor
+    func createProtocol(collectionId: String) async throws {
         isSubmitting = true
         errorMessage = nil
         
         let newProtocol = Protocol(name: name, protocol_date: protocolDate, dog_reactive: dogReactive, cat_reactive: catReactive, barrier_reactive: barrierReactive, leash_reactive: leashReactive, jumpy_mouthy: jumpy, resource_guarder: resourceGuarder, stranger_reactive: avoidStrangers, place_routine: placeRoutine, door_routine: doorRoutine, misc_notes: notes)
         
-        Task {
-            do {
-                let encoder = JSONEncoder()
-                encoder.dateEncodingStrategy = .iso8601
-                guard let data = try? encoder.encode(newProtocol) else {return}
-               
-                //convert data to json string:
-                let dataString = String(data: data, encoding: .utf8)
-                let response = try await appwrite.createDocument(collectionId, documentId, dataString ?? "")
-                await MainActor.run {
-                    self.document = response
-                    self.isSubmitting = false
-                }
-            
-            } catch {
-                await MainActor.run {
-                    self.errorMessage = error.localizedDescription
-                    print("Create document error \(String(describing: errorMessage))")
-                    self.isSubmitting = false
-                }
+        do {
+            let encoder = JSONEncoder()
+            encoder.dateEncodingStrategy = .iso8601
+            guard let data = try? encoder.encode(newProtocol) else {
+                self.isSubmitting = false
+                throw JSONError.invalidData
             }
+            
+            //convert data to json string:
+            let dataString = String(data: data, encoding: .utf8)
+            let response = try await appwrite.createDocument(collectionId, documentId, dataString ?? "")
+            self.document = response
+            self.isSubmitting = false
+            
+        } catch {
+            self.isSubmitting = false
+            throw CreateProtocolError.failedToCreateProtocol
+        }
+    }
+}
+
+enum CreateProtocolError: LocalizedError {
+    case failedToCreateProtocol
+    
+    var errorDescription: String? {
+        switch self {
+        case .failedToCreateProtocol:
+            return "Failed to create protocol"
+        }
+    }
+}
+
+enum JSONError: LocalizedError {
+    case invalidData
+    case typeMismatch
+    
+    var errorDescription: String? {
+        switch self {
+        case .invalidData:
+            return "Invalid data"
+        case .typeMismatch:
+            return "Type mismatch"
         }
     }
 }
