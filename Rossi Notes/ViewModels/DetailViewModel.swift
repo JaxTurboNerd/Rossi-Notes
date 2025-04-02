@@ -22,7 +22,7 @@ class DetailViewModel: ObservableObject {
     @ObservedObject var detailsStringModel = DetailsStringModel()
     @Published var formattedStringDate = ""
     @State var noteWillDelete = false
-
+    
     init(appwrite: Appwrite){
         self.appwrite = appwrite
     }
@@ -32,27 +32,23 @@ class DetailViewModel: ObservableObject {
         self.detailsModel = model
     }
     
-    public func fetchDocument(collectionId: String ,documentId: String){
+    public func fetchDocument(collectionId: String ,documentId: String) async throws {
         isLoading = true
         errorMessage = nil
         
-        Task {
-            do {
-                let document = try await appwrite.listDocument(collectionId, documentId)
-                self.document = document
-                await MainActor.run {
-                    self.isLoading = false
-                    setDetailsModel(response: document!)
-                    formattedStringDate = formatDate(from: detailsModel?.protocolDate ?? Date.now)
-                    setDetailsStringModel(responseData: document!.data)
-                }
-            } catch {
-                await MainActor.run {
-                    self.errorMessage = error.localizedDescription
-                    self.isLoading = false
-                    
-                }
+        do {
+            let document = try await appwrite.listDocument(collectionId, documentId)
+            self.document = document
+            await MainActor.run {
+                self.isLoading = false
+                setDetailsModel(response: document!)
+                formattedStringDate = formatDate(from: detailsModel?.protocolDate ?? Date.now)
+                setDetailsStringModel(responseData: document!.data)
             }
+        } catch {
+            self.errorMessage = error.localizedDescription
+            self.isLoading = false
+            
         }
     }
     
@@ -133,26 +129,17 @@ class DetailViewModel: ObservableObject {
         }
     }
     
-    public func deleteNote(collectionId: String, documentId: String){
-        Task {
-            do {
-//                let response = try await appwrite.databases.deleteDocument(
-//                    databaseId: self.databaseId,
-//                    collectionId: collectionId,
-//                    documentId: documentId
-//                )
-                let response = try await appwrite.deleteDocument(collectionId, documentId)
-                await MainActor.run {
-                    //do stuff here:
-                    noteWillDelete = true
-                }
-            } catch {
-                await MainActor.run {
-                    self.errorMessage = error.localizedDescription
-                    print("delete document error \(String(describing: errorMessage))")
-                    self.isLoading = false
-                }
+    public func deleteNote(collectionId: String, documentId: String) async throws {
+        do {
+            let _ = try await appwrite.deleteDocument(collectionId, documentId)
+            await MainActor.run {
+                //do stuff here:
+                noteWillDelete = true
             }
+        } catch {
+            self.errorMessage = error.localizedDescription
+            print("delete document error \(String(describing: errorMessage))")
+            self.isLoading = false
         }
     }
 }

@@ -78,7 +78,9 @@ struct DetailView: View {
                 .sheet(isPresented: $showUpdateForm,
                        onDismiss: {
                     if noteUpdated {
-                        viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
+                        Task {
+                            try await viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
+                        }
                         noteUpdated = false
                     }},
                        content: {UpdateView(appwrite: appwrite, triggerRefresh: $triggerRefresh, noteUpdated: $noteUpdated, collectionId: collectionId, documentId: documentId)}
@@ -88,17 +90,21 @@ struct DetailView: View {
                         content: {
                 Button("Delete"){
                     Task {
-                        viewModel.deleteNote(collectionId: collectionId, documentId: documentId)
+                        try await viewModel.deleteNote(collectionId: collectionId, documentId: documentId)
                         noteDeleted = true
-                        dismiss.callAsFunction()
                     }
+                    dismiss.callAsFunction()
                 }
                 .foregroundStyle(Color.red)
             })
         }
         .task {
             viewModel.modelSetup(detailsModel)
-            viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
+            do {
+               try await viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
+            } catch {
+                print("fetching document error: \(error)")
+            }
         }
         .onDisappear{
             if noteDeleted {

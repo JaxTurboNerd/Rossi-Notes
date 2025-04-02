@@ -7,6 +7,7 @@
 
 import Foundation
 import Appwrite
+import JSONCodable
 
 @MainActor
 class LoginViewModel: ObservableObject {
@@ -41,4 +42,21 @@ class LoginViewModel: ObservableObject {
         UserDefaults.standard.set(session.userId, forKey: "userId")
         UserDefaults.standard.set(session.secret, forKey: "sessionSecret")
     }
+    
+    private func decodeAppwriteError(from data: Data) throws -> AppwriteError? {
+        let decoder = JSONDecoder()
+        do {
+           let error = try decoder.decode(AppwriteError.self, from: data)
+            return error
+        } catch {
+            print("failed to decode AppwriteError: \(error)")
+            return nil
+        }
+    }
+}
+
+struct AppwriteError: Codable {
+    let code: Int
+    let message: String
+    let type: String
 }

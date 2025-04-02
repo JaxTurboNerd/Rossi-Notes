@@ -14,7 +14,7 @@ struct SignIn: View {
     @State var showHomeTabView = false
     
     @State private var showAlert = false
-    @State private var alertMessage = ""
+    @State private var alertMessage: String?
     
     @FocusState var emailIsFocused: Bool
     @FocusState var passwordIsFocused: Bool
@@ -116,7 +116,7 @@ struct SignIn: View {
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
                         .alert(isPresented: $showAlert){
-                            Alert(title: Text("Login Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                            Alert(title: Text("Login Error"), message: Text(alertMessage ?? "an error has occured"), dismissButton: .default(Text("OK")))
                         }
                     }
                     .navigationDestination(isPresented: $showHomeTabView, destination: {HomeTabView(appwrite: appwrite)})

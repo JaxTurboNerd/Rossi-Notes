@@ -98,14 +98,21 @@ class Appwrite: ObservableObject {
             }
             return session
         } catch {
+            //AppwriteError has properties: message, type, and code.
+            //returns AppwriteError object if an error is thrown...below is a custom error
             throw AuthError.signInFailed(error.localizedDescription)
         }
     }
     
-    public func getInitials() async throws -> ByteBuffer {
-        //returns a ByteBuffer Object
-        let bytes = try await avatars.getInitials(width: 40)
-        return bytes
+    public func getInitials() async throws -> ByteBuffer? {
+        do {
+            //returns a ByteBuffer Object
+            let bytes = try await avatars.getInitials(width: 40)
+            return bytes
+        } catch {
+            print("get initials error: \(error.localizedDescription)")
+            return nil
+        }
     }
     
     public func onLogout() async throws {
@@ -129,8 +136,8 @@ class Appwrite: ObservableObject {
             return document
         } catch {
             print(error.localizedDescription)
+            return nil
         }
-        return self.document
     }
     
     public func listDocuments(_ collectionId: String) async throws -> DocumentList<[String: AnyCodable]>? {
@@ -146,8 +153,8 @@ class Appwrite: ObservableObject {
             return documentList
         } catch {
             print(error.localizedDescription)
+            return nil
         }
-        return self.documentList
     }
     
     public func createDocument(_ collectionId: String, _ documentId: String, _ data: String) async throws -> Document<[String: AnyCodable]>? {
@@ -157,10 +164,11 @@ class Appwrite: ObservableObject {
             await MainActor.run {
                 self.createdDocument = document
             }
+            return document
         } catch {
             print(error.localizedDescription)
+            return nil
         }
-        return createdDocument
     }
     
     public func updateDocument(_ collectionId: String, _ documentId: String, _ data: String) async throws -> Document<[String: AnyCodable]>? {
@@ -169,20 +177,19 @@ class Appwrite: ObservableObject {
             await MainActor.run {
                 self.updatedDocument = document
             }
+            return document
         } catch {
             print(error.localizedDescription)
+            return nil
         }
-        return updatedDocument
     }
     
     public func deleteDocument(_ collectionId: String, _ documentId: String) async throws {
-        Task {
             do {
-                let response = try await databases.deleteDocument(databaseId: databaseId, collectionId: collectionId, documentId: documentId)
+                let _ = try await databases.deleteDocument(databaseId: databaseId, collectionId: collectionId, documentId: documentId)
             } catch {
                 print(error.localizedDescription)
             }
-        }
     }
 }
 
