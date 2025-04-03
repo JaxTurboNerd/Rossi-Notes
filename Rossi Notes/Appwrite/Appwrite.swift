@@ -97,10 +97,17 @@ class Appwrite: ObservableObject {
                 self.isAuthenticated = true
             }
             return session
-        } catch {
-            //AppwriteError has properties: message, type, and code.
-            //returns AppwriteError object if an error is thrown...below is a custom error
-            throw AuthError.signInFailed(error.localizedDescription)
+        } catch let error as AppwriteError {
+            print("appwrite error: \(String(describing: error.type))")
+            if error.type == "user_invalid_credentials" {
+                throw AuthError.invalidCredentials
+            } else if error.type == "user_blocked" {
+                throw AuthError.userBlocked
+            } else if error.type == "general_argument_invalid" {
+                throw AuthError.generalArgumentError
+            } else {
+                throw error
+            }
         }
     }
     
@@ -123,7 +130,7 @@ class Appwrite: ObservableObject {
                 self.isAuthenticated = false
             }
         } catch {
-            throw AuthError.signOutFailed(error.localizedDescription)
+            throw AuthError.signOutFailed
         }
     }
     
@@ -193,17 +200,32 @@ class Appwrite: ObservableObject {
     }
 }
 
-
+//enum AuthError: LocalizedError {
+//    case signInFailed(String)
+//    case signOutFailed(String)
+//    
+//    var errorDescription: String? {
+//        switch self {
+//        case .signInFailed(let message):
+//            return "\(message)"
+//        case .signOutFailed(let message):
+//            return "\(message)"
+//        }
+//    }
+//}
 enum AuthError: LocalizedError {
-    case signInFailed(String)
-    case signOutFailed(String)
+    case invalidCredentials, userBlocked, signOutFailed, generalArgumentError
     
     var errorDescription: String? {
         switch self {
-        case .signInFailed(let message):
-            return "\(message)"
-        case .signOutFailed(let message):
-            return "\(message)"
+        case .invalidCredentials:
+            return "The email or password you entered is incorrect. Please try again."
+        case .userBlocked:
+            return "Your account has been temporarily suspended. Please contact support"
+        case .generalArgumentError:
+            return "Password must be at least 8 characters long"
+        case .signOutFailed:
+            return "Failed to sign out. Please try again."
         }
     }
 }

@@ -29,7 +29,7 @@ class HomeTabViewModel: ObservableObject {
             deleteSession()
             self.isSubmitting = false
         } catch {
-            throw AuthError.signOutFailed(error.localizedDescription)
+            throw AuthError.signOutFailed
         }
     }
     

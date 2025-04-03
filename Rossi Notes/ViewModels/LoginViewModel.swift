@@ -17,7 +17,7 @@ class LoginViewModel: ObservableObject {
     @Published var password: String = ""
     @Published var errorMessage: String?
     @Published var isSubmitting = false
-    @Published var session: Session?
+    //@Published var session: Session?
     
     init(appwrite: Appwrite){
         self.appwrite = appwrite
@@ -29,12 +29,16 @@ class LoginViewModel: ObservableObject {
         self.errorMessage = nil
         
         do {
-            session = try await appwrite.signIn(email, password)
-            self.persistSession(session!)
+            let session = try await appwrite.signIn(email, password)
+            self.persistSession(session)
             self.isSubmitting = false
-        } catch {
-            throw AuthError.signInFailed(error.localizedDescription)
+        } catch let error as AppwriteError {
+            print("SignIn Error: \(error.message)")
+            print("Sign In Error: \(String(describing: error.code))")
         }
+//        } catch {
+//            throw AuthError.signInFailed(error.localizedDescription)
+//        }
     }
     
     private func persistSession(_ session: Session){
@@ -42,21 +46,4 @@ class LoginViewModel: ObservableObject {
         UserDefaults.standard.set(session.userId, forKey: "userId")
         UserDefaults.standard.set(session.secret, forKey: "sessionSecret")
     }
-    
-    private func decodeAppwriteError(from data: Data) throws -> AppwriteError? {
-        let decoder = JSONDecoder()
-        do {
-           let error = try decoder.decode(AppwriteError.self, from: data)
-            return error
-        } catch {
-            print("failed to decode AppwriteError: \(error)")
-            return nil
-        }
-    }
-}
-
-struct AppwriteError: Codable {
-    let code: Int
-    let message: String
-    let type: String
 }
