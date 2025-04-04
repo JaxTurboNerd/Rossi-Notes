@@ -46,16 +46,12 @@ class Appwrite: ObservableObject {
         Task {
             do {
                 currentUser = try await account.get()
-                await MainActor.run {
-                    self.isAuthenticated = true
-                    self.isLoading = false
-                }
+                self.isAuthenticated = true
+                self.isLoading = false
             } catch {
-                await MainActor.run {
-                    self.isAuthenticated = false
-                    self.currentUser = nil
-                    self.isLoading = false
-                }
+                self.isAuthenticated = false
+                self.currentUser = nil
+                self.isLoading = false
             }
         }
     }
@@ -66,7 +62,6 @@ class Appwrite: ObservableObject {
             let name = firstName + " " + lastName
             newUser = try await account.create(userId: ID.unique(), email: email, password: password, name: name)
         } catch {
-//            print("localized error: \(error.localizedDescription)")
             throw CreateUserError.failed(error.localizedDescription)
         }
         return newUser!
@@ -75,10 +70,7 @@ class Appwrite: ObservableObject {
     public func getAccount() async throws -> User<[String: AnyCodable]>{
         do {
             let response = try await account.get()
-            
-            await MainActor.run {
-                self.currentUser = response
-            }
+            self.currentUser = response
         } catch {
             print(error.localizedDescription)
         }
@@ -92,10 +84,8 @@ class Appwrite: ObservableObject {
                 password: password
             )
             let user = try await account.get()
-            await MainActor.run {
-                self.currentUser = user
-                self.isAuthenticated = true
-            }
+            self.currentUser = user
+            self.isAuthenticated = true
             return session
         } catch let error as AppwriteError {
             if error.type == "user_invalid_credentials" {
@@ -124,10 +114,8 @@ class Appwrite: ObservableObject {
     public func onLogout() async throws {
         do {
             let _ = try await account.deleteSession(sessionId: "current")
-            await MainActor.run {
-                self.currentUser = nil
-                self.isAuthenticated = false
-            }
+            self.currentUser = nil
+            self.isAuthenticated = false
         } catch {
             throw AuthError.signOutFailed
         }
@@ -136,9 +124,7 @@ class Appwrite: ObservableObject {
     public func listDocument(_ collectionId: String, _ documentId: String) async throws -> Document<[String: AnyCodable]>? {
         do {
             let document = try await databases.getDocument(databaseId: databaseId, collectionId: collectionId, documentId: documentId)
-            await MainActor.run {
-                self.document = document
-            }
+            self.document = document
             return document
         } catch {
             print(error.localizedDescription)
@@ -153,9 +139,7 @@ class Appwrite: ObservableObject {
                 collectionId: collectionId,
                 queries: [] // optional
             )
-            await MainActor.run {
-                self.documentList = documentList
-            }
+            self.documentList = documentList
             return documentList
         } catch {
             print(error.localizedDescription)
@@ -167,9 +151,7 @@ class Appwrite: ObservableObject {
         
         do {
             let document = try await databases.createDocument(databaseId: databaseId, collectionId: collectionId, documentId: documentId, data: data)
-            await MainActor.run {
-                self.createdDocument = document
-            }
+            self.createdDocument = document
             return document
         } catch {
             print(error.localizedDescription)
@@ -180,9 +162,7 @@ class Appwrite: ObservableObject {
     public func updateDocument(_ collectionId: String, _ documentId: String, _ data: String) async throws -> Document<[String: AnyCodable]>? {
         do {
             let document = try await databases.updateDocument(databaseId: databaseId, collectionId: collectionId, documentId: documentId, data: data)
-            await MainActor.run {
-                self.updatedDocument = document
-            }
+            self.updatedDocument = document
             return document
         } catch {
             print(error.localizedDescription)
@@ -191,11 +171,11 @@ class Appwrite: ObservableObject {
     }
     
     public func deleteDocument(_ collectionId: String, _ documentId: String) async throws {
-            do {
-                let _ = try await databases.deleteDocument(databaseId: databaseId, collectionId: collectionId, documentId: documentId)
-            } catch {
-                print(error.localizedDescription)
-            }
+        do {
+            let _ = try await databases.deleteDocument(databaseId: databaseId, collectionId: collectionId, documentId: documentId)
+        } catch {
+            print(error.localizedDescription)
+        }
     }
 }
 
