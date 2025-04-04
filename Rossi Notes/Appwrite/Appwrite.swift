@@ -98,7 +98,6 @@ class Appwrite: ObservableObject {
             }
             return session
         } catch let error as AppwriteError {
-            print("appwrite error: \(String(describing: error.type))")
             if error.type == "user_invalid_credentials" {
                 throw AuthError.invalidCredentials
             } else if error.type == "user_blocked" {
@@ -200,19 +199,6 @@ class Appwrite: ObservableObject {
     }
 }
 
-//enum AuthError: LocalizedError {
-//    case signInFailed(String)
-//    case signOutFailed(String)
-//    
-//    var errorDescription: String? {
-//        switch self {
-//        case .signInFailed(let message):
-//            return "\(message)"
-//        case .signOutFailed(let message):
-//            return "\(message)"
-//        }
-//    }
-//}
 enum AuthError: LocalizedError {
     case invalidCredentials, userBlocked, signOutFailed, generalArgumentError
     

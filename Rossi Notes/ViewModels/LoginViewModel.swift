@@ -32,13 +32,9 @@ class LoginViewModel: ObservableObject {
             let session = try await appwrite.signIn(email, password)
             self.persistSession(session)
             self.isSubmitting = false
-        } catch let error as AppwriteError {
-            print("SignIn Error: \(error.message)")
-            print("Sign In Error: \(String(describing: error.code))")
+        } catch {
+            throw error
         }
-//        } catch {
-//            throw AuthError.signInFailed(error.localizedDescription)
-//        }
     }
     
     private func persistSession(_ session: Session){
