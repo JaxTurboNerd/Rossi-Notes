@@ -13,6 +13,8 @@ struct UpdateView: View {
     @EnvironmentObject var noteDetails: DetailsModel
     @Binding var triggerRefresh: Bool
     @Binding var noteUpdated: Bool
+    @State private var alertMessage = ""
+    @State private var showAlert = false
     
     var collectionId: String
     var documentId: String
@@ -79,15 +81,25 @@ struct UpdateView: View {
                     Button("Update"){
                         Task {
                             //Submit the form:
-                            viewModel.updateProtocol(collectionId: collectionId, documentId: documentId, noteDetails: noteDetails)
-                            noteUpdated = true
-                            dismiss.callAsFunction()
+                            do {
+                                try await viewModel.updateProtocol(collectionId: collectionId, documentId: documentId, noteDetails: noteDetails)
+                                noteUpdated = true
+                                dismiss.callAsFunction()
+
+                            } catch {
+                                viewModel.isSubmitting = false
+                                alertMessage = error.localizedDescription
+                                showAlert = true
+                            }
                         }
                     }
                 })
             }
             .task {
                 viewModel.modelSetup(noteDetails)
+            }
+            .alert(isPresented: $showAlert){
+                Alert(title: Text("Create Protocol"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
             }
         }
     }

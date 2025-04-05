@@ -16,6 +16,7 @@ struct CreateView: View {
     var collectionId: String
     
     @Binding var triggerRefresh: Bool
+    @FocusState var nameIsFocused: Bool
     
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
@@ -34,7 +35,11 @@ struct CreateView: View {
                         .font(Font.custom("Urbanist-Medium", size: 16))
                         .foregroundColor(Color("AppBlue")))
                 {
-                    TextField("Name", text: $viewModel.name)
+                    VStack {
+                        TextField("Name", text: $viewModel.name).focused($nameIsFocused)
+                        Text("Required").font(.footnote).foregroundColor(.red)
+                    }
+                    
                     DatePicker("Protocol Date", selection: $viewModel.protocolDate, displayedComponents: [.date])//shows only the date excludes time
                         .datePickerStyle(.compact)
                 }
@@ -82,12 +87,24 @@ struct CreateView: View {
                         Task {
                             //Submit the form:
                             do {
-                                try await viewModel.createProtocol(collectionId: collectionId)
-                                dismiss.callAsFunction()
-                                noteAdded = true
-                            } catch {
-                                viewModel.isSubmitting = false
-                                alertMessage = error.localizedDescription
+                                let isValidFields = try validateTextFields(name: viewModel.name, date: viewModel.protocolDate)
+                                if isValidFields {
+                                    do {
+                                        try await viewModel.createProtocol(collectionId: collectionId)
+                                        dismiss.callAsFunction()
+                                        noteAdded = true
+                                    } catch {
+                                        viewModel.isSubmitting = false
+                                        alertMessage = error.localizedDescription
+                                        showAlert = true
+                                    }
+                                }
+                            } catch CreateTextfieldError.nameIsEmpty {
+                                nameIsFocused = true
+                                alertMessage = "Name is required."
+                                showAlert = true
+                            } catch CreateTextfieldError.dateIsEmpty {
+                                alertMessage = "Date is required."
                                 showAlert = true
                             }
                         }
@@ -106,6 +123,26 @@ struct CreateView: View {
     }
 }
 
-//#Preview {
-//    CreateProtocolForm()
-//}
+enum CreateTextfieldError: Error {
+    case nameIsEmpty, dateIsEmpty
+}
+
+private func validateTextFields(name: String, date: Date) throws -> Bool {
+    let dateFormatter = DateFormatter()
+    let dateString = dateFormatter.string(from: date)
+    
+    if name.isEmpty {
+        throw CreateTextfieldError.nameIsEmpty
+    }
+    
+    if dateString.isEmpty {
+        throw CreateTextfieldError.dateIsEmpty
+    }
+    
+    return true
+}
+
+#Preview {
+    let appwrite = Appwrite()
+    CreateView(appwrite: appwrite, collectionId: "66a04db400070bffec78", triggerRefresh: .constant(false))
+}
