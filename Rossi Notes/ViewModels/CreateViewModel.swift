@@ -52,13 +52,21 @@ final class CreateViewModel: ObservableObject {
             
             //convert data to json string:
             let dataString = String(data: data, encoding: .utf8)
-            let response = try await appwrite.createDocument(collectionId, documentId, dataString ?? "")
+            guard let response = try await appwrite.createDocument(collectionId, documentId, dataString ?? "") else {
+                self.isSubmitting = false
+                throw CreateProtocolError.failedToCreateProtocol
+            }
             self.document = response
             self.isSubmitting = false
             
-        } catch {
+        } catch JSONError.invalidData {
             self.isSubmitting = false
-            throw CreateProtocolError.failedToCreateProtocol
+            
+        } catch JSONError.typeMismatch {
+            self.isSubmitting = false
+            
+        } catch CreateProtocolError.failedToCreateProtocol {
+            self.isSubmitting = false
         }
     }
 }
@@ -69,7 +77,7 @@ enum CreateProtocolError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .failedToCreateProtocol:
-            return "Failed to create protocol"
+            return "Failed to create protocol.  Please try again."
         }
     }
 }

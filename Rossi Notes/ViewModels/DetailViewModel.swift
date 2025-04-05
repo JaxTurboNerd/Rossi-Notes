@@ -132,13 +132,10 @@ class DetailViewModel: ObservableObject {
     public func deleteNote(collectionId: String, documentId: String) async throws {
         do {
             let _ = try await appwrite.deleteDocument(collectionId, documentId)
-            await MainActor.run {
-                //do stuff here:
-                noteWillDelete = true
-            }
+            noteWillDelete = true
         } catch {
-            self.errorMessage = error.localizedDescription
             print("delete document error \(String(describing: errorMessage))")
+            self.errorMessage = error.localizedDescription
             self.isLoading = false
         }
     }
