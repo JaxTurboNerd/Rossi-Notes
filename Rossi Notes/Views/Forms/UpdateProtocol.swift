@@ -15,6 +15,7 @@ struct UpdateView: View {
     @Binding var noteUpdated: Bool
     @State private var alertMessage = ""
     @State private var showAlert = false
+    @FocusState var nameIsFocused: Bool
     
     var collectionId: String
     var documentId: String
@@ -38,7 +39,10 @@ struct UpdateView: View {
                     .font(Font.custom("Urbanist-Medium", size: 16))
                     .foregroundColor(Color("AppBlue")))
                 {
-                    TextField("Name", text: $noteDetails.name)
+                    VStack {
+                        TextField("Name", text: $noteDetails.name).focused($nameIsFocused)
+                        Text("Required").font(.footnote).foregroundColor(.red)
+                    }
                     DatePicker("Protocol Date", selection: $noteDetails.protocolDate, displayedComponents: [.date])//shows only the date excludes time
                         .datePickerStyle(.compact)
                 }
@@ -82,13 +86,24 @@ struct UpdateView: View {
                         Task {
                             //Submit the form:
                             do {
-                                try await viewModel.updateProtocol(collectionId: collectionId, documentId: documentId, noteDetails: noteDetails)
-                                noteUpdated = true
-                                dismiss.callAsFunction()
-
-                            } catch {
-                                viewModel.isSubmitting = false
-                                alertMessage = error.localizedDescription
+                                let isValidFields = try validateTextFields(name: noteDetails.name, date: noteDetails.protocolDate)
+                                if isValidFields {
+                                    do {
+                                        try await viewModel.updateProtocol(collectionId: collectionId, documentId: documentId, noteDetails: noteDetails)
+                                        noteUpdated = true
+                                        dismiss.callAsFunction()
+                                    } catch {
+                                        viewModel.isSubmitting = false
+                                        alertMessage = error.localizedDescription
+                                        showAlert = true
+                                    }
+                                }
+                            } catch UpdateTextfieldError.nameIsEmpty {
+                                nameIsFocused = true
+                                alertMessage = "Name is required."
+                                showAlert = true
+                            } catch UpdateTextfieldError.dateIsEmpty {
+                                alertMessage = "Date is required."
                                 showAlert = true
                             }
                         }
@@ -99,9 +114,27 @@ struct UpdateView: View {
                 viewModel.modelSetup(noteDetails)
             }
             .alert(isPresented: $showAlert){
-                Alert(title: Text("Create Protocol"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                Alert(title: Text("Input Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
             }
         }
     }
+}
+
+enum UpdateTextfieldError: Error {
+    case nameIsEmpty, dateIsEmpty
+}
+
+private func validateTextFields(name: String, date: Date) throws -> Bool {
+    let dateFormatter = DateFormatter()
+    let dateString = dateFormatter.string(from: date)
     
+    if name.isEmpty {
+        throw UpdateTextfieldError.nameIsEmpty
+    }
+    
+//    if dateString.isEmpty {
+//        throw UpdateTextfieldError.dateIsEmpty
+//    }
+    
+    return true
 }

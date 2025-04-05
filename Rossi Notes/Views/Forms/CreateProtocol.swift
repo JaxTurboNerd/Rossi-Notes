@@ -117,7 +117,7 @@ struct CreateView: View {
                 }
             }
             .alert(isPresented: $showAlert){
-                Alert(title: Text("Create Protocol"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                Alert(title: Text("Input Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
             }
         }
     }
@@ -135,9 +135,9 @@ private func validateTextFields(name: String, date: Date) throws -> Bool {
         throw CreateTextfieldError.nameIsEmpty
     }
     
-    if dateString.isEmpty {
-        throw CreateTextfieldError.dateIsEmpty
-    }
+//    if dateString.isEmpty {
+//        throw CreateTextfieldError.dateIsEmpty
+//    }
     
     return true
 }
