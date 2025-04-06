@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var user: Appwrite
+    @EnvironmentObject private var user: Appwrite
     @State var isShowingSignIn = false
     
     var body: some View {
@@ -58,6 +58,9 @@ struct ContentView: View {
                 
             }
         }
+        .task({
+            await user.checkAuthStatus()
+        })
     }
 }
 
@@ -71,5 +74,5 @@ struct MainBackgroundView: View {
 
 #Preview {
     @Previewable @StateObject var appwrite = Appwrite()
-    ContentView(user: appwrite)
+    ContentView()
 }

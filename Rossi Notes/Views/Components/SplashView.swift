@@ -16,7 +16,7 @@ struct SplashView: View {
             if self.shouldDisplaySplashView {
                 SplashContent(user: appwrite)
             } else {
-                ContentView(user: appwrite)
+                ContentView()
             }
         }
         .onAppear {
@@ -30,7 +30,7 @@ struct SplashView: View {
     }
 }
 
-#Preview {
-    @Previewable @StateObject var appwrite = Appwrite()
-    SplashView(appwrite: appwrite)
-}
+//#Preview {
+//    @Previewable @StateObject var appwrite = Appwrite()
+//    SplashView(appwrite: appwrite)
+//}

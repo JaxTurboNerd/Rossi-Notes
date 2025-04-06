@@ -77,7 +77,7 @@ struct Home: View {
                     
                 }
                 .padding()
-                .navigationDestination(isPresented: $isShowingHomeView, destination: {ContentView(user: appwrite)})
+                .navigationDestination(isPresented: $isShowingHomeView, destination: {ContentView()})
             }
         }
         .navigationBarBackButtonHidden()

@@ -66,7 +66,7 @@ struct SplashContent: View {
     }
 }
 
-#Preview {
-    @Previewable @StateObject var appwrite = Appwrite()
-    SplashContent(user: appwrite)
-}
+//#Preview {
+//    @Previewable @StateObject var appwrite = Appwrite()
+//    SplashContent(user: appwrite)
+//}

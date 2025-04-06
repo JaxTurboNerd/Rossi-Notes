@@ -14,7 +14,7 @@ class LoginViewModel: ObservableObject {
     private let appwrite: Appwrite
     
     @Published var email: String = "gboyd69@yahoo.com"
-    @Published var password: String = ""
+    @Published var password: String = "11Gunner$"
     @Published var errorMessage: String?
     @Published var isSubmitting = false
     //@Published var session: Session?

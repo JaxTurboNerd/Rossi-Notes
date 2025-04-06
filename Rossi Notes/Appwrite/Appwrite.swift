@@ -16,7 +16,7 @@ import NIOCore
 class Appwrite: ObservableObject {
     //initialize appwrite:
     private let client: Client
-    private let account: Account
+    let account: Account
     private let avatars: Avatars
     private let databases: Databases
     private var databaseId = "66a04cba001cb48a5bd7"
@@ -26,7 +26,6 @@ class Appwrite: ObservableObject {
     @Published var createdDocument: Document<[String: AnyCodable]>?
     @Published var updatedDocument: Document<[String: AnyCodable]>?
     @Published var documentList: DocumentList<[String: AnyCodable]>?
-    @Published var newUser: User<[String: AnyCodable]>?
     @Published var isAuthenticated = false
     @Published var isLoading = false
     
@@ -38,21 +37,19 @@ class Appwrite: ObservableObject {
         self.account = Account(client)
         self.avatars = Avatars(client)
         self.databases = Databases(client)
-        checkAuthStatus()
     }
     
-    func checkAuthStatus() {
+    func checkAuthStatus() async {
         isLoading = true
-        Task {
-            do {
-                currentUser = try await account.get()
-                self.isAuthenticated = true
-                self.isLoading = false
-            } catch {
-                self.isAuthenticated = false
-                self.currentUser = nil
-                self.isLoading = false
-            }
+        do {
+            currentUser = try await account.get()
+            self.isAuthenticated = true
+            self.isLoading = false
+        } catch {
+            print("auth error: \(error.localizedDescription)")
+            self.isAuthenticated = false
+            self.currentUser = nil
+            self.isLoading = false
         }
     }
     
@@ -60,21 +57,30 @@ class Appwrite: ObservableObject {
     public func createAccount(_ firstName: String, _ lastName: String, _ email: String,_ password: String) async throws -> User<[String: AnyCodable]> {
         do {
             let name = firstName + " " + lastName
-            newUser = try await account.create(userId: ID.unique(), email: email, password: password, name: name)
+            let newUser = try await account.create(userId: ID.unique(), email: email, password: password, name: name)
+            return newUser
         } catch {
-            throw CreateUserError.failed(error.localizedDescription)
+            throw UserError.failed(error.localizedDescription)
         }
-        return newUser!
     }
     
-    public func getAccount() async throws -> User<[String: AnyCodable]>{
+    public func getAccount() async throws -> User<[String: AnyCodable]>?{
         do {
             let response = try await account.get()
             self.currentUser = response
-        } catch {
-            print(error.localizedDescription)
+            return currentUser
+        } catch let error as AppwriteError {
+            if error.type == "user_invalid_credentials" {
+                throw AuthError.invalidCredentials
+            } else if error.type == "user_blocked" {
+                throw AuthError.userBlocked
+            } else if error.type == "general_argument_invalid" {
+                throw AuthError.generalArgumentError
+            } else {
+                print("Get account error: \(error.localizedDescription)")
+                throw error
+            }
         }
-        return currentUser!
     }
     
     public func signIn(_ email: String, _ password: String) async throws -> Session {
@@ -95,6 +101,7 @@ class Appwrite: ObservableObject {
             } else if error.type == "general_argument_invalid" {
                 throw AuthError.generalArgumentError
             } else {
+                print("Sign in error: \(error.localizedDescription)")
                 throw error
             }
         }
@@ -196,7 +203,7 @@ enum AuthError: LocalizedError {
     }
 }
 
-enum CreateUserError: LocalizedError {
+enum UserError: LocalizedError {
     case failed(String)
     case invalidEmail(String)
     case invalidPassword(String)
@@ -213,5 +220,13 @@ enum CreateUserError: LocalizedError {
     }
 }
 
+enum DeleteDocumentError: LocalizedError {
+    case failedDelete
+    
+    var errorDescription: String? {
+        return "Failed to delete document.  Please try again."
+    }
+    
+}
 
 
