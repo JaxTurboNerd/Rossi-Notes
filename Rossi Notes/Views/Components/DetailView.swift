@@ -103,7 +103,7 @@ struct DetailView: View {
             do {
                try await viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
             } catch {
-                print("fetching document error: \(error)")
+                print("fetching document error: \(error.localizedDescription)")
             }
         }
         .onDisappear{

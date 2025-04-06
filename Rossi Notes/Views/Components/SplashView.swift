@@ -8,19 +8,18 @@
 import SwiftUI
 
 struct SplashView: View {
-    @StateObject var appwrite: Appwrite
     @State var shouldDisplaySplashView = true
     
     var body: some View {
         VStack {
             if self.shouldDisplaySplashView {
-                SplashContent(user: appwrite)
+                SplashContent()
             } else {
                 ContentView()
             }
         }
         .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3.5, execute: {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5, execute: {
                 withAnimation {
                     self.shouldDisplaySplashView = false
                 }

@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ContentView: View {
+    //Used EnvironmentObject instead of requiring the view to initialize the appwrite instance
+    //so the task modifier can check the user Auth status before the view appears.
     @EnvironmentObject private var user: Appwrite
     @State var isShowingSignIn = false
     

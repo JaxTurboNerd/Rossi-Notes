@@ -13,7 +13,7 @@ struct Rossi_NotesApp: App {
     @StateObject private var detailsModel = DetailsModel()
     var body: some Scene {
         WindowGroup {
-            SplashView(appwrite: appwrite)
+            SplashView()
                 .environmentObject(appwrite)
                 .environmentObject(detailsModel)
         }

@@ -34,9 +34,7 @@ enum AnimationPhase: CaseIterable {
 }
 
 struct SplashContent: View {
-    
-    @StateObject var user: Appwrite
-    @State private var shouldDisplaySplashView = true
+        @State private var shouldDisplaySplashView = true
     
     var body: some View {
         ZStack {
