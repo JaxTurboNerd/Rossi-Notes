@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SplashView: View {
     @State var shouldDisplaySplashView = true
+    @EnvironmentObject var appwrite: Appwrite
     
     var body: some View {
         VStack {
@@ -25,7 +26,7 @@ struct SplashView: View {
                 }
             })
         }
-
+        .environmentObject(appwrite)
     }
 }
 

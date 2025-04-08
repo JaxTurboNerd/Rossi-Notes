@@ -22,10 +22,6 @@ class Appwrite: ObservableObject {
     private var databaseId = "66a04cba001cb48a5bd7"
     @Published var currentUser: User<[String: AnyCodable]>?
     //@Published var session: Session?
-    @Published var document: Document<[String: AnyCodable]>?
-    @Published var createdDocument: Document<[String: AnyCodable]>?
-    @Published var updatedDocument: Document<[String: AnyCodable]>?
-    @Published var documentList: DocumentList<[String: AnyCodable]>?
     @Published var isAuthenticated = false
     @Published var isLoading = false
     
@@ -131,11 +127,10 @@ class Appwrite: ObservableObject {
     public func listDocument(_ collectionId: String, _ documentId: String) async throws -> Document<[String: AnyCodable]>? {
         do {
             let document = try await databases.getDocument(databaseId: databaseId, collectionId: collectionId, documentId: documentId)
-            self.document = document
             return document
         } catch {
             print(error.localizedDescription)
-            return nil
+            throw FetchDocumentsError.failedFetch
         }
     }
     
@@ -146,11 +141,10 @@ class Appwrite: ObservableObject {
                 collectionId: collectionId,
                 queries: [] // optional
             )
-            self.documentList = documentList
             return documentList
         } catch {
             print(error.localizedDescription)
-            return nil
+            throw FetchDocumentsError.failedFetch
         }
     }
     
@@ -158,7 +152,6 @@ class Appwrite: ObservableObject {
         
         do {
             let document = try await databases.createDocument(databaseId: databaseId, collectionId: collectionId, documentId: documentId, data: data)
-            self.createdDocument = document
             return document
         } catch {
             print(error.localizedDescription)
@@ -169,7 +162,6 @@ class Appwrite: ObservableObject {
     public func updateDocument(_ collectionId: String, _ documentId: String, _ data: String) async throws -> Document<[String: AnyCodable]>? {
         do {
             let document = try await databases.updateDocument(databaseId: databaseId, collectionId: collectionId, documentId: documentId, data: data)
-            self.updatedDocument = document
             return document
         } catch {
             print(error.localizedDescription)
@@ -227,6 +219,14 @@ enum DeleteDocumentError: LocalizedError {
         return "Failed to delete document.  Please try again."
     }
     
+}
+
+enum FetchDocumentsError: LocalizedError {
+    case failedFetch
+    
+    var errorDescription: String? {
+        return "Failed to load protocols.  Please try again."
+    }
 }
 
 

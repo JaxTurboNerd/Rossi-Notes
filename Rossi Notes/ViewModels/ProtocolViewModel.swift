@@ -9,7 +9,6 @@ import SwiftUI
 import Appwrite
 import JSONCodable
 
-@MainActor
 final class ProtocolViewModel: ObservableObject {
     private let appwrite: Appwrite
     
@@ -25,38 +24,34 @@ final class ProtocolViewModel: ObservableObject {
     //Initialize:
     init(appwrite: Appwrite){
         self.appwrite = appwrite
-        fetchDocuments()
-    }
-    
-    func fetchDocuments() {
-        isLoading = true
-        errorMessage = nil
-        
         Task {
-            do {
-//                let response = try await appwrite.databases.listDocuments(
-//                    databaseId: databaseId,
-//                    collectionId: collectionId,
-//                    queries: []
-//                )
-                let response = try await appwrite.listDocuments(collectionId)
-                //returns response of type: DocumentList<Dictionary<String, AnyCodable>>
-                await MainActor.run {
-                    self.documents = response!.documents
-                    self.isLoading = false
-                }
-                
-            } catch {
-                await MainActor.run {
-                    self.errorMessage = error.localizedDescription
-                    print("get document error \(String(describing: errorMessage))")
-                    self.isLoading = false
-                }
-            }
+            try await fetchDocuments()
         }
     }
     
-    func refreshDocuments() {
-        fetchDocuments()
+    @MainActor
+    func fetchDocuments() async throws {
+        self.isLoading = true
+        self.errorMessage = nil
+        
+        do {
+            let response = try await appwrite.listDocuments(collectionId)
+            self.documents = response?.documents ?? []
+            self.isLoading = false
+        } catch {
+            self.errorMessage = error.localizedDescription
+            self.isLoading = false
+            print("fetch document error \(error.localizedDescription)")
+        }
+    }
+    
+    @MainActor
+    func refreshDocuments() async throws {
+        do {
+            try await fetchDocuments()
+        } catch {
+            print("refresh error \(error.localizedDescription)")
+        }
+        
     }
 }
