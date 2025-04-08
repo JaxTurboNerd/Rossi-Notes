@@ -26,7 +26,6 @@ struct SplashView: View {
                 }
             })
         }
-        .environmentObject(appwrite)
     }
 }
 
