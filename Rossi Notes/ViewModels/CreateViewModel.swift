@@ -55,7 +55,7 @@ final class CreateViewModel: ObservableObject {
             
             //convert data to json string:
             let dataString = String(data: data, encoding: .utf8)
-            guard let response = try await appwrite.createDocument(collectionId, documentId, dataString ?? "") else {
+            guard (try await appwrite.createDocument(collectionId, documentId, dataString ?? "")) != nil else {
                 self.isSubmitting = false
                 throw CreateProtocolError.failedToCreateProtocol
             }

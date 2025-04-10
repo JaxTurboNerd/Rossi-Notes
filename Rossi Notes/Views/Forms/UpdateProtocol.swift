@@ -125,7 +125,7 @@ enum UpdateTextfieldError: Error {
 }
 
 private func validateTextFields(name: String, date: Date) throws -> Bool {
-    let dateFormatter = DateFormatter()    
+    //let dateFormatter = DateFormatter()    
     if name.isEmpty {
         throw UpdateTextfieldError.nameIsEmpty
     }

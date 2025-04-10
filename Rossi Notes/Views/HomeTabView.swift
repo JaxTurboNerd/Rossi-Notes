@@ -9,11 +9,6 @@ import SwiftUI
 
 struct HomeTabView: View {
     @EnvironmentObject private var appwrite: Appwrite
-    //private var appwrite: Appwrite
-    
-//    init(appwrite: Appwrite){
-//        self.appwrite = appwrite
-//    }
     
     var body: some View {
         TabView {
@@ -31,13 +26,9 @@ struct HomeTabView: View {
                 }
         }
         .navigationBarBackButtonHidden()
-//        .task {
-//            print(appwrite.currentUser?.email ?? "No user logged in")
-//        }
     }
 }
 
 #Preview {
-    let appwrite = Appwrite()
     HomeTabView()
 }
