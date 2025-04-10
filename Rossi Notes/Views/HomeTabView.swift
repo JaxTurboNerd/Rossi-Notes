@@ -8,11 +8,7 @@
 import SwiftUI
 
 struct HomeTabView: View {
-    private var appwrite: Appwrite
-    
-    init(appwrite: Appwrite){
-        self.appwrite = appwrite
-    }
+    @EnvironmentObject private var appwrite: Appwrite
     
     var body: some View {
         TabView {
@@ -34,6 +30,5 @@ struct HomeTabView: View {
 }
 
 #Preview {
-    let appwrite = Appwrite()
-    HomeTabView(appwrite: appwrite)
+    HomeTabView()
 }

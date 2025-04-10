@@ -119,7 +119,7 @@ struct SignIn: View {
                             Alert(title: Text("Login Error"), message: Text(alertMessage ?? "an error has occured"), dismissButton: .default(Text("OK")))
                         }
                     }
-                    .navigationDestination(isPresented: $showHomeTabView, destination: {HomeTabView(appwrite: appwrite)})
+                    .navigationDestination(isPresented: $showHomeTabView, destination: {HomeTabView()})
                     Divider()
                         .frame(width: 350, height: 2)
                         .overlay(Color("AppBlue"))

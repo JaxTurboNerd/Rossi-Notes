@@ -9,7 +9,6 @@ import SwiftUI
 import Appwrite
 import JSONCodable
 
-@MainActor
 class PlusViewModel: ObservableObject {
     private let appwrite: Appwrite
 
@@ -25,32 +24,33 @@ class PlusViewModel: ObservableObject {
     //Initialize:
     init(appwrite: Appwrite){
         self.appwrite = appwrite
-        fetchDocuments()
-    }
-    
-    func fetchDocuments() {
-        isLoading = true
-        errorMessage = nil
-        
         Task {
-            do {
-                let response = try await appwrite.listDocuments(collectionId)
-                //returns response of type: DocumentList<Dictionary<String, AnyCodable>>
-                await MainActor.run {
-                    self.documents = response!.documents
-                    self.isLoading = false
-                }
-                
-            } catch {
-                await MainActor.run {
-                    self.errorMessage = error.localizedDescription
-                    self.isLoading = false
-                }
-            }
+            try await fetchDocuments()
         }
     }
     
-    func refreshDocuments() {
-        fetchDocuments()
+    @MainActor
+    func fetchDocuments() async throws {
+        isLoading = true
+        errorMessage = nil
+            do {
+                let response = try await appwrite.listDocuments(collectionId)
+                //returns response of type: DocumentList<Dictionary<String, AnyCodable>>
+                    self.documents = response!.documents
+                    self.isLoading = false
+                
+            } catch {
+                    self.errorMessage = error.localizedDescription
+                    self.isLoading = false
+            }
+    }
+    
+    @MainActor
+    func refreshDocuments() async throws {
+        do {
+            try await fetchDocuments()
+        } catch {
+            print("referesh error: \(error.localizedDescription)")
+        }
     }
 }

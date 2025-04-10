@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct ProtocolPlusView: View {
-    @State private var showForm = false
     @StateObject private var viewModel: PlusViewModel
     @State var triggerRefresh: Bool = false
+    @State private var showForm = false
     private var appwrite: Appwrite
     
     init(appwrite: Appwrite){
-       _viewModel = StateObject(wrappedValue: PlusViewModel(appwrite: appwrite))
+        _viewModel = StateObject(wrappedValue: PlusViewModel(appwrite: appwrite))
         self.appwrite = appwrite
     }
-        
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -47,7 +47,7 @@ struct ProtocolPlusView: View {
                                     }
                                     //Displays the protocol form to create a new note
                                     .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, triggerRefresh: $triggerRefresh)})
-
+                                    
                                 })
                             }
                             
@@ -57,11 +57,23 @@ struct ProtocolPlusView: View {
             }
         }
         .onChange(of: triggerRefresh, {
-            viewModel.refreshDocuments()
+            Task {
+                do {
+                    try await viewModel.refreshDocuments()
+                } catch {
+                    print("fetch error: \(error.localizedDescription)")
+                }
+            }
             triggerRefresh = false
         })
         .refreshable {
-            viewModel.refreshDocuments()
+            Task {
+                do {
+                    try await viewModel.refreshDocuments()
+                } catch {
+                    print("Refresh error \(error.localizedDescription)")
+                }
+            }
         }
     }
 }

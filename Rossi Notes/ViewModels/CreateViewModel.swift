@@ -13,23 +13,26 @@ import JSONCodable
 final class CreateViewModel: ObservableObject {
     private let appwrite: Appwrite
     
-    @Published var document: Document<[String: AnyCodable]>?
-    @Published var documentId = ID.unique()
-    @Published var name = ""
-    @Published var protocolDate = Date.now
-    @Published var dogReactive = false
-    @Published var catReactive = false
-    @Published var barrierReactive = false
-    @Published var leashReactive = false
-    @Published var jumpy = false
-    @Published var resourceGuarder = false
-    @Published var avoidStrangers = false
-    @Published var placeRoutine = false
-    @Published var doorRoutine = false
-    @Published var looseLeash = false
-    @Published var notes = ""
+    //Probably don't need these to be @Published:
     @Published public var isSubmitting = false
     @Published public var errorMessage: String?
+    @Published public var noteAdded = false
+    
+    var document: Document<[String: AnyCodable]>?
+    var documentId = ID.unique()
+    var name = ""
+    var protocolDate = Date.now
+    var dogReactive = false
+    var catReactive = false
+    var barrierReactive = false
+    var leashReactive = false
+    var jumpy = false
+    var resourceGuarder = false
+    var avoidStrangers = false
+    var placeRoutine = false
+    var doorRoutine = false
+    var looseLeash = false
+    var notes = ""
     
     init(appwrite: Appwrite){
         self.appwrite = appwrite
@@ -52,11 +55,12 @@ final class CreateViewModel: ObservableObject {
             
             //convert data to json string:
             let dataString = String(data: data, encoding: .utf8)
-            guard let response = try await appwrite.createDocument(collectionId, documentId, dataString ?? "") else {
+            guard (try await appwrite.createDocument(collectionId, documentId, dataString ?? "")) != nil else {
                 self.isSubmitting = false
                 throw CreateProtocolError.failedToCreateProtocol
             }
-            self.document = response
+            //self.document = response
+            self.noteAdded = true
             self.isSubmitting = false
             
         } catch JSONError.invalidData {

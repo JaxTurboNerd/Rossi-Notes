@@ -9,8 +9,7 @@ import SwiftUI
 import Foundation
 
 struct ProtocolView: View {
-    
-    @StateObject var viewModel: ProtocolViewModel
+    @StateObject private var viewModel: ProtocolViewModel
     @State var triggerRefresh: Bool = false
     @State private var showForm = false
     private var appwrite: Appwrite
@@ -33,7 +32,7 @@ struct ProtocolView: View {
                     }
                 } else {
                     Group {
-                        List(viewModel.documents, id: \.id){document in
+                        List(viewModel.documents, id: \.id){ document in
                             let name = document.data["name"]?.description ?? ""
                             let id = document.data["$id"]?.description ?? ""
                             CardView(name: name)
@@ -58,11 +57,24 @@ struct ProtocolView: View {
             
         }
         .onChange(of: triggerRefresh, {
-            viewModel.refreshDocuments()
+            Task {
+                do {
+                    try await viewModel.refreshDocuments()
+                } catch {
+                    print("Error refreshing documents: \(error.localizedDescription)")
+                }
+                
+            }
             triggerRefresh = false
         })
         .refreshable {
-            viewModel.refreshDocuments()
+            Task {
+                do {
+                    try await viewModel.refreshDocuments()
+                } catch {
+                    print("refresh error \(error.localizedDescription)")
+                }
+            }
         }
     }
 }

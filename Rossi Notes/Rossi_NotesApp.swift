@@ -9,11 +9,11 @@ import SwiftUI
 
 @main
 struct Rossi_NotesApp: App {
-    let appwrite = Appwrite()
     @StateObject private var detailsModel = DetailsModel()
+    let appwrite = Appwrite()
     var body: some Scene {
         WindowGroup {
-            SplashView(appwrite: appwrite)
+            SplashView()
                 .environmentObject(appwrite)
                 .environmentObject(detailsModel)
         }

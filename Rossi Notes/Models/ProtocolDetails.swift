@@ -8,20 +8,20 @@
 import Foundation
 
 class DetailsModel: Identifiable, ObservableObject {
-    @Published var id: String = ""
-    @Published var name: String = ""
-    @Published var dogReactive: Bool = false
-    @Published var barrierReactive: Bool = false
-    @Published var miscNotes: String = ""
-    @Published var protocolDate: Date = Date.now
-    @Published var catReactive: Bool = false
-    @Published var resourceGuarder: Bool = false
-    @Published var strangerReactive: Bool = false
-    @Published var jumpyMouthy: Bool = false
-    @Published var doorRoutine: Bool = false
-    @Published var placeRoutine: Bool = false
-    @Published var leashReactive: Bool = false
-    @Published var creatorName: String = ""
+    var id: String = ""
+    var name: String = ""
+    var dogReactive: Bool = false
+    var barrierReactive: Bool = false
+    var miscNotes: String = ""
+    var protocolDate: Date = Date.now
+    var catReactive: Bool = false
+    var resourceGuarder: Bool = false
+    var strangerReactive: Bool = false
+    var jumpyMouthy: Bool = false
+    var doorRoutine: Bool = false
+    var placeRoutine: Bool = false
+    var leashReactive: Bool = false
+    var creatorName: String = ""
 }
 
 class DetailsStringModel: Identifiable, ObservableObject {
