@@ -10,6 +10,8 @@ import SwiftUI
 @main
 struct Rossi_NotesApp: App {
     @StateObject private var detailsModel = DetailsModel()
+    //Can NOT use @ObservedObject.  This causes the tab views to not display the toolbar.
+    //ObservedObject persists for the life of the view.
     let appwrite = Appwrite()
     var body: some Scene {
         WindowGroup {

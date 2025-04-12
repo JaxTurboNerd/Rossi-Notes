@@ -11,7 +11,7 @@ struct Home: View {
     
     @StateObject var viewModel: HomeTabViewModel
     @State var isShowingHomeView = false
-    private var appwrite: Appwrite
+    var appwrite: Appwrite
     
     @State private var showAlert = false
     @State private var alertMessage = ""

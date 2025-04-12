@@ -25,32 +25,28 @@ struct ProtocolView: View {
             ZStack {
                 MainBackgroundView()
                 if viewModel.isLoading {
-                    Group {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle())
-                            .controlSize(.large)
-                    }
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .controlSize(.large)
                 } else {
-                    Group {
-                        List(viewModel.documents, id: \.id){ document in
-                            let name = document.data["name"]?.description ?? ""
-                            let id = document.data["$id"]?.description ?? ""
-                            CardView(name: name)
-                                .overlay {
-                                    NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()})
-                                }
-                        }
-                        .navigationTitle("Protocol")
-                        .navigationBarTitleDisplayMode(.inline)
-                        .toolbar {
-                            ToolbarItem(placement: .topBarTrailing,
-                                        content: {
-                                Button("Add Note"){
-                                    showForm = true
-                                }
-                                .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, triggerRefresh: $triggerRefresh)})
-                            })
-                        }
+                    List(viewModel.documents, id: \.id){ document in
+                        let name = document.data["name"]?.description ?? ""
+                        let id = document.data["$id"]?.description ?? ""
+                        CardView(name: name)
+                            .overlay {
+                                NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()})
+                            }
+                    }
+                    .navigationTitle("Protocol")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing,
+                                    content: {
+                            Button("Add Note"){
+                                showForm = true
+                            }
+                            .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, triggerRefresh: $triggerRefresh)})
+                        })
                     }
                 }
             }

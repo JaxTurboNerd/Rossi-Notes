@@ -10,7 +10,7 @@ import Appwrite
 
 @MainActor
 class HomeTabViewModel: ObservableObject {
-    private let appwrite: Appwrite
+    let appwrite: Appwrite
     
     @Published var isSubmitting = false
     @Published var errorMessage = ""
