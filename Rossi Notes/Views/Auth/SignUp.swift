@@ -185,7 +185,7 @@ struct SignUp: View {
                     .alert(isPresented: $showAlert){
                         Alert(title: Text("Account Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
                     }
-                    .navigationDestination(isPresented: $showHomeTabView, destination: {HomeTabView(appwrite: appwrite)})
+                    .navigationDestination(isPresented: $showHomeTabView, destination: {HomeTabView()})
                     Divider()
                         .frame(width: 350, height: 2)
                         .overlay(Color("AppBlue"))

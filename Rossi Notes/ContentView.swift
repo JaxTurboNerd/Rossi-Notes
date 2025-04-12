@@ -15,8 +15,8 @@ struct ContentView: View {
         NavigationStack {
             if appwrite.isLoading {
                 ProgressView()
-            } else if appwrite.isAuthenticated {
-                HomeTabView(appwrite: appwrite)
+            } else if appwrite.isAuthenticated { //checks user authentication status
+                HomeTabView()
             } else {
                 ZStack {
                     MainBackgroundView()

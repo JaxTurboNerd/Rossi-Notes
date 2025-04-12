@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct Home: View {
-    //@EnvironmentObject private var appwrite: Appwrite
     @StateObject var viewModel: HomeTabViewModel
     @State var isShowingHomeView = false
     private var appwrite: Appwrite
