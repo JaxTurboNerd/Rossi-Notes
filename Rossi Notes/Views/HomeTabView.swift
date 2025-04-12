@@ -9,7 +9,6 @@ import SwiftUI
 
 struct HomeTabView: View {
     @EnvironmentObject private var appwrite: Appwrite
-    //let appwrite: Appwrite
     
     var body: some View {
         TabView {
@@ -27,11 +26,9 @@ struct HomeTabView: View {
                 }
         }
         .navigationBarBackButtonHidden()
-        //.environmentObject(appwrite)
     }
 }
 
-//#Preview {
-//    let appwrite = Appwrite()
-//    HomeTabView(appwrite: appwrite, viewModel: SharedViewModel())
-//}
+#Preview {
+    HomeTabView()
+}
