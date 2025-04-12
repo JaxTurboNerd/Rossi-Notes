@@ -8,14 +8,13 @@
 import SwiftUI
 
 struct ProtocolPlusView: View {
+    @EnvironmentObject var appwrite: Appwrite
     @StateObject private var viewModel: PlusViewModel
     @State var triggerRefresh: Bool = false
     @State private var showForm = false
-    private var appwrite: Appwrite
     
     init(appwrite: Appwrite){
         _viewModel = StateObject(wrappedValue: PlusViewModel(appwrite: appwrite))
-        self.appwrite = appwrite
     }
     
     var body: some View {

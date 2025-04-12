@@ -8,17 +8,15 @@
 import SwiftUI
 
 struct Home: View {
-    
+    @EnvironmentObject var appwrite: Appwrite
     @StateObject var viewModel: HomeTabViewModel
     @State var isShowingHomeView = false
-    private var appwrite: Appwrite
     
     @State private var showAlert = false
     @State private var alertMessage = ""
     
     init(appwrite: Appwrite) {
         _viewModel = StateObject(wrappedValue: HomeTabViewModel(appwrite: appwrite))
-        self.appwrite = appwrite
     }
     
     var body: some View {

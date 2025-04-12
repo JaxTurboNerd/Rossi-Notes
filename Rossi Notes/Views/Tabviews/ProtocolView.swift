@@ -9,14 +9,13 @@ import SwiftUI
 import Foundation
 
 struct ProtocolView: View {
+    @EnvironmentObject var appwrite: Appwrite
     @StateObject private var viewModel: ProtocolViewModel
     @State var triggerRefresh: Bool = false
     @State private var showForm = false
-    private var appwrite: Appwrite
     
     init(appwrite: Appwrite){
         _viewModel = StateObject(wrappedValue: ProtocolViewModel(appwrite: appwrite))
-        self.appwrite = appwrite
     }
     
     //Need to add navigation bar items on the top of the view
