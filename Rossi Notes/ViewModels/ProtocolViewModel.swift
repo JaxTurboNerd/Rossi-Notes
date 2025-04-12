@@ -10,7 +10,7 @@ import Appwrite
 import JSONCodable
 
 final class ProtocolViewModel: ObservableObject {
-    private let appwrite: Appwrite
+    let appwrite: Appwrite
     
     // Published properties for UI updates
     @Published public var documents: [Document<[String: AnyCodable]>] = []

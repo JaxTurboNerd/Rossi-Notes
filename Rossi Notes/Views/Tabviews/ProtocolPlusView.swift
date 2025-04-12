@@ -11,47 +11,42 @@ struct ProtocolPlusView: View {
     @StateObject private var viewModel: PlusViewModel
     @State var triggerRefresh: Bool = false
     @State private var showForm = false
-    private var appwrite: Appwrite
+    let appwrite: Appwrite
     
     init(appwrite: Appwrite){
-        _viewModel = StateObject(wrappedValue: PlusViewModel(appwrite: appwrite))
         self.appwrite = appwrite
+        _viewModel = StateObject(wrappedValue: PlusViewModel(appwrite: appwrite))
     }
     
     var body: some View {
         NavigationView {
             ZStack {
                 MainBackgroundView()
-                Group {
-                    if viewModel.isLoading {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle())
-                            .controlSize(.large)
-                    } else {
-                        Group {
-                            List(viewModel.documents, id: \.id){document in
-                                let name = document.data["name"]?.description ?? ""
-                                let id = document.data["$id"]?.description ?? ""
-                                CardView(name: name)
-                                    .overlay {
-                                        NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()})
-                                    }
+                if viewModel.isLoading {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .controlSize(.large)
+                } else {
+                    List(viewModel.documents, id: \.id){document in
+                        let name = document.data["name"]?.description ?? ""
+                        let id = document.data["$id"]?.description ?? ""
+                        CardView(name: name)
+                            .overlay {
+                                NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()})
                             }
-                            .navigationTitle("Protocol")
-                            .navigationBarTitleDisplayMode(.inline)
-                            .toolbar {
-                                ToolbarItem(placement: .topBarTrailing,
-                                            content: {
-                                    Button("Add Note"){
-                                        showForm = true
-                                    }
-                                    //Displays the protocol form to create a new note
-                                    .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, triggerRefresh: $triggerRefresh)})
-                                    
-                                })
+                    }
+                    .navigationTitle("Protocol")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing,
+                                    content: {
+                            Button("Add Note"){
+                                showForm = true
                             }
+                            //Displays the protocol form to create a new note
+                            .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, triggerRefresh: $triggerRefresh)})
                             
-                        }
+                        })
                     }
                 }
             }
