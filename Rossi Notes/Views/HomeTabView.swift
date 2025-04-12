@@ -16,7 +16,7 @@ struct HomeTabView: View {
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }
-            ProtocolView(appwrite: appwrite)
+            ProtocolView()
                 .tabItem {
                     Label("Protocol", systemImage: "dog")
                 }
