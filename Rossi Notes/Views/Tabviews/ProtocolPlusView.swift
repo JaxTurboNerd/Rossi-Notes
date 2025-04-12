@@ -51,16 +51,16 @@ struct ProtocolPlusView: View {
                 }
             }
         }
-//        .onChange(of: triggerRefresh, {
-//            Task {
-//                do {
-//                    try await viewModel.refreshPlusDocuments()
-//                } catch {
-//                    print("fetch error: \(error.localizedDescription)")
-//                }
-//            }
-//            triggerRefresh = false
-//        })
+        .onChange(of: triggerRefresh, {
+            Task {
+                do {
+                    try await viewModel.refreshPlusDocuments()
+                } catch {
+                    print("fetch error: \(error.localizedDescription)")
+                }
+            }
+            triggerRefresh = false
+        })
         .refreshable {
             Task {
                 do {
