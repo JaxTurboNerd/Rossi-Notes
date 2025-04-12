@@ -71,6 +71,7 @@ struct ProtocolPlusView: View {
     }
 }
 
-//#Preview {
-//    ProtocolPlusView()
-//}
+#Preview {
+    ProtocolPlusView()
+        .environmentObject(Appwrite())
+}
