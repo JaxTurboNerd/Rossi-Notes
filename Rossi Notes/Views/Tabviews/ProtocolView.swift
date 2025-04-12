@@ -9,15 +9,16 @@ import SwiftUI
 import Foundation
 
 struct ProtocolView: View {
-    @EnvironmentObject var appwrite: Appwrite
-    @StateObject private var viewModel = ProtocolViewModel()
+    @StateObject private var viewModel: ProtocolViewModel
+    let appwrite: Appwrite
     @State var triggerRefresh: Bool = false
     @State private var showForm = false
     
-//    init(appwrite: Appwrite){
-//        _viewModel = StateObject(wrappedValue: ProtocolViewModel(appwrite: appwrite))
-//        self.appwrite = appwrite
-//    }
+    init(appwrite: Appwrite){
+        self.appwrite = appwrite
+        _viewModel = StateObject(wrappedValue: ProtocolViewModel(appwrite: appwrite))
+        
+    }
     
     //Need to add navigation bar items on the top of the view
     var body: some View {
@@ -25,28 +26,32 @@ struct ProtocolView: View {
             ZStack {
                 MainBackgroundView()
                 if viewModel.isLoading {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle())
-                        .controlSize(.large)
-                } else {
-                    List(viewModel.documents, id: \.id){ document in
-                        let name = document.data["name"]?.description ?? ""
-                        let id = document.data["$id"]?.description ?? ""
-                        CardView(name: name)
-                            .overlay {
-                                NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()})
-                            }
+                    Group {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle())
+                            .controlSize(.large)
                     }
-                    .navigationTitle("Protocol")
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .topBarTrailing,
-                                    content: {
-                            Button("Add Note"){
-                                showForm = true
-                            }
-                            .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, triggerRefresh: $triggerRefresh)})
-                        })
+                } else {
+                    Group {
+                        List(viewModel.documents, id: \.id){ document in
+                            let name = document.data["name"]?.description ?? ""
+                            let id = document.data["$id"]?.description ?? ""
+                            CardView(name: name)
+                                .overlay {
+                                    NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()})
+                                }
+                        }
+                        .navigationTitle("Protocol")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .topBarTrailing,
+                                        content: {
+                                Button("Add Note"){
+                                    showForm = true
+                                }
+                                .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, triggerRefresh: $triggerRefresh)})
+                            })
+                        }
                     }
                 }
             }

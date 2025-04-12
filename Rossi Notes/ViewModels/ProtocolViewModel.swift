@@ -10,7 +10,7 @@ import Appwrite
 import JSONCodable
 
 final class ProtocolViewModel: ObservableObject {
-    @MainActor private let appwrite = Appwrite()
+    let appwrite: Appwrite
     
     // Published properties for UI updates
     @Published public var documents: [Document<[String: AnyCodable]>] = []
@@ -22,8 +22,8 @@ final class ProtocolViewModel: ObservableObject {
     let collectionId = "66a04db400070bffec78"
     
     //Initialize:
-    init(){
-        //self.appwrite = appwrite
+    init(appwrite: Appwrite){
+        self.appwrite = appwrite
         Task {
             try await fetchDocuments()
         }
