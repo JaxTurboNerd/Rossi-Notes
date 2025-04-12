@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct HomeTabView: View {
-    @EnvironmentObject private var appwrite: Appwrite
+    let appwrite: Appwrite
+    @StateObject var viewModel = SharedViewModel()
     
     var body: some View {
         TabView {
@@ -16,7 +17,7 @@ struct HomeTabView: View {
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }
-            ProtocolView(appwrite: appwrite)
+            ProtocolView(viewModel: viewModel)
                 .tabItem {
                     Label("Protocol", systemImage: "dog")
                 }
@@ -26,9 +27,11 @@ struct HomeTabView: View {
                 }
         }
         .navigationBarBackButtonHidden()
+        .environmentObject(appwrite)
     }
 }
 
-#Preview {
-    HomeTabView()
-}
+//#Preview {
+//    let appwrite = Appwrite()
+//    HomeTabView(appwrite: appwrite, viewModel: SharedViewModel())
+//}

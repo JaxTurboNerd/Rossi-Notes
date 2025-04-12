@@ -75,27 +75,27 @@ final class CreateViewModel: ObservableObject {
     }
 }
 
-enum CreateProtocolError: LocalizedError {
-    case failedToCreateProtocol
-    
-    var errorDescription: String? {
-        switch self {
-        case .failedToCreateProtocol:
-            return "Failed to create protocol.  Please try again."
-        }
-    }
-}
-
-enum JSONError: LocalizedError {
-    case invalidData
-    case typeMismatch
-    
-    var errorDescription: String? {
-        switch self {
-        case .invalidData:
-            return "Invalid data"
-        case .typeMismatch:
-            return "Type mismatch"
-        }
-    }
-}
+//enum CreateProtocolError: LocalizedError {
+//    case failedToCreateProtocol
+//    
+//    var errorDescription: String? {
+//        switch self {
+//        case .failedToCreateProtocol:
+//            return "Failed to create protocol.  Please try again."
+//        }
+//    }
+//}
+//
+//enum JSONError: LocalizedError {
+//    case invalidData
+//    case typeMismatch
+//    
+//    var errorDescription: String? {
+//        switch self {
+//        case .invalidData:
+//            return "Invalid data"
+//        case .typeMismatch:
+//            return "Type mismatch"
+//        }
+//    }
+//}
