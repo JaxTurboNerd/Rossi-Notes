@@ -14,7 +14,7 @@ struct ProtocolView: View {
     @StateObject var viewModel = SharedViewModel()
     @State var triggerRefresh: Bool = false
     @State private var showForm = false
-        
+    
     //Need to add navigation bar items on the top of the view
     var body: some View {
         NavigationView {
@@ -27,26 +27,24 @@ struct ProtocolView: View {
                             .controlSize(.large)
                     }
                 } else {
-                    Group {
-                        List(viewModel.documents, id: \.id){ document in
-                            let name = document.data["name"]?.description ?? ""
-                            let id = document.data["$id"]?.description ?? ""
-                            CardView(name: name)
-                                .overlay {
-                                    NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()})
-                                }
-                        }
-                        .navigationTitle("Protocol")
-                        .navigationBarTitleDisplayMode(.inline)
-                        .toolbar {
-                            ToolbarItem(placement: .topBarTrailing,
-                                        content: {
-                                Button("Add Note"){
-                                    showForm = true
-                                }
-                                .sheet(isPresented: $showForm, content: {CreateView(collectionId: viewModel.collectionId, triggerRefresh: $triggerRefresh)})
-                            })
-                        }
+                    List(viewModel.documents, id: \.id){ document in
+                        let name = document.data["name"]?.description ?? ""
+                        let id = document.data["$id"]?.description ?? ""
+                        CardView(name: name)
+                            .overlay {
+                                NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()})
+                            }
+                    }
+                    .navigationTitle("Protocol")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing,
+                                    content: {
+                            Button("Add Note"){
+                                showForm = true
+                            }
+                            .sheet(isPresented: $showForm, content: {CreateView(collectionId: viewModel.collectionId, triggerRefresh: $triggerRefresh)})
+                        })
                     }
                 }
             }

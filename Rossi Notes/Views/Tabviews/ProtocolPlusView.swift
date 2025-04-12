@@ -12,7 +12,7 @@ struct ProtocolPlusView: View {
     @StateObject var viewModel = SharedViewModel()
     @State var triggerRefresh: Bool = false
     @State private var showForm = false
-        
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -23,30 +23,28 @@ struct ProtocolPlusView: View {
                             .progressViewStyle(CircularProgressViewStyle())
                             .controlSize(.large)
                     } else {
-                        Group {
-                            List(viewModel.plusDocuments, id: \.id){document in
-                                let name = document.data["name"]?.description ?? ""
-                                let id = document.data["$id"]?.description ?? ""
-                                CardView(name: name)
-                                    .overlay {
-                                        NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.plusCollectionId, documentId: id), label: {EmptyView()})
-                                    }
-                            }
-                            .navigationTitle("Protocol")
-                            .navigationBarTitleDisplayMode(.inline)
-                            .toolbar {
-                                ToolbarItem(placement: .topBarTrailing,
-                                            content: {
-                                    Button("Add Note"){
-                                        showForm = true
-                                    }
-                                    //Displays the protocol form to create a new note
-                                    .sheet(isPresented: $showForm, content: {CreateView(collectionId: viewModel.plusCollectionId, triggerRefresh: $triggerRefresh)})
-                                    
-                                })
-                            }
-                            
+                        List(viewModel.plusDocuments, id: \.id){document in
+                            let name = document.data["name"]?.description ?? ""
+                            let id = document.data["$id"]?.description ?? ""
+                            CardView(name: name)
+                                .overlay {
+                                    NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.plusCollectionId, documentId: id), label: {EmptyView()})
+                                }
                         }
+                        .navigationTitle("Protocol")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .topBarTrailing,
+                                        content: {
+                                Button("Add Note"){
+                                    showForm = true
+                                }
+                                //Displays the protocol form to create a new note
+                                .sheet(isPresented: $showForm, content: {CreateView(collectionId: viewModel.plusCollectionId, triggerRefresh: $triggerRefresh)})
+                                
+                            })
+                        }
+                        
                     }
                 }
             }
