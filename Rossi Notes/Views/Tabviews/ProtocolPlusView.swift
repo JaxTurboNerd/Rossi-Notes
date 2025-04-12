@@ -14,8 +14,8 @@ struct ProtocolPlusView: View {
     let appwrite: Appwrite
     
     init(appwrite: Appwrite){
-        _viewModel = StateObject(wrappedValue: PlusViewModel(appwrite: appwrite))
         self.appwrite = appwrite
+        _viewModel = StateObject(wrappedValue: PlusViewModel(appwrite: appwrite))
     }
     
     var body: some View {

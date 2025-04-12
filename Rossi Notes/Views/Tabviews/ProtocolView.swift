@@ -17,7 +17,6 @@ struct ProtocolView: View {
     init(appwrite: Appwrite){
         self.appwrite = appwrite
         _viewModel = StateObject(wrappedValue: ProtocolViewModel(appwrite: appwrite))
-        
     }
     
     //Need to add navigation bar items on the top of the view
