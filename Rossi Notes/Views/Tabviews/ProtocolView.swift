@@ -10,7 +10,7 @@ import Foundation
 
 struct ProtocolView: View {
     //@StateObject private var viewModel: ProtocolViewModel
-   // @EnvironmentObject private var appwrite: Appwrite
+    @EnvironmentObject private var appwrite: Appwrite
     @StateObject var viewModel = SharedViewModel()
     @State var triggerRefresh: Bool = false
     @State private var showForm = false
@@ -33,7 +33,7 @@ struct ProtocolView: View {
                             let id = document.data["$id"]?.description ?? ""
                             CardView(name: name)
                                 .overlay {
-                                    NavigationLink(destination: DetailView(triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()})
+                                    NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()})
                                 }
                         }
                         .navigationTitle("Protocol")
@@ -44,7 +44,7 @@ struct ProtocolView: View {
                                 Button("Add Note"){
                                     showForm = true
                                 }
-                                .sheet(isPresented: $showForm, content: {CreateView(viewModel: viewModel, collectionId: viewModel.collectionId, triggerRefresh: $triggerRefresh)})
+                                .sheet(isPresented: $showForm, content: {CreateView(collectionId: viewModel.collectionId, triggerRefresh: $triggerRefresh)})
                             })
                         }
                     }
@@ -52,17 +52,17 @@ struct ProtocolView: View {
             }
             
         }
-//        .onChange(of: triggerRefresh, {
-//            Task {
-//                do {
-//                    try await viewModel.refreshDocuments()
-//                } catch {
-//                    print("Error refreshing documents: \(error.localizedDescription)")
-//                }
-//                
-//            }
-//            triggerRefresh = false
-//        })
+        .onChange(of: triggerRefresh, {
+            Task {
+                do {
+                    try await viewModel.refreshProtocolDocuments()
+                } catch {
+                    print("Error refreshing documents: \(error.localizedDescription)")
+                }
+                
+            }
+            triggerRefresh = false
+        })
         .refreshable {
             Task {
                 do {

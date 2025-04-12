@@ -11,8 +11,7 @@ struct DetailView: View {
     @StateObject private var viewModel: DetailViewModel
     @StateObject private var updateViewModel: UpdateViewModel
     @EnvironmentObject private var detailsModel: DetailsModel
-    @EnvironmentObject private var appwrite: Appwrite
-    //private var appwrite: Appwrite
+    private var appwrite: Appwrite //instance passed in from Protocol or Plus View
     @State private var showUpdateForm = false
     
     var collectionId: String
@@ -29,7 +28,7 @@ struct DetailView: View {
         _viewModel = StateObject(wrappedValue: DetailViewModel(appwrite: appwrite))
         _updateViewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite))
         _triggerRefresh = triggerRefresh
-        //self.appwrite = appwrite
+        self.appwrite = appwrite
         self.collectionId = collectionId
         self.documentId = documentId
     }

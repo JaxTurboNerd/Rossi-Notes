@@ -9,14 +9,10 @@ import SwiftUI
 
 struct ProtocolPlusView: View {
     @EnvironmentObject private var appwrite: Appwrite
-    @StateObject private var viewModel: PlusViewModel
+    @StateObject var viewModel = SharedViewModel()
     @State var triggerRefresh: Bool = false
     @State private var showForm = false
-    
-    init(){
-        _viewModel = StateObject(wrappedValue: PlusViewModel(appwrite: appwrite))
-    }
-    
+        
     var body: some View {
         NavigationView {
             ZStack {
@@ -28,12 +24,12 @@ struct ProtocolPlusView: View {
                             .controlSize(.large)
                     } else {
                         Group {
-                            List(viewModel.documents, id: \.id){document in
+                            List(viewModel.plusDocuments, id: \.id){document in
                                 let name = document.data["name"]?.description ?? ""
                                 let id = document.data["$id"]?.description ?? ""
                                 CardView(name: name)
                                     .overlay {
-                                        NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()})
+                                        NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.plusCollectionId, documentId: id), label: {EmptyView()})
                                     }
                             }
                             .navigationTitle("Protocol")
@@ -45,7 +41,7 @@ struct ProtocolPlusView: View {
                                         showForm = true
                                     }
                                     //Displays the protocol form to create a new note
-                                    .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, triggerRefresh: $triggerRefresh)})
+                                    .sheet(isPresented: $showForm, content: {CreateView(collectionId: viewModel.plusCollectionId, triggerRefresh: $triggerRefresh)})
                                     
                                 })
                             }
@@ -55,20 +51,20 @@ struct ProtocolPlusView: View {
                 }
             }
         }
-        .onChange(of: triggerRefresh, {
-            Task {
-                do {
-                    try await viewModel.refreshDocuments()
-                } catch {
-                    print("fetch error: \(error.localizedDescription)")
-                }
-            }
-            triggerRefresh = false
-        })
+//        .onChange(of: triggerRefresh, {
+//            Task {
+//                do {
+//                    try await viewModel.refreshPlusDocuments()
+//                } catch {
+//                    print("fetch error: \(error.localizedDescription)")
+//                }
+//            }
+//            triggerRefresh = false
+//        })
         .refreshable {
             Task {
                 do {
-                    try await viewModel.refreshDocuments()
+                    try await viewModel.refreshPlusDocuments()
                 } catch {
                     print("Refresh error \(error.localizedDescription)")
                 }

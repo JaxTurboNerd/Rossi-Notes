@@ -8,10 +8,7 @@
 import SwiftUI
 
 struct CreateView: View {
-    
-    //@StateObject private var viewModel: CreateViewModel
-    //@EnvironmentObject private var appwrite: Appwrite
-    @ObservedObject private var viewModel: SharedViewModel
+    @StateObject private var viewModel = SharedViewModel()
     @State private var noteAdded = false
     @State private var alertMessage = ""
     @State private var showAlert = false
@@ -23,11 +20,9 @@ struct CreateView: View {
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
     
-    init(collectionId: String, triggerRefresh: Binding<Bool>, viewModel: SharedViewModel){
-        //_viewModel = StateObject(wrappedValue: SharedViewModel(appwrite: appwrite))
+    init(collectionId: String, triggerRefresh: Binding<Bool>){
         self.collectionId = collectionId
         _triggerRefresh = triggerRefresh
-        self.viewModel = viewModel
     }
     
     var body: some View {

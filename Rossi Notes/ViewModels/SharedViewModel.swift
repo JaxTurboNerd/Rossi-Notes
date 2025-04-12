@@ -12,8 +12,8 @@ import JSONCodable
 @MainActor
 final class SharedViewModel: ObservableObject {
     private let appwrite = Appwrite()
-    //@EnvironmentObject private var appwrite: Appwrite
-    @Published public var documents: [Document<[String: AnyCodable]>] = []
+    @Published public var documents: [Document<[String: AnyCodable]>] = []  //Protocol Docs
+    @Published public var plusDocuments: [Document<[String: AnyCodable]>] = [] //Plus Docs
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     @Published public var noteAdded = false
@@ -21,6 +21,8 @@ final class SharedViewModel: ObservableObject {
     // Constants
     private let databaseId = "66a04cba001cb48a5bd7"
     let collectionId = "66a04db400070bffec78"
+    let plusCollectionId = "66a402a0003ddfe36884"
+
     
     //Protocol Detail variables:
     var document: Document<[String: AnyCodable]>?
@@ -40,9 +42,9 @@ final class SharedViewModel: ObservableObject {
     var notes = ""
 
     init(){
-        //self.appwrite = appwrite
         Task {
             try await fetchProtocolDocuments()
+            try await fetchPlusDocuments()
         }
     }
     
@@ -63,9 +65,35 @@ final class SharedViewModel: ObservableObject {
     }
     
     @MainActor
+    func fetchPlusDocuments() async throws {
+        self.isLoading = true
+        self.errorMessage = nil
+        
+        do {
+            let response = try await appwrite.listDocuments(plusCollectionId)
+            self.plusDocuments = response?.documents ?? []
+            self.isLoading = false
+        } catch {
+            self.errorMessage = error.localizedDescription
+            self.isLoading = false
+            print("fetch document error \(error.localizedDescription)")
+        }
+    }
+    
+    @MainActor
     func refreshProtocolDocuments() async throws {
         do {
             try await fetchProtocolDocuments()
+        } catch {
+            print("refresh error \(error.localizedDescription)")
+        }
+        
+    }
+    
+    @MainActor
+    func refreshPlusDocuments() async throws {
+        do {
+            try await fetchPlusDocuments()
         } catch {
             print("refresh error \(error.localizedDescription)")
         }
