@@ -10,14 +10,12 @@ import SwiftUI
 @main
 struct Rossi_NotesApp: App {
     @StateObject private var detailsModel = DetailsModel()
-    //@StateObject private var sharedViewModel = SharedViewModel(appwrite: A)
-    let appwrite = Appwrite()
+    @StateObject private var appwrite = Appwrite()
     var body: some Scene {
         WindowGroup {
             SplashView()
                 .environmentObject(appwrite)
                 .environmentObject(detailsModel)
-                //.environmentObject(sharedViewModel)
         }
     }
 }

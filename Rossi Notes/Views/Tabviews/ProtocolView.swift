@@ -10,10 +10,10 @@ import Foundation
 
 struct ProtocolView: View {
     //@StateObject private var viewModel: ProtocolViewModel
-    @ObservedObject var viewModel: SharedViewModel
+   // @EnvironmentObject private var appwrite: Appwrite
+    @StateObject var viewModel = SharedViewModel()
     @State var triggerRefresh: Bool = false
     @State private var showForm = false
-    //private var appwrite: Appwrite
         
     //Need to add navigation bar items on the top of the view
     var body: some View {
