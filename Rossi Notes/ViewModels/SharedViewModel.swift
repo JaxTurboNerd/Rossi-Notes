@@ -18,7 +18,7 @@ final class SharedViewModel: ObservableObject {
     @Published public var noteAdded = false
     
     // Constants
-    var appwrite: Appwrite
+    let appwrite: Appwrite
     private let databaseId = "66a04cba001cb48a5bd7"
     let collectionId = "66a04db400070bffec78"
     let plusCollectionId = "66a402a0003ddfe36884"

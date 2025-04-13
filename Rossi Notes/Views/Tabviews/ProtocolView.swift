@@ -9,14 +9,16 @@ import SwiftUI
 import Foundation
 
 struct ProtocolView: View {
-    @StateObject private var viewModel: ProtocolViewModel
+    //@StateObject private var viewModel: ProtocolViewModel
+    @StateObject private var viewModel: SharedViewModel
     let appwrite: Appwrite
     @State var triggerRefresh: Bool = false
     @State private var showForm = false
     
     init(appwrite: Appwrite){
         self.appwrite = appwrite
-        _viewModel = StateObject(wrappedValue: ProtocolViewModel(appwrite: appwrite))
+        //_viewModel = StateObject(wrappedValue: ProtocolViewModel(appwrite: appwrite))
+        _viewModel = StateObject(wrappedValue: SharedViewModel(appwrite: appwrite))
     }
     
     //Need to add navigation bar items on the top of the view
@@ -59,7 +61,7 @@ struct ProtocolView: View {
         .onChange(of: triggerRefresh, {
             Task {
                 do {
-                    try await viewModel.refreshDocuments()
+                    try await viewModel.refreshProtocolDocuments()
                 } catch {
                     print("Error refreshing documents: \(error.localizedDescription)")
                 }
@@ -70,7 +72,7 @@ struct ProtocolView: View {
         .refreshable {
             Task {
                 do {
-                    try await viewModel.refreshDocuments()
+                    try await viewModel.refreshProtocolDocuments()
                 } catch {
                     print("refresh error \(error.localizedDescription)")
                 }
