@@ -25,36 +25,36 @@ struct ProtocolView: View {
             ZStack {
                 MainBackgroundView()
                 if viewModel.isLoading {
-                    Group {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle())
-                            .controlSize(.large)
-                    }
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .controlSize(.large)
                 } else {
-                    Group {
-                        List(viewModel.documents, id: \.id){ document in
-                            let name = document.data["name"]?.description ?? ""
-                            let id = document.data["$id"]?.description ?? ""
+                    List(viewModel.documents, id: \.id){ document in
+                        let name = document.data["name"]?.description ?? ""
+                        let id = document.data["$id"]?.description ?? ""
+                        ZStack {
                             CardView(name: name)
-                                .overlay {
-                                    NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()})
-                                }
+                            NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id)){
+                                EmptyView()
+                            }
+                            .opacity(0.0)
                         }
-                        .navigationTitle("Protocol")
-                        .navigationBarTitleDisplayMode(.inline)
-                        .toolbar {
-                            ToolbarItem(placement: .topBarTrailing,
-                                        content: {
-                                Button("Add Note"){
-                                    showForm = true
-                                }
-                                .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, triggerRefresh: $triggerRefresh)})
-                            })
-                        }
+                        .listRowBackground(Color("BackgroundMain"))
+                        .listRowSeparator(Visibility.hidden, edges: .all)
+                    }
+                    .navigationTitle("Protocol")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing,
+                                    content: {
+                            Button("Add Note"){
+                                showForm = true
+                            }
+                            .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, triggerRefresh: $triggerRefresh)})
+                        })
                     }
                 }
             }
-            
         }
         .onChange(of: triggerRefresh, {
             Task {
@@ -77,4 +77,9 @@ struct ProtocolView: View {
             }
         }
     }
+}
+
+#Preview {
+    let appwrite = Appwrite()
+    ProtocolView(appwrite: appwrite)
 }

@@ -27,13 +27,18 @@ struct ProtocolPlusView: View {
                         .progressViewStyle(CircularProgressViewStyle())
                         .controlSize(.large)
                 } else {
-                    List(viewModel.documents, id: \.id){document in
+                    List(viewModel.documents, id: \.id){ document in
                         let name = document.data["name"]?.description ?? ""
                         let id = document.data["$id"]?.description ?? ""
-                        CardView(name: name)
-                            .overlay {
-                                NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()})
+                        ZStack {
+                            CardView(name: name)
+                            NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id)){
+                                EmptyView()
                             }
+                            .opacity(0.0)
+                        }
+                        .listRowBackground(Color("BackgroundMain"))
+                        .listRowSeparator(Visibility.hidden, edges: .all)
                     }
                     .navigationTitle("Protocol")
                     .navigationBarTitleDisplayMode(.inline)
@@ -73,6 +78,7 @@ struct ProtocolPlusView: View {
     }
 }
 
-//#Preview {
-//    ProtocolPlusView()
-//}
+#Preview {
+    let appwrite = Appwrite()
+    ProtocolPlusView(appwrite: appwrite)
+}
