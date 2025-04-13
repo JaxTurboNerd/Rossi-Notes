@@ -34,6 +34,8 @@ struct ProtocolPlusView: View {
                             .overlay {
                                 NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()})
                             }
+                            .listRowSeparator(Visibility.hidden, edges: .all)
+                            .listRowBackground(Color("BackgroundMain"))
                     }
                     .navigationTitle("Protocol")
                     .navigationBarTitleDisplayMode(.inline)
@@ -73,6 +75,7 @@ struct ProtocolPlusView: View {
     }
 }
 
-//#Preview {
-//    ProtocolPlusView()
-//}
+#Preview {
+    let appwrite = Appwrite()
+    ProtocolPlusView(appwrite: appwrite)
+}
