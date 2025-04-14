@@ -9,7 +9,8 @@ import SwiftUI
 
 struct CreateView: View {
     
-    @StateObject private var viewModel: CreateViewModel
+    //@StateObject private var viewModel: CreateViewModel
+    @StateObject private var viewModel: SharedViewModel
     @State private var noteAdded = false
     @State private var alertMessage = ""
     @State private var showAlert = false
@@ -22,7 +23,7 @@ struct CreateView: View {
     @Environment(\.dismiss) private var dismiss
     
     init(appwrite: Appwrite, collectionId: String, triggerRefresh: Binding<Bool>){
-        _viewModel = StateObject(wrappedValue: CreateViewModel(appwrite: appwrite))
+        _viewModel = StateObject(wrappedValue: SharedViewModel(appwrite: appwrite))
         self.collectionId = collectionId
         _triggerRefresh = triggerRefresh
     }
@@ -94,7 +95,7 @@ struct CreateView: View {
                                         dismiss.callAsFunction()
                                         noteAdded = true
                                     } catch {
-                                        viewModel.isSubmitting = false
+                                        viewModel.isLoading = false
                                         alertMessage = error.localizedDescription
                                         showAlert = true
                                     }
