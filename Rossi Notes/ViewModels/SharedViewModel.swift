@@ -117,7 +117,8 @@ final class SharedViewModel: ObservableObject {
                 self.isLoading = false
                 throw CreateProtocolError.failedToCreateProtocol
             }
-            //self.document = response
+            try await fetchProtocolDocuments()
+            try await fetchPlusDocuments()
             self.noteAdded = true
             self.isLoading = false
             
