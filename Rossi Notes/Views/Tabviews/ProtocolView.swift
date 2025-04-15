@@ -39,7 +39,7 @@ struct ProtocolView: View {
                             }
                             .opacity(0.0)
                         }
-                        .listRowBackground(Color("BackgroundMain"))
+                        .listRowBackground(Color.clear)
                         .listRowSeparator(Visibility.hidden, edges: .all)
                     }
                     .navigationTitle("Protocol")
