@@ -30,16 +30,12 @@ struct ProtocolPlusView: View {
                     List(viewModel.documents, id: \.id){ document in
                         let name = document.data["name"]?.description ?? ""
                         let id = document.data["$id"]?.description ?? ""
-                        ZStack {
-                            CardView(name: name)
-                            NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id)){
-                                EmptyView()
-                            }
-                            .opacity(0.0)
-                        }
-                        .listRowBackground(Color.clear)
-                        .listRowSeparator(Visibility.hidden, edges: .all)
+                        CardView(name: name)
+                            .background(NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()}))
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
                     }
+                    .scrollContentBackground(.hidden)
                     .navigationTitle("Protocol")
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
