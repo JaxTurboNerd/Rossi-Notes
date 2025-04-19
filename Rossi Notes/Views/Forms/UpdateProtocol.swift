@@ -70,7 +70,7 @@ struct UpdateView: View {
                     TextField("Notes", text: $noteDetails.miscNotes, axis: .vertical)
                 }
             }
-            .navigationTitle("Protocol")
+            //.navigationTitle("Protocol")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading, content: {
