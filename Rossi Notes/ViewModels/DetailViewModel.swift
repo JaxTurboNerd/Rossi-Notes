@@ -111,7 +111,7 @@ class DetailViewModel: ObservableObject {
                 case "resource_guarder":
                     detailsStringModel.resourceGuarder = "Resource Guarder"
                 case "stranger_reactive":
-                    detailsStringModel.strangerReactive = "Stranger Reactive"
+                    detailsStringModel.strangerReactive = "Avoid Strangers"
                 case "door_routine":
                     detailsStringModel.doorRoutine = "Practice Door Routine"
                 case "barrier_reactive":
