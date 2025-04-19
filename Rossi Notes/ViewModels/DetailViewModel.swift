@@ -123,7 +123,7 @@ class DetailViewModel: ObservableObject {
                 case "jumpy_mouthy":
                     detailsStringModel.jumpyMouthy = "Jumpy/Mouthy"
                 case "shy_fearful":
-                    detailsStringModel.shyFearful = "Shy/Fearful"
+                    detailsStringModel.shyFearful = "Shy / Fearful"
                 default:
                     return
                     
