@@ -51,7 +51,7 @@ struct SignUp: View {
                             .disableAutocorrection(true)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 5)
-                                    .stroke(fnameIsFocused ? Color.blue : Color.white, lineWidth: 3)
+                                    .stroke(fnameIsFocused ? Color.blue : Color.white, lineWidth: 1)
                             )
                     }
                     VStack(alignment: .leading){
@@ -68,7 +68,7 @@ struct SignUp: View {
                             }
                             .overlay(
                                 RoundedRectangle(cornerRadius: 5)
-                                    .stroke(lnameIsFocused ? Color.blue : Color.white, lineWidth: 3)
+                                    .stroke(lnameIsFocused ? Color.blue : Color.white, lineWidth: 1)
                             )
                     }
                     VStack(alignment: .leading){
@@ -85,7 +85,7 @@ struct SignUp: View {
                             }
                             .overlay(
                                 RoundedRectangle(cornerRadius: 5)
-                                    .stroke(emailIsFocused ? Color.blue : Color.white, lineWidth: 3)
+                                    .stroke(emailIsFocused ? Color.blue : Color.white, lineWidth: 1)
                             )
                     }
                     VStack(alignment: .leading){
@@ -98,7 +98,7 @@ struct SignUp: View {
                             .focused($passwordIsFocused)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 5)
-                                    .stroke(passwordIsFocused ? Color.blue : Color.white, lineWidth: 3)
+                                    .stroke(passwordIsFocused ? Color.blue : Color.white, lineWidth: 1)
                             )
                     }
                     VStack(alignment: .leading){
@@ -111,7 +111,7 @@ struct SignUp: View {
                             .focused($password2IsFocused)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 5)
-                                    .stroke(password2IsFocused ? Color.blue : Color.white, lineWidth: 3)
+                                    .stroke(password2IsFocused ? Color.blue : Color.white, lineWidth: 1)
                             )
                     }
                     Button{
@@ -179,7 +179,7 @@ struct SignUp: View {
                                 .font(.headline)
                         }
                     }
-                    .padding(.vertical, 30)
+                    .padding(.vertical, 20)
                     .buttonStyle(.borderedProminent)
                     .controlSize(.large)
                     .alert(isPresented: $showAlert){
@@ -202,14 +202,12 @@ struct SignUp: View {
                                 .frame(maxWidth: 250)
                                 .font(.headline)
                         }
-                        .padding()
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
                     }
                     .navigationDestination(isPresented: $isShowingSignIn, destination: {SignIn(appwrite: appwrite)})
                 }
                 .padding()
-                
             }
             .ignoresSafeArea(.all)
             .navigationBarBackButtonHidden()
@@ -251,4 +249,10 @@ private func checkSignUpFields(
     }
     
     return true
+}
+
+#Preview {
+    var appwrite = Appwrite()
+    SignUp(appwrite: appwrite)
+        .environmentObject(Appwrite())
 }

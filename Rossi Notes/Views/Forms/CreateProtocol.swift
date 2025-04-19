@@ -37,7 +37,6 @@ struct CreateView: View {
                 {
                     VStack {
                         TextField("Name", text: $viewModel.name).focused($nameIsFocused)
-                        Text("Required").font(.footnote).foregroundColor(.red)
                     }
                     
                     DatePicker("Protocol Date", selection: $viewModel.protocolDate, displayedComponents: [.date])//shows only the date excludes time

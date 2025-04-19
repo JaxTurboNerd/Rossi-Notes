@@ -41,7 +41,6 @@ struct UpdateView: View {
                 {
                     VStack {
                         TextField("Name", text: $noteDetails.name).focused($nameIsFocused)
-                        Text("Required").font(.footnote).foregroundColor(.red)
                     }
                     DatePicker("Protocol Date", selection: $noteDetails.protocolDate, displayedComponents: [.date])//shows only the date excludes time
                         .datePickerStyle(.compact)
