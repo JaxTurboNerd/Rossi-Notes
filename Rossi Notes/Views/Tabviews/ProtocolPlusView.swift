@@ -37,7 +37,7 @@ struct ProtocolPlusView: View {
                             .listRowSeparator(.hidden)
                     }
                     .scrollContentBackground(.hidden)
-                    .navigationTitle("Protocol")
+                    .navigationTitle("Protocol +")
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing,
