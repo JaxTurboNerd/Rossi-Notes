@@ -11,6 +11,7 @@ struct ProtocolPlusView: View {
     @StateObject private var viewModel: PlusViewModel
     @State var triggerRefresh: Bool = false
     @State private var showForm = false
+    @State var isPlusNote: Bool = true
     let appwrite: Appwrite
     
     init(appwrite: Appwrite){
@@ -45,7 +46,7 @@ struct ProtocolPlusView: View {
                                 showForm = true
                             }
                             //Displays the protocol form to create a new note
-                            .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, triggerRefresh: $triggerRefresh)})
+                            .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, triggerRefresh: $triggerRefresh, isPlusNote: $isPlusNote)})
                             
                         })
                     }
