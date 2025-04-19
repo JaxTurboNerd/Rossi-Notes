@@ -21,6 +21,7 @@ class DetailsModel: Identifiable, ObservableObject {
     var doorRoutine: Bool = false
     var placeRoutine: Bool = false
     var leashReactive: Bool = false
+    var shyFearful: Bool = false
     var creatorName: String = ""
 }
 
@@ -38,6 +39,7 @@ class DetailsStringModel: Identifiable, ObservableObject {
     var doorRoutine: String = ""
     var placeRoutine: String = ""
     var leashReactive: String = ""
+    var shyFearful: String = ""
     //var creatorName: String = ""
     
     func formatDate(from dateString: String) -> String {

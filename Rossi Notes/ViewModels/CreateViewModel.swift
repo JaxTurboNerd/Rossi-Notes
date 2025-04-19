@@ -32,6 +32,7 @@ final class CreateViewModel: ObservableObject {
     var placeRoutine = false
     var doorRoutine = false
     var looseLeash = false
+    var shyFearful = false
     var notes = ""
     
     init(appwrite: Appwrite){
@@ -43,7 +44,7 @@ final class CreateViewModel: ObservableObject {
         isSubmitting = true
         errorMessage = nil
         
-        let newProtocol = Protocol(name: name, protocol_date: protocolDate, dog_reactive: dogReactive, cat_reactive: catReactive, barrier_reactive: barrierReactive, leash_reactive: leashReactive, jumpy_mouthy: jumpy, resource_guarder: resourceGuarder, stranger_reactive: avoidStrangers, place_routine: placeRoutine, door_routine: doorRoutine, misc_notes: notes)
+        let newProtocol = Protocol(name: name, protocol_date: protocolDate, dog_reactive: dogReactive, cat_reactive: catReactive, barrier_reactive: barrierReactive, leash_reactive: leashReactive, jumpy_mouthy: jumpy, resource_guarder: resourceGuarder, stranger_reactive: avoidStrangers, place_routine: placeRoutine, door_routine: doorRoutine, shy_fearful: shyFearful, misc_notes: notes)
         
         do {
             let encoder = JSONEncoder()

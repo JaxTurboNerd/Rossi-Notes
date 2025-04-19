@@ -87,6 +87,7 @@ class DetailViewModel: ObservableObject {
         detailsModel?.placeRoutine = response.data["place_routine"]?.value as! Bool
         detailsModel?.resourceGuarder = response.data["resource_guarder"]?.value as! Bool
         detailsModel?.strangerReactive = response.data["stranger_reactive"]?.value as! Bool
+        detailsModel?.shyFearful = response.data["shy_fearful"]?.value as! Bool
         detailsModel?.miscNotes = response.data["misc_notes"]?.value as! String
     }
     
@@ -121,6 +122,8 @@ class DetailViewModel: ObservableObject {
                     detailsStringModel.placeRoutine = "Practice Place Routine"
                 case "jumpy_mouthy":
                     detailsStringModel.jumpyMouthy = "Jumpy/Mouthy"
+                case "shy_fearful":
+                    detailsStringModel.shyFearful = "Shy/Fearful"
                 default:
                     return
                     
