@@ -61,6 +61,7 @@ struct CreateView: View {
                     Toggle("Avoid Strangers", isOn: $viewModel.avoidStrangers)
                     Toggle("Door Routine", isOn: $viewModel.doorRoutine)
                     Toggle("Loose Leash", isOn: $viewModel.looseLeash)
+                    Toggle("Shy/Fearful", isOn: $viewModel.shyFearful)
                 }
                 Section(header: Text("Notes")
                     .font(Font.custom("Urbanist-Medium", size: 16))
@@ -135,7 +136,7 @@ private func validateTextFields(name: String, date: Date) throws -> Bool {
     return true
 }
 
-#Preview {
-    let appwrite = Appwrite()
-    CreateView(appwrite: appwrite, collectionId: "66a04db400070bffec78", triggerRefresh: .constant(false), isPlusNote: .constant(false))
-}
+//#Preview {
+//    let appwrite = Appwrite()
+//    CreateView(appwrite: appwrite, collectionId: "66a04db400070bffec78", triggerRefresh: .constant(false), isPlusNote: .constant(false))
+//}
