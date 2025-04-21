@@ -65,7 +65,7 @@ class DetailViewModel: ObservableObject {
     //Used to convert the response date string value to type Date:
     private func formatDateString(from dateString: String) -> Date {
         let isoDateFormatter = ISO8601DateFormatter()
-        isoDateFormatter.formatOptions = .withFullDate
+        isoDateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         let formattedDate = isoDateFormatter.date(from: dateString) ?? Date.now
         
         return formattedDate
