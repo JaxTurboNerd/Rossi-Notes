@@ -28,8 +28,8 @@ struct Home: View {
                 MainBackgroundView()
                 VStack {
                     Spacer()
-                    Text("Protocol Notes")
-                        .font(Font.custom("ConcertOne-Regular", size: 34))
+                        Text("Protocol Notes")
+                            .font(Font.custom("ConcertOne-Regular", size: 34))
                     Divider()
                         .frame(width: 350, height: 2)
                         .overlay(Color("AppBlue"))
@@ -38,24 +38,18 @@ struct Home: View {
                     Text("Create and updated dog protocols!")
                         .font(Font.custom("Urbanist-Medium", size: 20))
                         .padding(.vertical)
-                    if let image = viewModel.initialsImage {
-                        Image(uiImage: image)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 40, height: 40)
-                            .clipShape(Circle())
-                    } else {
-                        EmptyView()
-                    }
                     Text("Please check-in with the ACE staff to verify the proper protocols and dates.")
                         .multilineTextAlignment(.center)
                         .font(Font.custom("Urbanist-Medium", size: 18))
-                        .padding([.vertical], 35)
-                        .padding([.horizontal], 20)
+//                        .padding([.vertical], 35)
+//                        .padding([.horizontal], 20)
+                        //.frame(width: 350, height: 110)
+                        .frame(minWidth: 300, minHeight: 100)
+                        .padding()
                         .background(Color("AppBlue"))
                         .foregroundColor(.white)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
-                    Spacer(minLength: 150)
+                    Spacer(minLength: 120)
                     
                     Button{
                         //action:
@@ -83,11 +77,23 @@ struct Home: View {
                     .padding()
                     .buttonStyle(.borderedProminent)
                     .controlSize(.large)
-                    Spacer()
-                    
+                    Spacer(minLength: 120)
                 }
                 .padding()
                 .navigationDestination(isPresented: $isShowingHomeView, destination: {ContentView()})
+            }
+            .toolbar{
+                ToolbarItem(content: {
+                    if let image = viewModel.initialsImage {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 35, height: 35)
+                            .clipShape(Circle())
+                    } else {
+                        EmptyView()
+                    }
+                })
             }
         }
         .navigationBarBackButtonHidden()
