@@ -27,30 +27,30 @@ struct Home: View {
             ZStack{
                 MainBackgroundView()
                 VStack {
-                    Spacer()
-                        Text("Protocol Notes")
+                    Text("Protocol Notes")
                             .font(Font.custom("ConcertOne-Regular", size: 34))
                     Divider()
                         .frame(width: 350, height: 2)
                         .overlay(Color("AppBlue"))
                         .padding(.vertical)
-                    
                     Text("Create and updated dog protocols!")
                         .font(Font.custom("Urbanist-Medium", size: 20))
                         .padding(.vertical)
                     Text("Please check-in with the ACE staff to verify the proper protocols and dates.")
                         .multilineTextAlignment(.center)
                         .font(Font.custom("Urbanist-Medium", size: 18))
-//                        .padding([.vertical], 35)
-//                        .padding([.horizontal], 20)
-                        //.frame(width: 350, height: 110)
                         .frame(minWidth: 300, minHeight: 100)
                         .padding()
                         .background(Color("AppBlue"))
                         .foregroundColor(.white)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
-                    Spacer(minLength: 120)
-                    
+                }
+                .frame(maxHeight: .infinity, alignment: .top)
+                .padding()
+                .navigationDestination(isPresented: $isShowingHomeView, destination: {ContentView()})
+            }
+            .toolbar{
+                ToolbarItem(placement: .topBarLeading, content: {
                     Button{
                         //action:
                         Task {
@@ -67,23 +67,9 @@ struct Home: View {
                         
                     } label: {
                         Text("Sign Out")
-                            .frame(maxWidth: 250)
-                            .font(.headline)
-                        Image("sign-out-thin")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 25)
                     }
-                    .padding()
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.large)
-                    Spacer(minLength: 120)
-                }
-                .padding()
-                .navigationDestination(isPresented: $isShowingHomeView, destination: {ContentView()})
-            }
-            .toolbar{
-                ToolbarItem(content: {
+                })
+                ToolbarItem(placement: .topBarTrailing, content: {
                     if let image = viewModel.initialsImage {
                         Image(uiImage: image)
                             .resizable()
