@@ -103,10 +103,10 @@ class Appwrite: ObservableObject {
         }
     }
     
-    public func getInitials() async throws -> ByteBuffer? {
+    public func getInitials(name: String) async throws -> ByteBuffer? {
         do {
             //returns a ByteBuffer Object
-            let bytes = try await avatars.getInitials(width: 40)
+            let bytes = try await avatars.getInitials(name: name)
             return bytes
         } catch {
             print("get initials error: \(error.localizedDescription)")

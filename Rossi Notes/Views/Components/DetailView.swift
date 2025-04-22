@@ -11,8 +11,10 @@ struct DetailView: View {
     @StateObject private var viewModel: DetailViewModel
     @StateObject private var updateViewModel: UpdateViewModel
     @EnvironmentObject private var detailsModel: DetailsModel
-    private var appwrite: Appwrite
     @State private var showUpdateForm = false
+    @State private var isShowingDeleteAlert = false
+    private var appwrite: Appwrite
+    
     
     var collectionId: String
     var documentId: String
@@ -57,8 +59,8 @@ struct DetailView: View {
                             }
                             .padding()
                             .overlay(
-                                RoundedRectangle(cornerRadius: 10).stroke(Color.black, lineWidth: 1)
-                                    .shadow(color: Color.black.opacity(0.4), radius: 2, x: 2, y: 2)
+                                RoundedRectangle(cornerRadius: 10).stroke(Color("AppBlue"), lineWidth: 1)
+                                    .shadow(color: Color("AppBlue").opacity(0.4), radius: 2, x: 2, y: 2)
                             )
                             .background(Color("BackgroundMain"))
                             Spacer()
@@ -89,19 +91,27 @@ struct DetailView: View {
             ToolbarItem(placement: .topBarTrailing,
                         content: {
                 Button("Delete"){
-                    Task {
-                        try await viewModel.deleteNote(collectionId: collectionId, documentId: documentId)
-                        noteDeleted = true
-                    }
-                    dismiss.callAsFunction()
+                    isShowingDeleteAlert = true
                 }
                 .foregroundStyle(Color.red)
             })
         }
+        .alert("Confirm Deletion", isPresented: $isShowingDeleteAlert, actions: {
+            Button("Delete", role: .destructive){
+                Task {
+                    try await viewModel.deleteNote(collectionId: collectionId, documentId: documentId)
+                    noteDeleted = true
+                }
+                dismiss.callAsFunction()
+            }
+            Button("Cancel", role: .cancel){
+                
+            }
+        })
         .task {
             viewModel.modelSetup(detailsModel)
             do {
-               try await viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
+                try await viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
             } catch {
                 print("fetching document error: \(error.localizedDescription)")
             }

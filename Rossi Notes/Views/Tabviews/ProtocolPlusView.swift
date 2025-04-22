@@ -11,6 +11,7 @@ struct ProtocolPlusView: View {
     @StateObject private var viewModel: PlusViewModel
     @State var triggerRefresh: Bool = false
     @State private var showForm = false
+    @State var isPlusNote: Bool = true
     let appwrite: Appwrite
     
     init(appwrite: Appwrite){
@@ -27,15 +28,16 @@ struct ProtocolPlusView: View {
                         .progressViewStyle(CircularProgressViewStyle())
                         .controlSize(.large)
                 } else {
-                    List(viewModel.documents, id: \.id){document in
+                    List(viewModel.documents, id: \.id){ document in
                         let name = document.data["name"]?.description ?? ""
                         let id = document.data["$id"]?.description ?? ""
                         CardView(name: name)
-                            .overlay {
-                                NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()})
-                            }
+                            .background(NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()}))
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
                     }
-                    .navigationTitle("Protocol")
+                    .scrollContentBackground(.hidden)
+                    .navigationTitle("Protocol +")
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing,
@@ -44,7 +46,7 @@ struct ProtocolPlusView: View {
                                 showForm = true
                             }
                             //Displays the protocol form to create a new note
-                            .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, triggerRefresh: $triggerRefresh)})
+                            .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, triggerRefresh: $triggerRefresh, isPlusNote: $isPlusNote)})
                             
                         })
                     }
@@ -73,6 +75,7 @@ struct ProtocolPlusView: View {
     }
 }
 
-//#Preview {
-//    ProtocolPlusView()
-//}
+#Preview {
+    let appwrite = Appwrite()
+    ProtocolPlusView(appwrite: appwrite)
+}

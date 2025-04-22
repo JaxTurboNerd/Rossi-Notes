@@ -9,12 +9,13 @@ import SwiftUI
 
 struct Home: View {
     
+    private var appwrite: Appwrite
     @StateObject var viewModel: HomeTabViewModel
     @State var isShowingHomeView = false
-    private var appwrite: Appwrite
-    
     @State private var showAlert = false
     @State private var alertMessage = ""
+    private var initialImage: UIImage? = nil
+    private var userName = ""
     
     init(appwrite: Appwrite) {
         _viewModel = StateObject(wrappedValue: HomeTabViewModel(appwrite: appwrite))
@@ -37,6 +38,15 @@ struct Home: View {
                     Text("Create and updated dog protocols!")
                         .font(Font.custom("Urbanist-Medium", size: 20))
                         .padding(.vertical)
+                    if let image = viewModel.initialsImage {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 40, height: 40)
+                            .clipShape(Circle())
+                    } else {
+                        EmptyView()
+                    }
                     Text("Please check-in with the ACE staff to verify the proper protocols and dates.")
                         .multilineTextAlignment(.center)
                         .font(Font.custom("Urbanist-Medium", size: 18))
@@ -81,6 +91,13 @@ struct Home: View {
             }
         }
         .navigationBarBackButtonHidden()
+        .task {
+            do {
+                try await viewModel.fetchUserInitials(name: "Greg Boyd")
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
     }
 }
 

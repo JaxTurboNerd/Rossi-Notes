@@ -41,7 +41,6 @@ struct UpdateView: View {
                 {
                     VStack {
                         TextField("Name", text: $noteDetails.name).focused($nameIsFocused)
-                        Text("Required").font(.footnote).foregroundColor(.red)
                     }
                     DatePicker("Protocol Date", selection: $noteDetails.protocolDate, displayedComponents: [.date])//shows only the date excludes time
                         .datePickerStyle(.compact)
@@ -63,6 +62,7 @@ struct UpdateView: View {
                     Toggle("Resource Guarder", isOn: $noteDetails.resourceGuarder)
                     Toggle("Avoid Strangers", isOn: $noteDetails.strangerReactive)
                     Toggle("Door Routine", isOn: $noteDetails.doorRoutine)
+                    Toggle("Shy/Fearful", isOn: $noteDetails.shyFearful)
                 }
                 Section(header: Text("Notes")
                     .font(Font.custom("Urbanist-Medium", size: 16))
@@ -71,7 +71,7 @@ struct UpdateView: View {
                     TextField("Notes", text: $noteDetails.miscNotes, axis: .vertical)
                 }
             }
-            .navigationTitle("Protocol")
+            //.navigationTitle("Protocol")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading, content: {

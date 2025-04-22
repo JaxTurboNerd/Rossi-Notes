@@ -46,7 +46,7 @@ struct SignIn: View {
                             .focused($emailIsFocused)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 5)
-                                    .stroke(emailIsFocused ? Color.blue : Color.white, lineWidth: 3)
+                                    .stroke(emailIsFocused ? Color.blue : Color.white, lineWidth: 1)
                             )
                     }
                     .padding()
@@ -60,7 +60,7 @@ struct SignIn: View {
                             .focused($passwordIsFocused)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 5)
-                                    .stroke(passwordIsFocused ? Color.blue : Color.white, lineWidth: 3)
+                                    .stroke(passwordIsFocused ? Color.blue : Color.white, lineWidth: 1)
                             )
                     }
                     .padding()
@@ -163,4 +163,10 @@ private func checkLoginFields(_ email: String, _ password: String) throws -> Boo
         throw LoginTextfieldError.emptyPassword
     }
     return true
+}
+
+#Preview {
+    var appwrite = Appwrite()
+    SignIn(appwrite: appwrite)
+        .environmentObject(Appwrite())
 }
