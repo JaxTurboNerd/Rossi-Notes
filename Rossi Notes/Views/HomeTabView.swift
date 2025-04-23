@@ -31,4 +31,5 @@ struct HomeTabView: View {
 
 #Preview {
     HomeTabView()
+        .environmentObject(Appwrite())
 }
