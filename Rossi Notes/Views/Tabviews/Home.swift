@@ -28,7 +28,7 @@ struct Home: View {
                 MainBackgroundView()
                 VStack {
                     Text("Protocol Notes")
-                            .font(Font.custom("ConcertOne-Regular", size: 34))
+                        .font(Font.custom("ConcertOne-Regular", size: 34))
                     Divider()
                         .frame(width: 350, height: 2)
                         .overlay(Color("AppBlue"))
@@ -48,48 +48,30 @@ struct Home: View {
                 .frame(maxHeight: .infinity, alignment: .top)
                 .padding()
                 .navigationDestination(isPresented: $isShowingHomeView, destination: {ContentView()})
-            }
-            .toolbar{
-                ToolbarItem(placement: .topBarLeading, content: {
-                    Button{
-                        //action:
-                        Task {
-                            do {
-                                try await viewModel.signOut()
-                                appwrite.isAuthenticated = false
-                                isShowingHomeView = true
-                            } catch {
-                                viewModel.isSubmitting = false
-                                alertMessage = error.localizedDescription
-                                showAlert = true
-                            }
-                        }
-                        
-                    } label: {
-                        Text("Sign Out")
-                    }
-                })
-                ToolbarItem(placement: .topBarTrailing, content: {
-                    if let image = viewModel.initialsImage {
-                        Image(uiImage: image)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 35, height: 35)
-                            .clipShape(Circle())
-                    } else {
-                        EmptyView()
-                    }
-                })
+//                .toolbar{
+//                    ToolbarItem(placement: .topBarLeading, content: {
+//                        Button{
+//                            //action:
+//                            Task {
+//                                do {
+//                                    try await viewModel.signOut()
+//                                    appwrite.isAuthenticated = false
+//                                    isShowingHomeView = true
+//                                } catch {
+//                                    viewModel.isSubmitting = false
+//                                    alertMessage = error.localizedDescription
+//                                    showAlert = true
+//                                }
+//                            }
+//                            
+//                        } label: {
+//                            Text("Sign Out")
+//                        }
+//                    })
+//               }
             }
         }
         .navigationBarBackButtonHidden()
-        .task {
-            do {
-                try await viewModel.fetchUserInitials(name: "Greg Boyd")
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
     }
 }
 

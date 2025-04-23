@@ -75,4 +75,5 @@ struct MainBackgroundView: View {
 #Preview {
     @Previewable @StateObject var appwrite = Appwrite()
     ContentView()
+        .environmentObject(Appwrite())
 }

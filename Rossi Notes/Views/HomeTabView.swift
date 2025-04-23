@@ -9,21 +9,25 @@ import SwiftUI
 
 struct HomeTabView: View {
     @EnvironmentObject private var appwrite: Appwrite
+    @State private var selectedTab = 0
     
     var body: some View {
-        TabView {
+        TabView (selection: $selectedTab){
             Home(appwrite: appwrite)
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }
+                .tag(0)
             ProtocolView(appwrite: appwrite)
                 .tabItem {
                     Label("Protocol", systemImage: "dog")
                 }
+                .tag(1)
             ProtocolPlusView(appwrite: appwrite)
                 .tabItem {
                     Label("Protocol +", systemImage: "cross")
                 }
+                .tag(2)
         }
         .navigationBarBackButtonHidden()
     }
@@ -31,4 +35,5 @@ struct HomeTabView: View {
 
 #Preview {
     HomeTabView()
+        .environmentObject(Appwrite())
 }

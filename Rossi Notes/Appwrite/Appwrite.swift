@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 import Appwrite
 import AppwriteEnums
 import AppwriteModels
@@ -21,6 +22,7 @@ class Appwrite: ObservableObject {
     private let databases: Databases
     private var databaseId = "66a04cba001cb48a5bd7"
     @Published var currentUser: User<[String: AnyCodable]>?
+    @Published var initialsImage: UIImage? = nil
     //@Published var session: Session?
     @Published var isAuthenticated = false
     @Published var isLoading = false
@@ -38,7 +40,7 @@ class Appwrite: ObservableObject {
     func checkAuthStatus() async {
         isLoading = true
         do {
-            currentUser = try await account.get()
+            currentUser = try await getAccount()
             self.isAuthenticated = true
             self.isLoading = false
         } catch {
@@ -64,6 +66,7 @@ class Appwrite: ObservableObject {
         do {
             let response = try await account.get()
             self.currentUser = response
+            try await getInitials(name: currentUser?.name ?? "")
             return currentUser
         } catch let error as AppwriteError {
             if error.type == "user_invalid_credentials" {
@@ -85,8 +88,7 @@ class Appwrite: ObservableObject {
                 email: email,
                 password: password
             )
-            let user = try await account.get()
-            self.currentUser = user
+            currentUser = try await getAccount() //should probably nest in another do catch
             self.isAuthenticated = true
             return session
         } catch let error as AppwriteError {
@@ -103,14 +105,16 @@ class Appwrite: ObservableObject {
         }
     }
     
-    public func getInitials(name: String) async throws -> ByteBuffer? {
+    public func getInitials(name: String) async throws {
         do {
             //returns a ByteBuffer Object
-            let bytes = try await avatars.getInitials(name: name)
-            return bytes
+            let data = try await avatars.getInitials(name: name)
+            let byteData = Data(buffer: data)
+            if let uiImage = UIImage(data: byteData) {
+                self.initialsImage = uiImage
+            }
         } catch {
             print("get initials error: \(error.localizedDescription)")
-            return nil
         }
     }
     
