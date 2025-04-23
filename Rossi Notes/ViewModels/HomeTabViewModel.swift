@@ -15,9 +15,14 @@ class HomeTabViewModel: ObservableObject {
     @Published var isSubmitting = false
     @Published var errorMessage = ""
     @Published var initialsImage: UIImage? = nil
+    @Published var user: User<[String: AnyCodable]>? = nil
+    @Published var userName: String = ""
     
     init(appwrite: Appwrite) {
         self.appwrite = appwrite
+        Task {
+            await fetchUserName()
+        }
     }
     
     @MainActor
@@ -39,17 +44,7 @@ class HomeTabViewModel: ObservableObject {
         UserDefaults.standard.removeObject(forKey: "sessionSecret")
     }
     
-//    @MainActor
-//    public func fetchUserInitials(name: String) async throws {
-//        //print("Current User: \(String(describing: appwrite.currentUser?.name))")
-//        do {
-//            guard let data = try await appwrite.getInitials(name: appwrite.currentUser?.name ?? "") else { return }
-//            let byteData = Data(buffer: data)
-//            if let uiImage = UIImage(data: byteData) {
-//                self.initialsImage = uiImage
-//            }
-//        } catch {
-//            print("Failed to fetch user's initials: \(error.localizedDescription)")
-//        }
-//    }
+    @MainActor public func fetchUserName() {
+        self.userName = appwrite.currentUser?.name ?? ""
+    }
 }

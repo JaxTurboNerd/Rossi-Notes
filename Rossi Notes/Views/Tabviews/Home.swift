@@ -14,9 +14,7 @@ struct Home: View {
     @State var isShowingHomeView = false
     @State private var showAlert = false
     @State private var alertMessage = ""
-    private var initialImage: UIImage? = nil
-    private var userName = ""
-    
+        
     init(appwrite: Appwrite) {
         _viewModel = StateObject(wrappedValue: HomeTabViewModel(appwrite: appwrite))
         self.appwrite = appwrite
@@ -33,10 +31,10 @@ struct Home: View {
                         .frame(width: 350, height: 2)
                         .overlay(Color("AppBlue"))
                         .padding(.vertical)
-                    Text("Create and updated dog protocols!")
+                    Text("Create and share dog protocols!")
                         .font(Font.custom("Urbanist-Medium", size: 20))
                         .padding(.vertical)
-                    Text("Please check-in with the ACE staff to verify the proper protocols and dates.")
+                    Text("\(viewModel.userName)\nPlease check-in with the ACE staff to verify the proper protocols and dates.")
                         .multilineTextAlignment(.center)
                         .font(Font.custom("Urbanist-Medium", size: 18))
                         .frame(minWidth: 300, minHeight: 100)
@@ -44,31 +42,37 @@ struct Home: View {
                         .background(Color("AppBlue"))
                         .foregroundColor(.white)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
+                    Spacer()
+                    Button{
+                        //action:
+                        Task {
+                            do {
+                                try await viewModel.signOut()
+                                appwrite.isAuthenticated = false
+                                isShowingHomeView = true
+                            } catch {
+                                viewModel.isSubmitting = false
+                                alertMessage = error.localizedDescription
+                                showAlert = true
+                            }
+                        }
+                        
+                    } label: {
+                        Text("Sign Out")
+                            .frame(maxWidth: 250)
+                            .font(.headline)
+                        Image("sign-out-thin")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 25)
+                    }
+                    .padding(.bottom, 50)
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.large)
                 }
                 .frame(maxHeight: .infinity, alignment: .top)
                 .padding()
                 .navigationDestination(isPresented: $isShowingHomeView, destination: {ContentView()})
-//                .toolbar{
-//                    ToolbarItem(placement: .topBarLeading, content: {
-//                        Button{
-//                            //action:
-//                            Task {
-//                                do {
-//                                    try await viewModel.signOut()
-//                                    appwrite.isAuthenticated = false
-//                                    isShowingHomeView = true
-//                                } catch {
-//                                    viewModel.isSubmitting = false
-//                                    alertMessage = error.localizedDescription
-//                                    showAlert = true
-//                                }
-//                            }
-//                            
-//                        } label: {
-//                            Text("Sign Out")
-//                        }
-//                    })
-//               }
             }
         }
         .navigationBarBackButtonHidden()
