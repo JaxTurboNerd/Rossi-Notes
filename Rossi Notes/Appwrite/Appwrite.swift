@@ -66,7 +66,7 @@ class Appwrite: ObservableObject {
         do {
             let response = try await account.get()
             self.currentUser = response
-            try await getInitials(name: currentUser?.name ?? "")
+            //try await getInitials(name: currentUser?.name ?? "") //nest inside do/catch?  or call  elsewhere
             return currentUser
         } catch let error as AppwriteError {
             if error.type == "user_invalid_credentials" {
@@ -105,16 +105,14 @@ class Appwrite: ObservableObject {
         }
     }
     
-    public func getInitials(name: String) async throws {
+    public func getInitials(name: String) async throws -> ByteBuffer? {
         do {
             //returns a ByteBuffer Object
-            let data = try await avatars.getInitials(name: name)
-            let byteData = Data(buffer: data)
-            if let uiImage = UIImage(data: byteData) {
-                self.initialsImage = uiImage
-            }
+             let data = try await avatars.getInitials(name: name)
+            return data
         } catch {
             print("get initials error: \(error.localizedDescription)")
+            return nil
         }
     }
     
