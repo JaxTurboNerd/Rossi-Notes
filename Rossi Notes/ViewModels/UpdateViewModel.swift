@@ -21,6 +21,7 @@ import JSONCodable
 @MainActor
 final class UpdateViewModel: ObservableObject {
     private let appwrite: Appwrite
+    private var createdBy = ""
     var noteDetails: DetailsModel?
     
     @Published public var isSubmitting = false
@@ -39,7 +40,11 @@ final class UpdateViewModel: ObservableObject {
         isSubmitting = true
         errorMessage = nil
         
-        let updatedProtocol = Protocol(name: noteDetails.name, protocol_date: noteDetails.protocolDate, dog_reactive: noteDetails.dogReactive, cat_reactive: noteDetails.catReactive, barrier_reactive: noteDetails.barrierReactive, leash_reactive: noteDetails.leashReactive, jumpy_mouthy: noteDetails.jumpyMouthy, resource_guarder: noteDetails.resourceGuarder, stranger_reactive: noteDetails.strangerReactive, place_routine: noteDetails.placeRoutine, door_routine: noteDetails .doorRoutine, shy_fearful: noteDetails.shyFearful, misc_notes: noteDetails.miscNotes)
+        if let userName = appwrite.currentUser?.name {
+            self.createdBy = userName
+        }
+        
+        let updatedProtocol = Protocol(name: noteDetails.name, protocol_date: noteDetails.protocolDate, dog_reactive: noteDetails.dogReactive, cat_reactive: noteDetails.catReactive, barrier_reactive: noteDetails.barrierReactive, leash_reactive: noteDetails.leashReactive, jumpy_mouthy: noteDetails.jumpyMouthy, resource_guarder: noteDetails.resourceGuarder, stranger_reactive: noteDetails.strangerReactive, place_routine: noteDetails.placeRoutine, door_routine: noteDetails .doorRoutine, shy_fearful: noteDetails.shyFearful, misc_notes: noteDetails.miscNotes, created_by: createdBy)
         
         do {
             let encoder = JSONEncoder()
