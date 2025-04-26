@@ -50,10 +50,17 @@ struct DetailView: View {
                                 //Display the pet name:
                                 CardView(name: viewModel.detailsModel?.name ?? "")
                                 //Display the protocol date:
-                                Text("Protocol Date: \(viewModel.formattedStringDate)")
-                                    .font(.system(size: 20))
-                                    .fontWeight(.bold)
-                                    .padding(.vertical)
+                                HStack {
+                                    Image(uiImage: viewModel.initialsImage ?? UIImage())
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 25, height: 25)
+                                        .clipShape(.circle)
+                                    Text("Protocol Date: \(viewModel.formattedStringDate)")
+                                        .font(.system(size: 20))
+                                        .fontWeight(.bold)
+                                        .padding(.vertical)
+                                }
                                 //Details:
                                 DetailGroupView(viewModel: viewModel)
                             }

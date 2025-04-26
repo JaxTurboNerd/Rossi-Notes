@@ -19,6 +19,7 @@ class DetailViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var document: Document<[String: AnyCodable]>?
     @Published var initialsImage: UIImage? = nil
+    @Published var initialsImageData: Data? = nil
     //This model used to display string values from the details model:
     @ObservedObject var detailsStringModel = DetailsStringModel()
     @Published var formattedStringDate = ""
@@ -27,8 +28,9 @@ class DetailViewModel: ObservableObject {
     init(appwrite: Appwrite){
         self.appwrite = appwrite
         //call function to get/set user's initials:
-        
-        
+        Task {
+            try await fetchUserInfo()
+        }
     }
     
     //This function is intended to inject an instance of the DetailsModel:
@@ -147,12 +149,16 @@ class DetailViewModel: ObservableObject {
         }
     }
     
-    private func fetchInitials() async throws {
+    private func fetchUserInfo() async throws {
         do {
-            guard let data = try await appwrite.getInitials(name: detailsStringModel.name) else {
+            guard let userName = appwrite.currentUser?.name else {
+                return
+            }
+            guard let data = try await appwrite.getInitials(name: userName) else {
                 return
             }
             let byteData = Data(buffer: data)
+            self.initialsImageData = byteData
             if let uiImage = UIImage(data: byteData) {
                 self.initialsImage = uiImage
             }
@@ -160,6 +166,5 @@ class DetailViewModel: ObservableObject {
         } catch {
             print("Error fetching initials \(error.localizedDescription)")
         }
-        
     }
 }
