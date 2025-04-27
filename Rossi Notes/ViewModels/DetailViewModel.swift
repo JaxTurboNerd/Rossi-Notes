@@ -21,7 +21,7 @@ class DetailViewModel: ObservableObject {
     @Published var initialsImage: UIImage? = nil
     @Published var creatorImage: UIImage? = nil
     @Published var initialsImageData: Data? = nil
-    @Published var creatorImageData: Data? = nil
+    //@Published var creatorImageData: Data? = nil
     //This model used to display string values from the details model:
     @ObservedObject var detailsStringModel = DetailsStringModel()
     @Published var formattedStringDate = ""
@@ -30,10 +30,10 @@ class DetailViewModel: ObservableObject {
     init(appwrite: Appwrite){
         self.appwrite = appwrite
         //call function to get/set user's initials:
-        Task {
-            //try await fetchUserInfo()
-            try await fetchCreatorInfo()
-        }
+//        Task {
+//            //try await fetchUserInfo()
+//            try await fetchCreatorInfo()
+//        }
     }
     
     //This function is intended to inject an instance of the DetailsModel:
@@ -83,12 +83,12 @@ class DetailViewModel: ObservableObject {
     private func setDetailsModel(response: Document<[String: AnyCodable]>){
         //formats the response date value (string) to a Date object:
         
-        guard let protocol_date = response.data["protocol_date"]?.value as? String else {
+        guard let protocolDate = response.data["protocol_date"]?.value as? String else {
             print("protocol_date not found")
             return
         }
         
-        let protocolDateObject = formatDateString(from: protocol_date)
+        let protocolDateObject = formatDateString(from: protocolDate)
         //set the detailsModel instance values;
         
         guard let id = response.data["$id"]?.value as? String else {
@@ -144,6 +144,11 @@ class DetailViewModel: ObservableObject {
             return
         }
         
+        guard let createdBy = response.data["created_by"]?.value as? String else {
+            print("Created By info not found")
+            return
+        }
+        
         detailsModel?.id = id
         detailsModel?.name = name
         detailsModel?.protocolDate = protocolDateObject
@@ -158,6 +163,7 @@ class DetailViewModel: ObservableObject {
         detailsModel?.strangerReactive = strangerReactive
         detailsModel?.shyFearful = shyFearful
         detailsModel?.miscNotes = miscNotes
+        detailsModel?.createdBy = createdBy
     }
     
     //This function sets the string values from the api response to a model instance to be
@@ -195,7 +201,6 @@ class DetailViewModel: ObservableObject {
                     detailsStringModel.shyFearful = "Shy / Fearful"
                 default:
                     return
-                    
                 }
             }
         }
@@ -245,7 +250,7 @@ class DetailViewModel: ObservableObject {
                 throw DetailViewError.failedToFetchInitials
             }
             let byteData = Data(buffer: data)
-            self.creatorImageData = byteData
+            //self.creatorImageData = byteData  //probably don't need
             
             if let uiImage = UIImage(data: byteData) {
                 self.creatorImage = uiImage
