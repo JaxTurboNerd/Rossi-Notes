@@ -91,86 +91,47 @@ class DetailViewModel: ObservableObject {
             detailsModel.id = id
         }
         if let name = response.data["name"]?.value as? String {
-//            print("name not found")
-//            return
             detailsModel.name = name
         }
         if let jumpyMouthy = response.data["jumpy_mouthy"]?.value as? Bool {
-//            print("jumpyMouthy not found")
-//            return
             detailsModel.jumpyMouthy = jumpyMouthy
         }
         if let dogReactive = response.data["dog_reactive"]?.value as? Bool {
-//            print("dogReactive not found")
-//            return
             detailsModel.dogReactive = dogReactive
         }
         if let catReactive = response.data["cat_reactive"]?.value as? Bool {
-//            print("catReactive not found")
-//            return
             detailsModel.catReactive = catReactive
         }
         if let leashReactive = response.data["leash_reactive"]?.value as? Bool {
-//            print("leashReactive not found")
-//            return
             detailsModel.leashReactive = leashReactive
         }
         if let barrierReactive = response.data["barrier_reactive"]?.value as? Bool {
-//            print("barrierReactive not found")
-//            return
             detailsModel.barrierReactive = barrierReactive
         }
         if let doorRoutine = response.data["door_routine"]?.value as? Bool {
-//            print("doorRoutine not found")
-//            return
             detailsModel.doorRoutine = doorRoutine
         }
-
         if let placeRoutine = response.data["place_routine"]?.value as? Bool {
-//            print("placeRoutine not found")
-//            return
             detailsModel.placeRoutine = placeRoutine
         }
         if let resourceGuarder = response.data["resource_guarder"]?.value as? Bool {
-//            print("resourceGuarder not found")
-//            return
             detailsModel.resourceGuarder = resourceGuarder
         }
         if let strangerReactive = response.data["stranger_reactive"]?.value as? Bool {
-//            print("strangerReactive not found")
-//            return
             detailsModel.strangerReactive = strangerReactive
         }
         if let shyFearful = response.data["shy_fearful"]?.value as? Bool {
-//            print("shyFearful not found")
-//            return
             detailsModel.shyFearful = shyFearful
         }
         if let miscNotes = response.data["misc_notes"]?.value as? String {
-//            print("miscNotes not found")
-//            return
             detailsModel.miscNotes = miscNotes
         }
-        
         if let createdBy = response.data["created_by"]?.value as? String {
-//            print("Created By info not found")
-//            return
+
             detailsModel.createdBy = createdBy
         } else {
             detailsModel.createdBy = ""
         }
-        
-       
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
     }
     
     //This function sets the string values from the api response to a model instance to be

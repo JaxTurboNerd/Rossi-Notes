@@ -34,7 +34,7 @@ struct Home: View {
                     Text("Create and share dog protocols!")
                         .font(Font.custom("Urbanist-Medium", size: 20))
                         .padding(.vertical)
-                    Text("\(viewModel.userName)\nPlease check-in with the ACE staff to verify the proper protocols and dates.")
+                    Text("\(viewModel.userName)\n\nPlease check-in with the ACE staff to verify the proper protocols and dates.")
                         .multilineTextAlignment(.center)
                         .font(Font.custom("Urbanist-Medium", size: 18))
                         .frame(minWidth: 300, minHeight: 100)
