@@ -51,7 +51,7 @@ struct DetailView: View {
                                 CardView(name: viewModel.detailsModel?.name ?? "")
                                 //Display the protocol date:
                                 HStack {
-                                    Image(uiImage: viewModel.creatorImage ?? UIImage())
+                                    Image(uiImage: viewModel.creatorImage ?? UIImage(systemName: "person.circle")!)
                                         .resizable()
                                         .scaledToFit()
                                         .frame(width: 25, height: 25)
@@ -119,6 +119,7 @@ struct DetailView: View {
             viewModel.modelSetup(detailsModel)
             do {
                 try await viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
+                try await viewModel.fetchCreatorInfo()
             } catch {
                 print("fetching document error: \(error.localizedDescription)")
             }

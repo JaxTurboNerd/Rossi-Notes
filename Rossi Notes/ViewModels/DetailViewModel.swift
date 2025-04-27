@@ -31,7 +31,7 @@ class DetailViewModel: ObservableObject {
         self.appwrite = appwrite
         //call function to get/set user's initials:
         Task {
-            try await fetchUserInfo()
+            //try await fetchUserInfo()
             try await fetchCreatorInfo()
         }
     }
@@ -55,8 +55,7 @@ class DetailViewModel: ObservableObject {
         } catch DetailViewError.failedToFetchDocument {
             self.isLoading = false
             self.errorMessage = "Failed to fetch document."
-        }
-        catch {
+        } catch {
             self.errorMessage = error.localizedDescription
             self.isLoading = false
         }
@@ -99,7 +98,12 @@ class DetailViewModel: ObservableObject {
         detailsModel?.strangerReactive = response.data["stranger_reactive"]?.value as! Bool
         detailsModel?.shyFearful = response.data["shy_fearful"]?.value as! Bool
         detailsModel?.miscNotes = response.data["misc_notes"]?.value as! String
-        detailsModel?.createdBy = response.data["created_by"]?.value as! String
+        
+        guard let createdBy = response.data["created_by"]?.value as? String else {
+            print("failed to fetch createdBy info")
+            return
+        }
+        detailsModel?.createdBy = createdBy
     }
     
     //This function sets the string values from the api response to a model instance to be
