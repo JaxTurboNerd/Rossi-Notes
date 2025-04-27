@@ -173,8 +173,7 @@ class DetailViewModel: ObservableObject {
         } catch DetailViewError.failedToFetchInitials {
             print("Failed to fetch initials")
             self.errorMessage = "Failed to fetch initials."
-        }
-        catch {
+        } catch {
             print("Error fetching initials \(error.localizedDescription)")
         }
     }
@@ -182,10 +181,10 @@ class DetailViewModel: ObservableObject {
     public func fetchCreatorInfo() async throws {
         do {
             guard let creatorName = detailsModel?.createdBy else {
-                return
+                throw DetailViewError.failedToFetchCreator
             }
             guard let data = try await appwrite.getInitials(name: creatorName) else {
-                throw DetailViewError.failedToFetchCreator
+                throw DetailViewError.failedToFetchInitials
             }
             let byteData = Data(buffer: data)
             self.creatorImageData = byteData
@@ -195,8 +194,9 @@ class DetailViewModel: ObservableObject {
             }
         } catch DetailViewError.failedToFetchCreator {
             self.errorMessage = "Failed to fetch creator."
-        }
-        catch {
+        } catch DetailViewError.failedToFetchInitials {
+            self.errorMessage = "Failed to fetch initials."
+        } catch {
             print("error fetching creator initials \(error.localizedDescription)")
         }
     }
