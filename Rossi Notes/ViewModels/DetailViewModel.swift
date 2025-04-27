@@ -31,7 +31,6 @@ class DetailViewModel: ObservableObject {
         self.appwrite = appwrite
         //call function to get/set user's initials:
         Task {
-            //try await fetchUserInfo()
             try await fetchCreatorInfo()
         }
     }
