@@ -48,7 +48,7 @@ struct DetailView: View {
                         VStack {
                             VStack{
                                 //Display the pet name:
-                                CardView(name: viewModel.detailsModel?.name ?? "")
+                                CardView(name: viewModel.detailsModel.name)
                                 //Display the protocol date:
                                 HStack {
                                     Image(uiImage: viewModel.creatorImage ?? UIImage(systemName: "person.circle")!)
@@ -119,7 +119,6 @@ struct DetailView: View {
             viewModel.modelSetup(detailsModel)
             do {
                 try await viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
-                try await viewModel.fetchCreatorInfo()
             } catch {
                 print("fetching document error: \(error.localizedDescription)")
             }
