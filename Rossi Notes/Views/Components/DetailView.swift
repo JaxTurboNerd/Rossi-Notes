@@ -51,7 +51,7 @@ struct DetailView: View {
                                 CardView(name: viewModel.detailsModel?.name ?? "")
                                 //Display the protocol date:
                                 HStack {
-                                    Image(uiImage: viewModel.initialsImage ?? UIImage())
+                                    Image(uiImage: viewModel.creatorImage ?? UIImage())
                                         .resizable()
                                         .scaledToFit()
                                         .frame(width: 25, height: 25)
