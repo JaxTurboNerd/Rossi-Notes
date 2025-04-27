@@ -50,10 +50,17 @@ struct DetailView: View {
                                 //Display the pet name:
                                 CardView(name: viewModel.detailsModel?.name ?? "")
                                 //Display the protocol date:
-                                Text("Protocol Date: \(viewModel.formattedStringDate)")
-                                    .font(.system(size: 20))
-                                    .fontWeight(.bold)
-                                    .padding(.vertical)
+                                HStack {
+                                    Image(uiImage: viewModel.creatorImage ?? UIImage(systemName: "person.circle")!)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 25, height: 25)
+                                        .clipShape(.circle)
+                                    Text("Protocol Date: \(viewModel.formattedStringDate)")
+                                        .font(.system(size: 20))
+                                        .fontWeight(.bold)
+                                        .padding(.vertical)
+                                }
                                 //Details:
                                 DetailGroupView(viewModel: viewModel)
                             }
@@ -112,6 +119,7 @@ struct DetailView: View {
             viewModel.modelSetup(detailsModel)
             do {
                 try await viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
+                try await viewModel.fetchCreatorInfo()
             } catch {
                 print("fetching document error: \(error.localizedDescription)")
             }
@@ -132,7 +140,8 @@ struct NameBackgroundView: View {
     }
 }
 
-//#Preview {
-//    @Previewable var previewAppwrite = Appwrite()
-//    DetailView(appwrite: previewAppwrite, triggerRefresh: .constant(false), collectionId: "66a04db400070bffec78", documentId: "6799d9ab2ce631c69eee")
-//}
+#Preview {
+    @Previewable var previewAppwrite = Appwrite()
+    DetailView(appwrite: previewAppwrite, triggerRefresh: .constant(false), collectionId: "66a04db400070bffec78", documentId: "6799d9ab2ce631c69eee")
+        .environmentObject(DetailsModel())
+}

@@ -22,7 +22,8 @@ class DetailsModel: Identifiable, ObservableObject {
     var placeRoutine: Bool = false
     var leashReactive: Bool = false
     var shyFearful: Bool = false
-    var creatorName: String = ""
+    var createdBy: String = ""
+    //var updatedBy: String = ""
 }
 
 class DetailsStringModel: Identifiable, ObservableObject {
@@ -40,7 +41,8 @@ class DetailsStringModel: Identifiable, ObservableObject {
     var placeRoutine: String = ""
     var leashReactive: String = ""
     var shyFearful: String = ""
-    //var creatorName: String = ""
+    var createdBy: String = ""
+    //var updatedBy: String = ""
     
     func formatDate(from dateString: String) -> String {
            let isoDateFormatter = ISO8601DateFormatter()

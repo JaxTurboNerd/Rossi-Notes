@@ -166,7 +166,7 @@ private func checkLoginFields(_ email: String, _ password: String) throws -> Boo
 }
 
 #Preview {
-    var appwrite = Appwrite()
+    let appwrite = Appwrite()
     SignIn(appwrite: appwrite)
         .environmentObject(Appwrite())
 }

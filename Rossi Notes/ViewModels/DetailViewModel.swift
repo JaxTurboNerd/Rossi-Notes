@@ -16,8 +16,12 @@ class DetailViewModel: ObservableObject {
     var detailsModel: DetailsModel?
     
     @Published var isLoading = false
-    @Published var errorMessage: String?
+    @Published var errorMessage: String = ""
     @Published var document: Document<[String: AnyCodable]>?
+    @Published var initialsImage: UIImage? = nil
+    @Published var creatorImage: UIImage? = nil
+    @Published var initialsImageData: Data? = nil
+    //@Published var creatorImageData: Data? = nil
     //This model used to display string values from the details model:
     @ObservedObject var detailsStringModel = DetailsStringModel()
     @Published var formattedStringDate = ""
@@ -25,6 +29,11 @@ class DetailViewModel: ObservableObject {
     
     init(appwrite: Appwrite){
         self.appwrite = appwrite
+        //call function to get/set user's initials:
+//        Task {
+//            //try await fetchUserInfo()
+//            try await fetchCreatorInfo()
+//        }
     }
     
     //This function is intended to inject an instance of the DetailsModel:
@@ -34,21 +43,21 @@ class DetailViewModel: ObservableObject {
     
     public func fetchDocument(collectionId: String ,documentId: String) async throws {
         isLoading = true
-        errorMessage = nil
-        
         do {
-            let document = try await appwrite.listDocument(collectionId, documentId)
-            self.document = document
-            await MainActor.run {
-                self.isLoading = false
-                setDetailsModel(response: document!)
-                formattedStringDate = formatDate(from: detailsModel?.protocolDate ?? Date.now)
-                setDetailsStringModel(responseData: document!.data)
+            guard let document = try await appwrite.listDocument(collectionId, documentId) else {
+                throw DetailViewError.failedToFetchDocument
             }
+            self.document = document
+            self.isLoading = false
+            setDetailsModel(response: document)
+            formattedStringDate = formatDate(from: detailsModel?.protocolDate ?? Date.now)
+            setDetailsStringModel(responseData: document.data)
+        } catch DetailViewError.failedToFetchDocument {
+            self.isLoading = false
+            self.errorMessage = "Failed to fetch document."
         } catch {
             self.errorMessage = error.localizedDescription
             self.isLoading = false
-            
         }
     }
     
@@ -74,12 +83,12 @@ class DetailViewModel: ObservableObject {
     private func setDetailsModel(response: Document<[String: AnyCodable]>){
         //formats the response date value (string) to a Date object:
         
-        guard let protocol_date = response.data["protocol_date"]?.value as? String else {
+        guard let protocolDate = response.data["protocol_date"]?.value as? String else {
             print("protocol_date not found")
             return
         }
         
-        let protocolDateObject = formatDateString(from: protocol_date)
+        let protocolDateObject = formatDateString(from: protocolDate)
         //set the detailsModel instance values;
         
         guard let id = response.data["$id"]?.value as? String else {
@@ -135,6 +144,11 @@ class DetailViewModel: ObservableObject {
             return
         }
         
+        guard let createdBy = response.data["created_by"]?.value as? String else {
+            print("Created By info not found")
+            return
+        }
+        
         detailsModel?.id = id
         detailsModel?.name = name
         detailsModel?.protocolDate = protocolDateObject
@@ -149,6 +163,7 @@ class DetailViewModel: ObservableObject {
         detailsModel?.strangerReactive = strangerReactive
         detailsModel?.shyFearful = shyFearful
         detailsModel?.miscNotes = miscNotes
+        detailsModel?.createdBy = createdBy
     }
     
     //This function sets the string values from the api response to a model instance to be
@@ -186,7 +201,6 @@ class DetailViewModel: ObservableObject {
                     detailsStringModel.shyFearful = "Shy / Fearful"
                 default:
                     return
-                    
                 }
             }
         }
@@ -200,6 +214,73 @@ class DetailViewModel: ObservableObject {
             print("delete document error \(String(describing: errorMessage))")
             self.errorMessage = error.localizedDescription
             self.isLoading = false
+        }
+    }
+    
+    private func fetchUserInfo() async throws {
+        do {
+            guard let userName = appwrite.currentUser?.name else {
+                throw DetailViewError.failedToFetchUser
+            }
+            guard let data = try await appwrite.getInitials(name: userName) else {
+                throw DetailViewError.failedToFetchInitials
+            }
+            let byteData = Data(buffer: data)
+            self.initialsImageData = byteData
+            if let uiImage = UIImage(data: byteData) {
+                self.initialsImage = uiImage
+            }
+        } catch DetailViewError.failedToFetchUser {
+            print("failed to fetch user")
+            self.errorMessage = "Failed to fetch user."
+        } catch DetailViewError.failedToFetchInitials {
+            print("Failed to fetch initials")
+            self.errorMessage = "Failed to fetch initials."
+        } catch {
+            print("Error fetching initials \(error.localizedDescription)")
+        }
+    }
+    
+    public func fetchCreatorInfo() async throws {
+        do {
+            guard let creatorName = detailsModel?.createdBy else {
+                throw DetailViewError.failedToFetchCreator
+            }
+            guard let data = try await appwrite.getInitials(name: creatorName) else {
+                throw DetailViewError.failedToFetchInitials
+            }
+            let byteData = Data(buffer: data)
+            //self.creatorImageData = byteData  //probably don't need
+            
+            if let uiImage = UIImage(data: byteData) {
+                self.creatorImage = uiImage
+            }
+        } catch DetailViewError.failedToFetchCreator {
+            self.errorMessage = "Failed to fetch creator."
+        } catch DetailViewError.failedToFetchInitials {
+            self.errorMessage = "Failed to fetch initials."
+        } catch {
+            print("error fetching creator initials \(error.localizedDescription)")
+        }
+    }
+}
+
+enum DetailViewError: LocalizedError {
+    case failedToFetchDocument
+    case failedToFetchUser
+    case failedToFetchCreator
+    case failedToFetchInitials
+    
+    var errorDescription: String? {
+        switch self {
+        case .failedToFetchDocument:
+            return "Failed to fetch document."
+        case .failedToFetchUser:
+            return "Failed to fetch user."
+        case .failedToFetchCreator:
+            return "Failed to fetch creator."
+        case .failedToFetchInitials:
+            return "Failed to fetch initials."
         }
     }
 }

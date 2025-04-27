@@ -21,4 +21,6 @@ struct Protocol: Codable {
     var door_routine: Bool
     var shy_fearful: Bool
     var misc_notes: String
+    var created_by: String
+    //var updated_by: String
 }

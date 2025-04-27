@@ -252,7 +252,7 @@ private func checkSignUpFields(
 }
 
 #Preview {
-    var appwrite = Appwrite()
+    let appwrite = Appwrite()
     SignUp(appwrite: appwrite)
         .environmentObject(Appwrite())
 }

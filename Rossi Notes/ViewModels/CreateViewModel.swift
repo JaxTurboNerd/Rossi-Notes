@@ -34,6 +34,8 @@ final class CreateViewModel: ObservableObject {
     var looseLeash = false
     var shyFearful = false
     var notes = ""
+    var createdBy = ""
+    //var updatedBy = ""
     
     init(appwrite: Appwrite){
         self.appwrite = appwrite
@@ -44,7 +46,11 @@ final class CreateViewModel: ObservableObject {
         isSubmitting = true
         errorMessage = nil
         
-        let newProtocol = Protocol(name: name, protocol_date: protocolDate, dog_reactive: dogReactive, cat_reactive: catReactive, barrier_reactive: barrierReactive, leash_reactive: leashReactive, jumpy_mouthy: jumpy, resource_guarder: resourceGuarder, stranger_reactive: avoidStrangers, place_routine: placeRoutine, door_routine: doorRoutine, shy_fearful: shyFearful, misc_notes: notes)
+        if let userName = appwrite.currentUser?.name {
+            self.createdBy = userName
+        }
+        
+        let newProtocol = Protocol(name: name, protocol_date: protocolDate, dog_reactive: dogReactive, cat_reactive: catReactive, barrier_reactive: barrierReactive, leash_reactive: leashReactive, jumpy_mouthy: jumpy, resource_guarder: resourceGuarder, stranger_reactive: avoidStrangers, place_routine: placeRoutine, door_routine: doorRoutine, shy_fearful: shyFearful, misc_notes: notes, created_by: createdBy)
         
         do {
             let encoder = JSONEncoder()

@@ -5,18 +5,24 @@
 //  Created by Gregory Boyd on 3/24/25.
 //
 
-import Foundation
+import SwiftUI
 import Appwrite
+import JSONCodable
 
-@MainActor
 class HomeTabViewModel: ObservableObject {
     private let appwrite: Appwrite
     
     @Published var isSubmitting = false
     @Published var errorMessage = ""
+    @Published var initialsImage: UIImage? = nil
+    @Published var user: User<[String: AnyCodable]>? = nil
+    @Published var userName: String = ""
     
     init(appwrite: Appwrite) {
         self.appwrite = appwrite
+        Task {
+            await fetchUserName()
+        }
     }
     
     @MainActor
@@ -36,5 +42,9 @@ class HomeTabViewModel: ObservableObject {
     private func deleteSession(){
         UserDefaults.standard.removeObject(forKey: "userId")
         UserDefaults.standard.removeObject(forKey: "sessionSecret")
+    }
+    
+    @MainActor public func fetchUserName() {
+        self.userName = appwrite.currentUser?.name ?? ""
     }
 }
