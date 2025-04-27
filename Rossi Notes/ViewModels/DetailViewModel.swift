@@ -73,22 +73,82 @@ class DetailViewModel: ObservableObject {
     
     private func setDetailsModel(response: Document<[String: AnyCodable]>){
         //formats the response date value (string) to a Date object:
-        let protocolDateObject = formatDateString(from: response.data["protocol_date"]?.value as! String)
+        
+        guard let protocol_date = response.data["protocol_date"]?.value as? String else {
+            print("protocol_date not found")
+            return
+        }
+        
+        let protocolDateObject = formatDateString(from: protocol_date)
         //set the detailsModel instance values;
-        detailsModel?.id = response.data["$id"]?.value as! String
-        detailsModel?.name = response.data["name"]?.value as! String
+        
+        guard let id = response.data["$id"]?.value as? String else {
+            print("id not found")
+            return
+        }
+        guard let name = response.data["name"]?.value as? String else {
+            print("name not found")
+            return
+        }
+        guard let jumpyMouthy = response.data["jumpy_mouthy"]?.value as? Bool else {
+            print("jumpyMouthy not found")
+            return
+        }
+        guard let dogReactive = response.data["dog_reactive"]?.value as? Bool else {
+            print("dogReactive not found")
+            return
+        }
+        guard let catReactive = response.data["cat_reactive"]?.value as? Bool else {
+            print("catReactive not found")
+            return
+        }
+        guard let leashReactive = response.data["leash_reactive"]?.value as? Bool else {
+            print("leashReactive not found")
+            return
+        }
+        guard let barrierReactive = response.data["barrier_reactive"]?.value as? Bool else {
+            print("barrierReactive not found")
+            return
+        }
+        guard let doorRoutine = response.data["door_routine"]?.value as? Bool else {
+            print("doorRoutine not found")
+            return
+        }
+        guard let placeRoutine = response.data["place_routine"]?.value as? Bool else {
+            print("placeRoutine not found")
+            return
+        }
+        guard let resourceGuarder = response.data["resource_guarder"]?.value as? Bool else {
+            print("resourceGuarder not found")
+            return
+        }
+        guard let strangerReactive = response.data["stranger_reactive"]?.value as? Bool else {
+            print("strangerReactive not found")
+            return
+        }
+        guard let shyFearful = response.data["shy_fearful"]?.value as? Bool else {
+            print("shyFearful not found")
+            return
+        }
+        guard let miscNotes = response.data["misc_notes"]?.value as? String else {
+            print("miscNotes not found")
+            return
+        }
+        
+        detailsModel?.id = id
+        detailsModel?.name = name
         detailsModel?.protocolDate = protocolDateObject
-        detailsModel?.jumpyMouthy = response.data["jumpy_mouthy"]?.value as! Bool
-        detailsModel?.dogReactive = response.data["dog_reactive"]?.value as! Bool
-        detailsModel?.catReactive = response.data["cat_reactive"]?.value as! Bool
-        detailsModel?.leashReactive = response.data["leash_reactive"]?.value as! Bool
-        detailsModel?.barrierReactive = response.data["barrier_reactive"]?.value as! Bool
-        detailsModel?.doorRoutine = response.data["door_routine"]?.value as! Bool
-        detailsModel?.placeRoutine = response.data["place_routine"]?.value as! Bool
-        detailsModel?.resourceGuarder = response.data["resource_guarder"]?.value as! Bool
-        detailsModel?.strangerReactive = response.data["stranger_reactive"]?.value as! Bool
-        detailsModel?.shyFearful = response.data["shy_fearful"]?.value as! Bool
-        detailsModel?.miscNotes = response.data["misc_notes"]?.value as! String
+        detailsModel?.jumpyMouthy = jumpyMouthy
+        detailsModel?.dogReactive = dogReactive
+        detailsModel?.catReactive = catReactive
+        detailsModel?.leashReactive = leashReactive
+        detailsModel?.barrierReactive = barrierReactive
+        detailsModel?.doorRoutine = doorRoutine
+        detailsModel?.placeRoutine = placeRoutine
+        detailsModel?.resourceGuarder = resourceGuarder
+        detailsModel?.strangerReactive = strangerReactive
+        detailsModel?.shyFearful = shyFearful
+        detailsModel?.miscNotes = miscNotes
     }
     
     //This function sets the string values from the api response to a model instance to be
