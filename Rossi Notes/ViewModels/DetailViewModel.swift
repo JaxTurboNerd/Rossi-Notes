@@ -13,7 +13,7 @@ import JSONCodable
 @MainActor
 class DetailViewModel: ObservableObject {
     private let appwrite: Appwrite
-    var detailsModel: DetailsModel?
+    var detailsModel = DetailsModel()
     
     @Published var isLoading = false
     @Published var errorMessage: String = ""
@@ -30,10 +30,6 @@ class DetailViewModel: ObservableObject {
     init(appwrite: Appwrite){
         self.appwrite = appwrite
         //call function to get/set user's initials:
-//        Task {
-//            //try await fetchUserInfo()
-//            try await fetchCreatorInfo()
-//        }
     }
     
     //This function is intended to inject an instance of the DetailsModel:
@@ -50,8 +46,9 @@ class DetailViewModel: ObservableObject {
             self.document = document
             self.isLoading = false
             setDetailsModel(response: document)
-            formattedStringDate = formatDate(from: detailsModel?.protocolDate ?? Date.now)
+            formattedStringDate = formatDate(from: detailsModel.protocolDate)
             setDetailsStringModel(responseData: document.data)
+            try await fetchCreatorInfo()
         } catch DetailViewError.failedToFetchDocument {
             self.isLoading = false
             self.errorMessage = "Failed to fetch document."
@@ -83,87 +80,58 @@ class DetailViewModel: ObservableObject {
     private func setDetailsModel(response: Document<[String: AnyCodable]>){
         //formats the response date value (string) to a Date object:
         
-        guard let protocolDate = response.data["protocol_date"]?.value as? String else {
-            print("protocol_date not found")
-            return
+        if let protocolDate = response.data["protocol_date"]?.value as? String {
+            //print("protocol_date not found")
+            let protocolDateObject = formatDateString(from: protocolDate)
+            detailsModel.protocolDate = protocolDateObject
         }
         
-        let protocolDateObject = formatDateString(from: protocolDate)
         //set the detailsModel instance values;
-        
-        guard let id = response.data["$id"]?.value as? String else {
-            print("id not found")
-            return
+        if let id = response.data["$id"]?.value as? String {
+            detailsModel.id = id
         }
-        guard let name = response.data["name"]?.value as? String else {
-            print("name not found")
-            return
+        if let name = response.data["name"]?.value as? String {
+            detailsModel.name = name
         }
-        guard let jumpyMouthy = response.data["jumpy_mouthy"]?.value as? Bool else {
-            print("jumpyMouthy not found")
-            return
+        if let jumpyMouthy = response.data["jumpy_mouthy"]?.value as? Bool {
+            detailsModel.jumpyMouthy = jumpyMouthy
         }
-        guard let dogReactive = response.data["dog_reactive"]?.value as? Bool else {
-            print("dogReactive not found")
-            return
+        if let dogReactive = response.data["dog_reactive"]?.value as? Bool {
+            detailsModel.dogReactive = dogReactive
         }
-        guard let catReactive = response.data["cat_reactive"]?.value as? Bool else {
-            print("catReactive not found")
-            return
+        if let catReactive = response.data["cat_reactive"]?.value as? Bool {
+            detailsModel.catReactive = catReactive
         }
-        guard let leashReactive = response.data["leash_reactive"]?.value as? Bool else {
-            print("leashReactive not found")
-            return
+        if let leashReactive = response.data["leash_reactive"]?.value as? Bool {
+            detailsModel.leashReactive = leashReactive
         }
-        guard let barrierReactive = response.data["barrier_reactive"]?.value as? Bool else {
-            print("barrierReactive not found")
-            return
+        if let barrierReactive = response.data["barrier_reactive"]?.value as? Bool {
+            detailsModel.barrierReactive = barrierReactive
         }
-        guard let doorRoutine = response.data["door_routine"]?.value as? Bool else {
-            print("doorRoutine not found")
-            return
+        if let doorRoutine = response.data["door_routine"]?.value as? Bool {
+            detailsModel.doorRoutine = doorRoutine
         }
-        guard let placeRoutine = response.data["place_routine"]?.value as? Bool else {
-            print("placeRoutine not found")
-            return
+        if let placeRoutine = response.data["place_routine"]?.value as? Bool {
+            detailsModel.placeRoutine = placeRoutine
         }
-        guard let resourceGuarder = response.data["resource_guarder"]?.value as? Bool else {
-            print("resourceGuarder not found")
-            return
+        if let resourceGuarder = response.data["resource_guarder"]?.value as? Bool {
+            detailsModel.resourceGuarder = resourceGuarder
         }
-        guard let strangerReactive = response.data["stranger_reactive"]?.value as? Bool else {
-            print("strangerReactive not found")
-            return
+        if let strangerReactive = response.data["stranger_reactive"]?.value as? Bool {
+            detailsModel.strangerReactive = strangerReactive
         }
-        guard let shyFearful = response.data["shy_fearful"]?.value as? Bool else {
-            print("shyFearful not found")
-            return
+        if let shyFearful = response.data["shy_fearful"]?.value as? Bool {
+            detailsModel.shyFearful = shyFearful
         }
-        guard let miscNotes = response.data["misc_notes"]?.value as? String else {
-            print("miscNotes not found")
-            return
+        if let miscNotes = response.data["misc_notes"]?.value as? String {
+            detailsModel.miscNotes = miscNotes
         }
-        
-        guard let createdBy = response.data["created_by"]?.value as? String else {
-            print("Created By info not found")
-            return
+        if let createdBy = response.data["created_by"]?.value as? String {
+
+            detailsModel.createdBy = createdBy
+        } else {
+            detailsModel.createdBy = ""
         }
-        
-        detailsModel?.id = id
-        detailsModel?.name = name
-        detailsModel?.protocolDate = protocolDateObject
-        detailsModel?.jumpyMouthy = jumpyMouthy
-        detailsModel?.dogReactive = dogReactive
-        detailsModel?.catReactive = catReactive
-        detailsModel?.leashReactive = leashReactive
-        detailsModel?.barrierReactive = barrierReactive
-        detailsModel?.doorRoutine = doorRoutine
-        detailsModel?.placeRoutine = placeRoutine
-        detailsModel?.resourceGuarder = resourceGuarder
-        detailsModel?.strangerReactive = strangerReactive
-        detailsModel?.shyFearful = shyFearful
-        detailsModel?.miscNotes = miscNotes
-        detailsModel?.createdBy = createdBy
     }
     
     //This function sets the string values from the api response to a model instance to be
@@ -243,9 +211,10 @@ class DetailViewModel: ObservableObject {
     
     public func fetchCreatorInfo() async throws {
         do {
-            guard let creatorName = detailsModel?.createdBy else {
-                throw DetailViewError.failedToFetchCreator
-            }
+            let creatorName = detailsModel.createdBy
+//            guard let creatorName = detailsModel.createdBy else {
+//                throw DetailViewError.failedToFetchCreator
+//            }
             guard let data = try await appwrite.getInitials(name: creatorName) else {
                 throw DetailViewError.failedToFetchInitials
             }
