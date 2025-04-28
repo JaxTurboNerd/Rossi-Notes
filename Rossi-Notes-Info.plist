@@ -6,6 +6,8 @@
 	<string>${DATABASE_ID}</string>
 	<key>PLUS_COLL_ID</key>
 	<string>${PLUS_COLL_ID}</string>
+	<key>PROJECT_ID</key>
+	<string>${PROJECT_ID}</string>
 	<key>PROTOCOL_COLL_ID</key>
 	<string>${PROTOCOL_COLL_ID}</string>
 	<key>UIAppFonts</key>

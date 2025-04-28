@@ -5,6 +5,9 @@ xcuserdata
 xcuserdata/*
 *.xcuserstate
 
+#Ignore the Configuration settings:
+Config.xcconfig 
+
 ## Obj-C/Swift specific
 *.hmap
 
