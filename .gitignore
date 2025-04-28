@@ -5,6 +5,9 @@ xcuserdata
 xcuserdata/*
 *.xcuserstate
 
+#DS Store
+.DS_Store
+
 #Ignore the Configuration settings:
 Config.xcconfig 
 *.xcconfig
