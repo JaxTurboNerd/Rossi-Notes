@@ -5,7 +5,7 @@ xcuserdata
 xcuserdata/*
 *.xcuserstate
 
-#DS Store
+#DS Store:
 .DS_Store
 
 #Ignore the Configuration settings:
