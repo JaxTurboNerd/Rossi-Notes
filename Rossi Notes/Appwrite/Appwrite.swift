@@ -83,7 +83,6 @@ class Appwrite: ObservableObject {
         do {
             let response = try await account.get()
             self.currentUser = response
-            //try await getInitials(name: currentUser?.name ?? "") //nest inside do/catch?  or call  elsewhere
             return currentUser
         } catch let error as AppwriteError {
             if error.type == "user_invalid_credentials" {
