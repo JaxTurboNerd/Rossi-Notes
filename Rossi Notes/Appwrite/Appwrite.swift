@@ -31,7 +31,6 @@ class Appwrite: ObservableObject {
     }
     @Published var currentUser: User<[String: AnyCodable]>?
     @Published var initialsImage: UIImage? = nil
-    //@Published var session: Session?
     @Published var isAuthenticated = false
     @Published var isLoading = false
     
