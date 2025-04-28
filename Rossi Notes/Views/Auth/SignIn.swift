@@ -142,6 +142,7 @@ struct SignIn: View {
                     }
                     .navigationDestination(isPresented: $isShowingSignUp, destination: {SignUp(appwrite: appwrite)})
                 }
+                .padding()
             }
             .ignoresSafeArea(.all)
             .onTapGesture {
