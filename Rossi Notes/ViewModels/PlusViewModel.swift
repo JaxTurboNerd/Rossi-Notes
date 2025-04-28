@@ -18,8 +18,15 @@ class PlusViewModel: ObservableObject {
     @Published public var errorMessage: String?
     
     // Constants
-    private let databaseId = "66a04cba001cb48a5bd7"
-    let collectionId = "66a402a0003ddfe36884"
+    var collectionId: String {
+        do {
+            let IdKey: String = try Configuration.value(for: "PLUS_COLL_ID")
+            return IdKey
+        } catch {
+            print("collection ID error")
+            return ""
+        }
+    }
     
     //Initialize:
     init(appwrite: Appwrite){

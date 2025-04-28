@@ -20,17 +20,34 @@ class Appwrite: ObservableObject {
     let account: Account
     private let avatars: Avatars
     private let databases: Databases
-    private var databaseId = "66a04cba001cb48a5bd7"
+    private var databaseId: String {
+        do {
+            let config : String = try Configuration.value(for: "DATABASE_ID")
+            return config
+        } catch {
+            print("database configuration error")
+            return ""
+        }
+    }
     @Published var currentUser: User<[String: AnyCodable]>?
     @Published var initialsImage: UIImage? = nil
-    //@Published var session: Session?
     @Published var isAuthenticated = false
     @Published var isLoading = false
     
     public init() {
+        var projectId: String {
+            do {
+                let config : String = try Configuration.value(for: "PROJECT_ID")
+                return config
+            } catch {
+                print("project configuration error")
+                return ""
+            }
+        }
+
         self.client = Client()
             .setEndpoint("https://cloud.appwrite.io/v1")
-            .setProject("66a04859001d3df0988d")
+            .setProject(projectId)
         
         self.account = Account(client)
         self.avatars = Avatars(client)
@@ -66,7 +83,6 @@ class Appwrite: ObservableObject {
         do {
             let response = try await account.get()
             self.currentUser = response
-            //try await getInitials(name: currentUser?.name ?? "") //nest inside do/catch?  or call  elsewhere
             return currentUser
         } catch let error as AppwriteError {
             if error.type == "user_invalid_credentials" {

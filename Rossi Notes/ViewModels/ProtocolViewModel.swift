@@ -18,8 +18,15 @@ final class ProtocolViewModel: ObservableObject {
     @Published public var errorMessage: String?
     
     // Constants
-    private let databaseId = "66a04cba001cb48a5bd7"
-    let collectionId = "66a04db400070bffec78"
+    var collectionId: String {
+        do {
+            let IdKey: String = try Configuration.value(for: "PROTOCOL_COLL_ID")
+            return IdKey
+        } catch {
+            print("error getting collection id")
+            return ""
+        }
+    }
     
     //Initialize:
     init(appwrite: Appwrite){
