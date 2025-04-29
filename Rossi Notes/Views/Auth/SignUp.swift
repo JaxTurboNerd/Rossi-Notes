@@ -37,83 +37,86 @@ struct SignUp: View {
                         .foregroundColor(.white)
                         .font(Font.custom("Urbanist-Regular", size: 28))
                         .padding(.vertical)
-                    VStack(alignment: .leading){
-                        Text("First Name:")
-                            .foregroundColor(.white)
-                            .font(Font.custom("Urbanist-Regular", size: 20))
-                        TextField("First Name", text: $viewModel.firstName, onCommit: {})
-                            .textFieldStyle(.roundedBorder)
-                            .textInputAutocapitalization(.words)
-                            .focused($fnameIsFocused)
-                            .onSubmit {
-                                //code:
-                            }
-                            .disableAutocorrection(true)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 5)
-                                    .stroke(fnameIsFocused ? Color.blue : Color.white, lineWidth: 1)
-                            )
+                    Group {
+                        VStack(alignment: .leading){
+                            Text("First Name:")
+                                .foregroundColor(.white)
+                                .font(Font.custom("Urbanist-Regular", size: 20))
+                            TextField("First Name", text: $viewModel.firstName, onCommit: {})
+                                .textFieldStyle(.roundedBorder)
+                                .textInputAutocapitalization(.words)
+                                .focused($fnameIsFocused)
+                                .onSubmit {
+                                    //code:
+                                }
+                                .disableAutocorrection(true)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .stroke(fnameIsFocused ? Color.blue : Color.white, lineWidth: 1)
+                                )
+                        }
+                        VStack(alignment: .leading){
+                            Text("Last Name:")
+                                .foregroundColor(.white)
+                                .font(Font.custom("Urbanist-Regular", size: 20))
+                            TextField("Last Name", text: $viewModel.lastName, onCommit: {})
+                                .textFieldStyle(.roundedBorder)
+                                .textInputAutocapitalization(.words)
+                                .focused($lnameIsFocused)
+                                .disableAutocorrection(true)
+                                .onSubmit {
+                                    //code:
+                                }
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .stroke(lnameIsFocused ? Color.blue : Color.white, lineWidth: 1)
+                                )
+                        }
+                        VStack(alignment: .leading){
+                            Text("email:")
+                                .foregroundColor(.white)
+                                .font(Font.custom("Urbanist-Regular", size: 20))
+                            TextField("email", text: $viewModel.email, onCommit: {})
+                                .textFieldStyle(.roundedBorder)
+                                .textInputAutocapitalization(.never)
+                                .focused($emailIsFocused)
+                                .disableAutocorrection(true)
+                                .onSubmit {
+                                    //code:
+                                }
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .stroke(emailIsFocused ? Color.blue : Color.white, lineWidth: 1)
+                                )
+                        }
+                        VStack(alignment: .leading){
+                            Text("Password:")
+                                .foregroundColor(.white)
+                                .font(Font.custom("Urbanist-Regular", size: 20))
+                            SecureField("password", text: $viewModel.password, onCommit: {})
+                                .textFieldStyle(.roundedBorder)
+                                .disableAutocorrection(true)
+                                .focused($passwordIsFocused)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .stroke(passwordIsFocused ? Color.blue : Color.white, lineWidth: 1)
+                                )
+                        }
+                        VStack(alignment: .leading){
+                            Text("Confirm Password")
+                                .foregroundColor(.white)
+                                .font(Font.custom("Urbanist-Regular", size: 20))
+                            SecureField("confirm password", text: $viewModel.passwordConfirm, onCommit: {})
+                                .textFieldStyle(.roundedBorder)
+                                .disableAutocorrection(true)
+                                .focused($password2IsFocused)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .stroke(password2IsFocused ? Color.blue : Color.white, lineWidth: 1)
+                                )
+                        }
                     }
-                    VStack(alignment: .leading){
-                        Text("Last Name:")
-                            .foregroundColor(.white)
-                            .font(Font.custom("Urbanist-Regular", size: 20))
-                        TextField("Last Name", text: $viewModel.lastName, onCommit: {})
-                            .textFieldStyle(.roundedBorder)
-                            .textInputAutocapitalization(.words)
-                            .focused($lnameIsFocused)
-                            .disableAutocorrection(true)
-                            .onSubmit {
-                                //code:
-                            }
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 5)
-                                    .stroke(lnameIsFocused ? Color.blue : Color.white, lineWidth: 1)
-                            )
-                    }
-                    VStack(alignment: .leading){
-                        Text("email:")
-                            .foregroundColor(.white)
-                            .font(Font.custom("Urbanist-Regular", size: 20))
-                        TextField("email", text: $viewModel.email, onCommit: {})
-                            .textFieldStyle(.roundedBorder)
-                            .textInputAutocapitalization(.never)
-                            .focused($emailIsFocused)
-                            .disableAutocorrection(true)
-                            .onSubmit {
-                                //code:
-                            }
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 5)
-                                    .stroke(emailIsFocused ? Color.blue : Color.white, lineWidth: 1)
-                            )
-                    }
-                    VStack(alignment: .leading){
-                        Text("Password:")
-                            .foregroundColor(.white)
-                            .font(Font.custom("Urbanist-Regular", size: 20))
-                        SecureField("password", text: $viewModel.password, onCommit: {})
-                            .textFieldStyle(.roundedBorder)
-                            .disableAutocorrection(true)
-                            .focused($passwordIsFocused)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 5)
-                                    .stroke(passwordIsFocused ? Color.blue : Color.white, lineWidth: 1)
-                            )
-                    }
-                    VStack(alignment: .leading){
-                        Text("Confirm Password")
-                            .foregroundColor(.white)
-                            .font(Font.custom("Urbanist-Regular", size: 20))
-                        SecureField("confirm password", text: $viewModel.passwordConfirm, onCommit: {})
-                            .textFieldStyle(.roundedBorder)
-                            .disableAutocorrection(true)
-                            .focused($password2IsFocused)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 5)
-                                    .stroke(password2IsFocused ? Color.blue : Color.white, lineWidth: 1)
-                            )
-                    }
+                    .padding(.horizontal)
                     Button{
                         //action:
                         Task {
