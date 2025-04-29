@@ -74,8 +74,17 @@ class Appwrite: ObservableObject {
             let name = firstName + " " + lastName
             let newUser = try await account.create(userId: ID.unique(), email: email, password: password, name: name)
             return newUser
-        } catch {
-            throw UserError.failed(error.localizedDescription)
+        } catch let error as AppwriteError {
+            if error.message == "Invalid `email` param: Value must be a valid email address" {
+                throw UserError.invalidEmail
+            } else if error.message == "Invalid `password` param: Password must be between 8 and 265 characters long, and should not be one of the commonly used password." {
+                throw UserError.invalidPassword
+            } else if error.type == "user_password_mismatch" {
+                throw UserError.passwordMismatch
+            } else {
+                print("Create account error: \(error.localizedDescription)")
+                throw error
+            }
         }
     }
     
@@ -215,17 +224,20 @@ enum AuthError: LocalizedError {
 
 enum UserError: LocalizedError {
     case failed(String)
-    case invalidEmail(String)
-    case invalidPassword(String)
+    case invalidEmail
+    case invalidPassword
+    case passwordMismatch
     
     var errorDescription: String? {
         switch self {
         case .failed(let message):
             return "\(message)"
-        case .invalidEmail(let message):
-            return "\(message)"
-        case .invalidPassword(let message):
-            return "\(message)"
+        case .invalidEmail:
+            return "Invalid email format. Must be a valid email address."
+        case .invalidPassword:
+            return "Invalid password. Must be at least 8 characters long."
+        case .passwordMismatch:
+            return "Passwords do not match. Please try again."
         }
     }
 }
