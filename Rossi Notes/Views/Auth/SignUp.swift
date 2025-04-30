@@ -213,8 +213,9 @@ struct SignUp: View {
                     }
                     .padding()
                 }
+                .padding(.vertical, 30)
             }
-            .ignoresSafeArea(.all)
+            .ignoresSafeArea(.container)
             .navigationBarBackButtonHidden()
             .onTapGesture {
                 self.dismissKeyboard()
