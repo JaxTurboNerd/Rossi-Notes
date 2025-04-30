@@ -107,7 +107,7 @@ struct SignUp: View {
                                 Text("Confirm Password")
                                     .foregroundColor(.white)
                                     .font(Font.custom("Urbanist-Regular", size: 20))
-                                SecureField("confirm password", text: $viewModel.passwordConfirm, onCommit: {})
+                                SecureField("confirm password", text: $viewModel.passwordConfirm)
                                     .textFieldStyle(.roundedBorder)
                                     .disableAutocorrection(true)
                                     .focused($password2IsFocused)

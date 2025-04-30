@@ -54,7 +54,7 @@ struct DetailView: View {
                                     Image(uiImage: viewModel.creatorImage ?? UIImage(systemName: "person.circle")!)
                                         .resizable()
                                         .scaledToFit()
-                                        .frame(width: 25, height: 25)
+                                        .frame(width: 35, height: 35)
                                         .clipShape(.circle)
                                     Text("Protocol Date: \(viewModel.formattedStringDate)")
                                         .font(.system(size: 20))
