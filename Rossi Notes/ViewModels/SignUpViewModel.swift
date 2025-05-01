@@ -35,6 +35,5 @@ class SignUpViewModel: ObservableObject {
             self.errorMessage = error.localizedDescription
             throw UserError.failed(error.localizedDescription)
         }
-        
     }
 }
