@@ -76,6 +76,7 @@ class Appwrite: ObservableObject {
             return newUser
         } catch let error as AppwriteError {
             if error.message == "Invalid `email` param: Value must be a valid email address" {
+                print("Appwrite file error: \(error.localizedDescription)")
                 throw UserError.invalidEmail
             } else if error.message == "Invalid `password` param: Password must be between 8 and 265 characters long, and should not be one of the commonly used password." {
                 throw UserError.invalidPassword
