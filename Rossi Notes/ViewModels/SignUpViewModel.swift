@@ -19,8 +19,7 @@ class SignUpViewModel: ObservableObject {
     @Published var passwordConfirm = ""
     @Published var errorMessage = ""
     @Published var isSubmitting = false
-    //@Published var newUser: User<[String: AnyCodable]>? //don't know if I will need this later
-    @Published var isSignedUp: Bool = false
+    @Published var successfulSignedUp: Bool = false
     
     init(appwrite: Appwrite){
         self.appwrite = appwrite
@@ -30,8 +29,8 @@ class SignUpViewModel: ObservableObject {
     public func signUp() async throws {
         self.isSubmitting = true
         do {
-            let response = try await appwrite.createAccount(firstName, lastName, email, password)
-            self.isSignedUp = true
+            _ = try await appwrite.createAccount(firstName, lastName, email, password)
+            self.successfulSignedUp = true
         } catch {
             self.errorMessage = error.localizedDescription
             throw UserError.failed(error.localizedDescription)

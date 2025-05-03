@@ -13,10 +13,9 @@ struct SignUp: View {
     @EnvironmentObject var appwrite: Appwrite
     @State private var isLoading = false
     @State var isShowingSignIn = false
-    @State var showHomeTabView = false
+    @State var showSignInView = false
     //Alert vars:
     @State private var showAlert = false
-    @State private var showAccountSuccessAlert = false
     @State private var alertMessage = ""
     
     @FocusState var fnameIsFocused: Bool
@@ -51,7 +50,7 @@ struct SignUp: View {
                                     .disableAutocorrection(true)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 5)
-                                            .stroke(fnameIsFocused ? Color.blue : Color.white, lineWidth: 1)
+                                            .stroke(fnameIsFocused ? Color.blue : Color.white, lineWidth: 2)
                                     )
                             }
                             VStack(alignment: .leading){
@@ -65,7 +64,7 @@ struct SignUp: View {
                                     .disableAutocorrection(true)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 5)
-                                            .stroke(lnameIsFocused ? Color.blue : Color.white, lineWidth: 1)
+                                            .stroke(lnameIsFocused ? Color.blue : Color.white, lineWidth: 2)
                                     )
                             }
                             VStack(alignment: .leading){
@@ -79,7 +78,7 @@ struct SignUp: View {
                                     .disableAutocorrection(true)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 5)
-                                            .stroke(emailIsFocused ? Color.blue : Color.white, lineWidth: 1)
+                                            .stroke(emailIsFocused ? Color.blue : Color.white, lineWidth: 2)
                                     )
                             }
                             VStack(alignment: .leading){
@@ -92,7 +91,7 @@ struct SignUp: View {
                                     .focused($passwordIsFocused)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 5)
-                                            .stroke(passwordIsFocused ? Color.blue : Color.white, lineWidth: 1)
+                                            .stroke(passwordIsFocused ? Color.blue : Color.white, lineWidth: 2)
                                     )
                             }
                             VStack(alignment: .leading){
@@ -105,7 +104,7 @@ struct SignUp: View {
                                     .focused($password2IsFocused)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 5)
-                                            .stroke(password2IsFocused ? Color.blue : Color.white, lineWidth: 1)
+                                            .stroke(password2IsFocused ? Color.blue : Color.white, lineWidth: 2)
                                     )
                             }
                         }
@@ -122,7 +121,7 @@ struct SignUp: View {
                                             viewModel.isSubmitting = false
                                             alertMessage = "Sign up successful"
                                             showAlert = true
-                                            //showHomeTabView = true
+                                            //showSignInView = true
                                         } catch {
                                             viewModel.isSubmitting = false
                                             alertMessage = error.localizedDescription
@@ -174,9 +173,13 @@ struct SignUp: View {
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
                         .alert(isPresented: $showAlert){
-                            Alert(title: Text("Account Information"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                            Alert(title: Text("Account Information"), message: Text(alertMessage), dismissButton: .default(Text("OK")){
+                                if viewModel.successfulSignedUp {
+                                    showSignInView = true
+                                }
+                            })
                         }
-                        .navigationDestination(isPresented: $showHomeTabView, destination: {HomeTabView()})
+                        .navigationDestination(isPresented: $showSignInView, destination: {SignIn(appwrite: appwrite)})
                         Divider()
                             .frame(width: 350, height: 2)
                             .overlay(Color("AppBlue"))
