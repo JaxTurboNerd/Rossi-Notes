@@ -249,7 +249,6 @@ enum DeleteDocumentError: LocalizedError {
     var errorDescription: String? {
         return "Failed to delete document.  Please try again."
     }
-    
 }
 
 enum FetchDocumentsError: LocalizedError {
