@@ -48,7 +48,7 @@ struct DetailView: View {
                         VStack {
                             VStack{
                                 //Display the pet name:
-                                CardView(name: viewModel.detailsModel.name)
+                                CardView(name: viewModel.detailsModel?.name ?? "Error")
                                 //Display the protocol date:
                                 HStack {
                                     Image(uiImage: viewModel.creatorImage ?? UIImage(systemName: "person.circle")!)

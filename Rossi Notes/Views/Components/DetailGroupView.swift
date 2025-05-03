@@ -13,21 +13,20 @@ struct DetailGroupView: View {
     
     var body: some View {
         Group {
-            viewModel.detailsModel.barrierReactive ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.barrierReactive)) : AnyView(EmptyView())
-            viewModel.detailsModel.dogReactive ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.dogReactive)) : AnyView(EmptyView())
-            viewModel.detailsModel.strangerReactive ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.strangerReactive)) : AnyView(EmptyView())
-            viewModel.detailsModel.leashReactive ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.leashReactive)) : AnyView(EmptyView())
-            viewModel.detailsModel.catReactive ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.catReactive)): AnyView(EmptyView())
+            viewModel.detailsModel?.barrierReactive ?? false ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.barrierReactive)) : AnyView(EmptyView())
+            viewModel.detailsModel?.dogReactive ?? false ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.dogReactive)) : AnyView(EmptyView())
+            viewModel.detailsModel?.strangerReactive ?? false ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.strangerReactive)) : AnyView(EmptyView())
+            viewModel.detailsModel?.leashReactive ?? false ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.leashReactive)) : AnyView(EmptyView())
+            viewModel.detailsModel?.catReactive ?? false ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.catReactive)): AnyView(EmptyView())
         }
         .padding(.vertical, 2)
         Group {
-            viewModel.detailsModel.shyFearful ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.shyFearful)) : AnyView(EmptyView())
-            viewModel.detailsModel.jumpyMouthy ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.jumpyMouthy)) : AnyView(EmptyView())
-            viewModel.detailsModel.resourceGuarder ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.resourceGuarder)) : AnyView(EmptyView())
-            viewModel.detailsModel.doorRoutine ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.doorRoutine)) : AnyView(EmptyView())
-            viewModel.detailsModel.placeRoutine ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.placeRoutine)) : AnyView(EmptyView())
-            viewModel.detailsModel.miscNotes.isEmpty ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsStringModel.miscNotes))
-
+            viewModel.detailsModel?.shyFearful ?? false ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.shyFearful)) : AnyView(EmptyView())
+            viewModel.detailsModel?.jumpyMouthy ?? false ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.jumpyMouthy)) : AnyView(EmptyView())
+            viewModel.detailsModel?.resourceGuarder ?? false ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.resourceGuarder)) : AnyView(EmptyView())
+            viewModel.detailsModel?.doorRoutine ?? false ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.doorRoutine)) : AnyView(EmptyView())
+            viewModel.detailsModel?.placeRoutine ?? false ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.placeRoutine)) : AnyView(EmptyView())
+            viewModel.detailsModel?.miscNotes.isEmpty ?? true ? AnyView(EmptyView()) : AnyView(DetailLineView(detail: viewModel.detailsStringModel.miscNotes))
         }
         .multilineTextAlignment(.center)
         .padding(.vertical, 2)
