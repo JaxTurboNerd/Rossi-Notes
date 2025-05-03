@@ -16,7 +16,7 @@ class DetailViewModel: ObservableObject {
     var detailsModel = DetailsModel()
     
     @Published var isLoading = false
-    @Published var errorMessage: String = ""
+    //@Published var errorMessage: String = ""
     @Published var document: Document<[String: AnyCodable]>?
     @Published var initialsImage: UIImage? = nil
     @Published var creatorImage: UIImage? = nil
@@ -51,9 +51,7 @@ class DetailViewModel: ObservableObject {
             try await fetchCreatorInfo()
         } catch DetailViewError.failedToFetchDocument {
             self.isLoading = false
-            self.errorMessage = "Failed to fetch document."
         } catch {
-            self.errorMessage = error.localizedDescription
             self.isLoading = false
         }
     }
@@ -179,8 +177,7 @@ class DetailViewModel: ObservableObject {
             let _ = try await appwrite.deleteDocument(collectionId, documentId)
             noteWillDelete = true
         } catch {
-            print("delete document error \(String(describing: errorMessage))")
-            self.errorMessage = error.localizedDescription
+            print("delete document error \(error.localizedDescription)")
             self.isLoading = false
         }
     }
@@ -200,10 +197,8 @@ class DetailViewModel: ObservableObject {
             }
         } catch DetailViewError.failedToFetchUser {
             print("failed to fetch user")
-            self.errorMessage = "Failed to fetch user."
         } catch DetailViewError.failedToFetchInitials {
             print("Failed to fetch initials")
-            self.errorMessage = "Failed to fetch initials."
         } catch {
             print("Error fetching initials \(error.localizedDescription)")
         }
@@ -225,9 +220,9 @@ class DetailViewModel: ObservableObject {
                 self.creatorImage = uiImage
             }
         } catch DetailViewError.failedToFetchCreator {
-            self.errorMessage = "Failed to fetch creator."
+            throw DetailViewError.failedToFetchCreator
         } catch DetailViewError.failedToFetchInitials {
-            self.errorMessage = "Failed to fetch initials."
+            throw DetailViewError.failedToFetchInitials
         } catch {
             print("error fetching creator initials \(error.localizedDescription)")
         }

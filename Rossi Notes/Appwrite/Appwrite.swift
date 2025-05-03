@@ -76,15 +76,13 @@ class Appwrite: ObservableObject {
             return newUser
         } catch let error as AppwriteError {
             if error.message == "Invalid `email` param: Value must be a valid email address" {
-                print("Appwrite file error: \(error.localizedDescription)")
                 throw UserError.invalidEmail
             } else if error.message == "Invalid `password` param: Password must be between 8 and 265 characters long, and should not be one of the commonly used password." {
                 throw UserError.invalidPassword
             } else if error.type == "user_password_mismatch" {
                 throw UserError.passwordMismatch
             } else {
-                print("Create account error: \(error.localizedDescription)")
-                throw error
+                throw UserError.failed(error.localizedDescription)
             }
         }
     }
@@ -103,7 +101,7 @@ class Appwrite: ObservableObject {
                 throw AuthError.generalArgumentError
             } else {
                 print("Get account error: \(error.localizedDescription)")
-                throw error
+                throw AuthError.failed
             }
         }
     }
@@ -207,7 +205,7 @@ class Appwrite: ObservableObject {
 }
 
 enum AuthError: LocalizedError {
-    case invalidCredentials, userBlocked, signOutFailed, generalArgumentError
+    case invalidCredentials, userBlocked, signOutFailed, generalArgumentError, failed
     
     var errorDescription: String? {
         switch self {
@@ -219,6 +217,8 @@ enum AuthError: LocalizedError {
             return "Password must be at least 8 characters long"
         case .signOutFailed:
             return "Failed to sign out. Please try again."
+        case .failed:
+            return "An unknown error occurred. Please try again."
         }
     }
 }
@@ -249,7 +249,6 @@ enum DeleteDocumentError: LocalizedError {
     var errorDescription: String? {
         return "Failed to delete document.  Please try again."
     }
-    
 }
 
 enum FetchDocumentsError: LocalizedError {

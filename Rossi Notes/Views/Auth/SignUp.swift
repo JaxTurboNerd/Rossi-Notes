@@ -13,7 +13,7 @@ struct SignUp: View {
     @EnvironmentObject var appwrite: Appwrite
     @State private var isLoading = false
     @State var isShowingSignIn = false
-    @State var showHomeTabView = false
+    @State var showSignInView = false
     //Alert vars:
     @State private var showAlert = false
     @State private var alertMessage = ""
@@ -47,13 +47,10 @@ struct SignUp: View {
                                     .textFieldStyle(.roundedBorder)
                                     .textInputAutocapitalization(.words)
                                     .focused($fnameIsFocused)
-                                    .onSubmit {
-                                        //code:
-                                    }
                                     .disableAutocorrection(true)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 5)
-                                            .stroke(fnameIsFocused ? Color.blue : Color.white, lineWidth: 1)
+                                            .stroke(fnameIsFocused ? Color.blue : Color.white, lineWidth: 2)
                                     )
                             }
                             VStack(alignment: .leading){
@@ -65,12 +62,9 @@ struct SignUp: View {
                                     .textInputAutocapitalization(.words)
                                     .focused($lnameIsFocused)
                                     .disableAutocorrection(true)
-                                    .onSubmit {
-                                        //code:
-                                    }
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 5)
-                                            .stroke(lnameIsFocused ? Color.blue : Color.white, lineWidth: 1)
+                                            .stroke(lnameIsFocused ? Color.blue : Color.white, lineWidth: 2)
                                     )
                             }
                             VStack(alignment: .leading){
@@ -82,12 +76,9 @@ struct SignUp: View {
                                     .textInputAutocapitalization(.never)
                                     .focused($emailIsFocused)
                                     .disableAutocorrection(true)
-                                    .onSubmit {
-                                        //code:
-                                    }
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 5)
-                                            .stroke(emailIsFocused ? Color.blue : Color.white, lineWidth: 1)
+                                            .stroke(emailIsFocused ? Color.blue : Color.white, lineWidth: 2)
                                     )
                             }
                             VStack(alignment: .leading){
@@ -100,7 +91,7 @@ struct SignUp: View {
                                     .focused($passwordIsFocused)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 5)
-                                            .stroke(passwordIsFocused ? Color.blue : Color.white, lineWidth: 1)
+                                            .stroke(passwordIsFocused ? Color.blue : Color.white, lineWidth: 2)
                                     )
                             }
                             VStack(alignment: .leading){
@@ -113,7 +104,7 @@ struct SignUp: View {
                                     .focused($password2IsFocused)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 5)
-                                            .stroke(password2IsFocused ? Color.blue : Color.white, lineWidth: 1)
+                                            .stroke(password2IsFocused ? Color.blue : Color.white, lineWidth: 2)
                                     )
                             }
                         }
@@ -128,7 +119,9 @@ struct SignUp: View {
                                         do {
                                             try await viewModel.signUp()
                                             viewModel.isSubmitting = false
-                                            showHomeTabView = true
+                                            alertMessage = "Sign up successful"
+                                            showAlert = true
+                                            //showSignInView = true
                                         } catch {
                                             viewModel.isSubmitting = false
                                             alertMessage = error.localizedDescription
@@ -136,43 +129,36 @@ struct SignUp: View {
                                         }
                                     }
                                 } catch SignUpTextfieldError.emptyFname {
-                                    isLoading = false
                                     fnameIsFocused = true
                                     showAlert = true
                                     alertMessage = "Please enter your first name"
                                 } catch SignUpTextfieldError.emptyLname {
-                                    isLoading = false
                                     lnameIsFocused = true
                                     showAlert = true
                                     alertMessage = "Please enter your last name"
                                 } catch SignUpTextfieldError.emptyEmail {
-                                    isLoading = false
                                     emailIsFocused = true
                                     showAlert = true
                                     alertMessage = "Please enter your email"
                                 } catch SignUpTextfieldError.emptyPassword {
-                                    isLoading = false
                                     passwordIsFocused = true
                                     showAlert = true
                                     alertMessage = "Please enter your password"
                                 } catch SignUpTextfieldError.emptyPassword2 {
-                                    isLoading = false
                                     password2IsFocused = true
                                     showAlert = true
                                     alertMessage = "Please enter your password confirmation"
                                 } catch SignUpTextfieldError.pwordsNotMatched {
-                                    isLoading = false
                                     passwordIsFocused = true
                                     showAlert = true
                                     alertMessage = "Your passwords do not match!"
                                 } catch {
-                                    isLoading = false
                                     alertMessage = "An error logging in occured"
                                     showAlert = true
                                 }
                             }
                         } label: {
-                            if isLoading {
+                            if viewModel.isSubmitting {
                                 ProgressView()
                                     .progressViewStyle(CircularProgressViewStyle())
                                     .aspectRatio(contentMode: .fit)
@@ -187,9 +173,13 @@ struct SignUp: View {
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
                         .alert(isPresented: $showAlert){
-                            Alert(title: Text("Account Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                            Alert(title: Text("Account Information"), message: Text(alertMessage), dismissButton: .default(Text("OK")){
+                                if viewModel.successfulSignedUp {
+                                    showSignInView = true
+                                }
+                            })
                         }
-                        .navigationDestination(isPresented: $showHomeTabView, destination: {HomeTabView()})
+                        .navigationDestination(isPresented: $showSignInView, destination: {SignIn(appwrite: appwrite)})
                         Divider()
                             .frame(width: 350, height: 2)
                             .overlay(Color("AppBlue"))

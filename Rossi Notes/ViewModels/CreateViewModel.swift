@@ -15,7 +15,7 @@ final class CreateViewModel: ObservableObject {
     
     //Probably don't need these to be @Published:
     @Published public var isSubmitting = false
-    @Published public var errorMessage: String?
+    //@Published public var errorMessage: String?
     @Published public var noteAdded = false
     
     var document: Document<[String: AnyCodable]>?
@@ -44,7 +44,6 @@ final class CreateViewModel: ObservableObject {
     @MainActor
     func createProtocol(collectionId: String) async throws {
         isSubmitting = true
-        errorMessage = nil
         
         if let userName = appwrite.currentUser?.name {
             self.createdBy = userName
