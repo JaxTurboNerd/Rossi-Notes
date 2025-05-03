@@ -11,11 +11,10 @@ import JSONCodable
 
 class PlusViewModel: ObservableObject {
     let appwrite: Appwrite
-
+    
     // Published properties for UI updates
     @Published public var documents: [Document<[String: AnyCodable]>] = []
     @Published public var isLoading = false
-    @Published public var errorMessage: String?
     
     // Constants
     var collectionId: String {
@@ -39,17 +38,15 @@ class PlusViewModel: ObservableObject {
     @MainActor
     func fetchDocuments() async throws {
         isLoading = true
-        errorMessage = nil
-            do {
-                let response = try await appwrite.listDocuments(collectionId)
-                //returns response of type: DocumentList<Dictionary<String, AnyCodable>>
-                    self.documents = response!.documents
-                    self.isLoading = false
-                
-            } catch {
-                    self.errorMessage = error.localizedDescription
-                    self.isLoading = false
-            }
+        do {
+            let response = try await appwrite.listDocuments(collectionId)
+            //returns response of type: DocumentList<Dictionary<String, AnyCodable>>
+            self.documents = response!.documents
+            self.isLoading = false
+            
+        } catch {
+            self.isLoading = false
+        }
     }
     
     @MainActor

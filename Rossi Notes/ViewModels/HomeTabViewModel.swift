@@ -13,7 +13,6 @@ class HomeTabViewModel: ObservableObject {
     private let appwrite: Appwrite
     
     @Published var isSubmitting = false
-    @Published var errorMessage = ""
     @Published var initialsImage: UIImage? = nil
     @Published var user: User<[String: AnyCodable]>? = nil
     @Published var userName: String = ""
