@@ -82,7 +82,6 @@ class Appwrite: ObservableObject {
             } else if error.type == "user_password_mismatch" {
                 throw UserError.passwordMismatch
             } else {
-                print("Create account error: \(error.localizedDescription)")
                 throw UserError.failed(error.localizedDescription)
             }
         }
@@ -102,7 +101,7 @@ class Appwrite: ObservableObject {
                 throw AuthError.generalArgumentError
             } else {
                 print("Get account error: \(error.localizedDescription)")
-                throw error
+                throw AuthError.failed
             }
         }
     }
@@ -206,7 +205,7 @@ class Appwrite: ObservableObject {
 }
 
 enum AuthError: LocalizedError {
-    case invalidCredentials, userBlocked, signOutFailed, generalArgumentError
+    case invalidCredentials, userBlocked, signOutFailed, generalArgumentError, failed
     
     var errorDescription: String? {
         switch self {
@@ -218,6 +217,8 @@ enum AuthError: LocalizedError {
             return "Password must be at least 8 characters long"
         case .signOutFailed:
             return "Failed to sign out. Please try again."
+        case .failed:
+            return "An unknown error occurred. Please try again."
         }
     }
 }

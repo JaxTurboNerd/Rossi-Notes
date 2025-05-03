@@ -16,6 +16,7 @@ struct SignUp: View {
     @State var showHomeTabView = false
     //Alert vars:
     @State private var showAlert = false
+    @State private var showAccountSuccessAlert = false
     @State private var alertMessage = ""
     
     @FocusState var fnameIsFocused: Bool
@@ -47,9 +48,6 @@ struct SignUp: View {
                                     .textFieldStyle(.roundedBorder)
                                     .textInputAutocapitalization(.words)
                                     .focused($fnameIsFocused)
-                                    .onSubmit {
-                                        //code:
-                                    }
                                     .disableAutocorrection(true)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 5)
@@ -65,9 +63,6 @@ struct SignUp: View {
                                     .textInputAutocapitalization(.words)
                                     .focused($lnameIsFocused)
                                     .disableAutocorrection(true)
-                                    .onSubmit {
-                                        //code:
-                                    }
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 5)
                                             .stroke(lnameIsFocused ? Color.blue : Color.white, lineWidth: 1)
@@ -82,9 +77,6 @@ struct SignUp: View {
                                     .textInputAutocapitalization(.never)
                                     .focused($emailIsFocused)
                                     .disableAutocorrection(true)
-                                    .onSubmit {
-                                        //code:
-                                    }
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 5)
                                             .stroke(emailIsFocused ? Color.blue : Color.white, lineWidth: 1)
@@ -128,7 +120,9 @@ struct SignUp: View {
                                         do {
                                             try await viewModel.signUp()
                                             viewModel.isSubmitting = false
-                                            showHomeTabView = true
+                                            alertMessage = "Sign up successful"
+                                            showAlert = true
+                                            //showHomeTabView = true
                                         } catch {
                                             viewModel.isSubmitting = false
                                             alertMessage = error.localizedDescription
@@ -136,43 +130,36 @@ struct SignUp: View {
                                         }
                                     }
                                 } catch SignUpTextfieldError.emptyFname {
-                                    isLoading = false
                                     fnameIsFocused = true
                                     showAlert = true
                                     alertMessage = "Please enter your first name"
                                 } catch SignUpTextfieldError.emptyLname {
-                                    isLoading = false
                                     lnameIsFocused = true
                                     showAlert = true
                                     alertMessage = "Please enter your last name"
                                 } catch SignUpTextfieldError.emptyEmail {
-                                    isLoading = false
                                     emailIsFocused = true
                                     showAlert = true
                                     alertMessage = "Please enter your email"
                                 } catch SignUpTextfieldError.emptyPassword {
-                                    isLoading = false
                                     passwordIsFocused = true
                                     showAlert = true
                                     alertMessage = "Please enter your password"
                                 } catch SignUpTextfieldError.emptyPassword2 {
-                                    isLoading = false
                                     password2IsFocused = true
                                     showAlert = true
                                     alertMessage = "Please enter your password confirmation"
                                 } catch SignUpTextfieldError.pwordsNotMatched {
-                                    isLoading = false
                                     passwordIsFocused = true
                                     showAlert = true
                                     alertMessage = "Your passwords do not match!"
                                 } catch {
-                                    isLoading = false
                                     alertMessage = "An error logging in occured"
                                     showAlert = true
                                 }
                             }
                         } label: {
-                            if isLoading {
+                            if viewModel.isSubmitting {
                                 ProgressView()
                                     .progressViewStyle(CircularProgressViewStyle())
                                     .aspectRatio(contentMode: .fit)
@@ -187,7 +174,7 @@ struct SignUp: View {
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
                         .alert(isPresented: $showAlert){
-                            Alert(title: Text("Account Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                            Alert(title: Text("Account Information"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
                         }
                         .navigationDestination(isPresented: $showHomeTabView, destination: {HomeTabView()})
                         Divider()
