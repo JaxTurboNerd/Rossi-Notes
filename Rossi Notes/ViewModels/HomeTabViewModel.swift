@@ -28,7 +28,6 @@ class HomeTabViewModel: ObservableObject {
     @MainActor
     public func signOut() async throws {
         self.isSubmitting = true
-        
         do {
             try await appwrite.onLogout()
             //delete session from user defaults:

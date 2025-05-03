@@ -17,7 +17,6 @@ class SignUpViewModel: ObservableObject {
     @Published var email = ""
     @Published var password = ""
     @Published var passwordConfirm = ""
-    @Published var errorMessage = ""
     @Published var isSubmitting = false
     @Published var successfulSignedUp: Bool = false
     
@@ -32,7 +31,6 @@ class SignUpViewModel: ObservableObject {
             _ = try await appwrite.createAccount(firstName, lastName, email, password)
             self.successfulSignedUp = true
         } catch {
-            self.errorMessage = error.localizedDescription
             throw UserError.failed(error.localizedDescription)
         }
     }

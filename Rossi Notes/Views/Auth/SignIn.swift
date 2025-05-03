@@ -14,7 +14,7 @@ struct SignIn: View {
     @State var showHomeTabView = false
     
     @State private var showAlert = false
-    @State private var alertMessage: String?
+    @State private var alertMessage = ""
     
     @FocusState var emailIsFocused: Bool
     @FocusState var passwordIsFocused: Bool
@@ -39,14 +39,14 @@ struct SignIn: View {
                         Text("email:")
                             .foregroundColor(.white)
                             .font(Font.custom("Urbanist-Regular", size: 20))
-                        TextField("email", text: $viewModel.email, onCommit: {})
+                        TextField("email", text: $viewModel.email)
                             .keyboardType(.emailAddress)
                             .textInputAutocapitalization(.never)
                             .textFieldStyle(.roundedBorder)
                             .focused($emailIsFocused)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 5)
-                                    .stroke(emailIsFocused ? Color.blue : Color.white, lineWidth: 1)
+                                    .stroke(emailIsFocused ? Color.blue : Color.white, lineWidth: 2)
                             )
                     }
                     .padding()
@@ -54,13 +54,12 @@ struct SignIn: View {
                         Text("password")
                             .foregroundColor(.white)
                             .font(Font.custom("Urbanist-Regular", size: 20))
-                        
                         SecureField("password:", text: $viewModel.password)
                             .textFieldStyle(.roundedBorder)
                             .focused($passwordIsFocused)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 5)
-                                    .stroke(passwordIsFocused ? Color.blue : Color.white, lineWidth: 1)
+                                    .stroke(passwordIsFocused ? Color.blue : Color.white, lineWidth: 2)
                             )
                     }
                     .padding()
@@ -95,10 +94,9 @@ struct SignIn: View {
                                     showAlert = true
                                 } catch {
                                     viewModel.isSubmitting = false
-                                    alertMessage = viewModel.errorMessage ?? "An error occured"
+                                    alertMessage = "An unknown error occurred"
                                     showAlert = true
                                 }
-                                
                             }
                         } label: {
                             if viewModel.isSubmitting {
@@ -116,7 +114,7 @@ struct SignIn: View {
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
                         .alert(isPresented: $showAlert){
-                            Alert(title: Text("Login Error"), message: Text(alertMessage ?? "an error has occured"), dismissButton: .default(Text("OK")))
+                            Alert(title: Text("Login Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
                         }
                     }
                     .navigationDestination(isPresented: $showHomeTabView, destination: {HomeTabView()})
