@@ -92,6 +92,11 @@ struct SignIn: View {
                                     passwordIsFocused = true
                                     alertMessage = "Please enter your password"
                                     showAlert = true
+                                } catch LoginTextfieldError.invalidPassword {
+                                    viewModel.isSubmitting = false
+                                    passwordIsFocused = true
+                                    alertMessage = "Password is must me at least 8 characters long"
+                                    showAlert = true
                                 } catch {
                                     viewModel.isSubmitting = false
                                     alertMessage = "An unknown error occurred"
@@ -152,7 +157,7 @@ struct SignIn: View {
 }
 
 enum LoginTextfieldError: Error {
-    case emptyEmail, emptyPassword
+    case emptyEmail, emptyPassword, invalidPassword
 }
 
 private func checkLoginFields(_ email: String, _ password: String) throws -> Bool {
@@ -160,6 +165,8 @@ private func checkLoginFields(_ email: String, _ password: String) throws -> Boo
         throw LoginTextfieldError.emptyEmail
     } else if password.isEmpty {
         throw LoginTextfieldError.emptyPassword
+    } else if password.count < 9 {
+        throw LoginTextfieldError.invalidPassword
     }
     return true
 }
