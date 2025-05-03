@@ -13,7 +13,7 @@ import JSONCodable
 @MainActor
 class DetailViewModel: ObservableObject {
     private let appwrite: Appwrite
-    var detailsModel = DetailsModel()
+    var detailsModel: DetailsModel?
     
     @Published var isLoading = false
     //@Published var errorMessage: String = ""
@@ -29,7 +29,6 @@ class DetailViewModel: ObservableObject {
     
     init(appwrite: Appwrite){
         self.appwrite = appwrite
-        //call function to get/set user's initials:
     }
     
     //This function is intended to inject an instance of the DetailsModel:
@@ -46,7 +45,7 @@ class DetailViewModel: ObservableObject {
             self.document = document
             self.isLoading = false
             setDetailsModel(response: document)
-            formattedStringDate = formatDate(from: detailsModel.protocolDate)
+            formattedStringDate = formatDate(from: detailsModel?.protocolDate ?? Date.now)
             setDetailsStringModel(responseData: document.data)
             try await fetchCreatorInfo()
         } catch DetailViewError.failedToFetchDocument {
@@ -81,54 +80,53 @@ class DetailViewModel: ObservableObject {
         if let protocolDate = response.data["protocol_date"]?.value as? String {
             //print("protocol_date not found")
             let protocolDateObject = formatDateString(from: protocolDate)
-            detailsModel.protocolDate = protocolDateObject
+            detailsModel?.protocolDate = protocolDateObject
         }
         
         //set the detailsModel instance values;
         if let id = response.data["$id"]?.value as? String {
-            detailsModel.id = id
+            detailsModel?.id = id
         }
         if let name = response.data["name"]?.value as? String {
-            detailsModel.name = name
+            detailsModel?.name = name
         }
         if let jumpyMouthy = response.data["jumpy_mouthy"]?.value as? Bool {
-            detailsModel.jumpyMouthy = jumpyMouthy
+            detailsModel?.jumpyMouthy = jumpyMouthy
         }
         if let dogReactive = response.data["dog_reactive"]?.value as? Bool {
-            detailsModel.dogReactive = dogReactive
+            detailsModel?.dogReactive = dogReactive
         }
         if let catReactive = response.data["cat_reactive"]?.value as? Bool {
-            detailsModel.catReactive = catReactive
+            detailsModel?.catReactive = catReactive
         }
         if let leashReactive = response.data["leash_reactive"]?.value as? Bool {
-            detailsModel.leashReactive = leashReactive
+            detailsModel?.leashReactive = leashReactive
         }
         if let barrierReactive = response.data["barrier_reactive"]?.value as? Bool {
-            detailsModel.barrierReactive = barrierReactive
+            detailsModel?.barrierReactive = barrierReactive
         }
         if let doorRoutine = response.data["door_routine"]?.value as? Bool {
-            detailsModel.doorRoutine = doorRoutine
+            detailsModel?.doorRoutine = doorRoutine
         }
         if let placeRoutine = response.data["place_routine"]?.value as? Bool {
-            detailsModel.placeRoutine = placeRoutine
+            detailsModel?.placeRoutine = placeRoutine
         }
         if let resourceGuarder = response.data["resource_guarder"]?.value as? Bool {
-            detailsModel.resourceGuarder = resourceGuarder
+            detailsModel?.resourceGuarder = resourceGuarder
         }
         if let strangerReactive = response.data["stranger_reactive"]?.value as? Bool {
-            detailsModel.strangerReactive = strangerReactive
+            detailsModel?.strangerReactive = strangerReactive
         }
         if let shyFearful = response.data["shy_fearful"]?.value as? Bool {
-            detailsModel.shyFearful = shyFearful
+            detailsModel?.shyFearful = shyFearful
         }
         if let miscNotes = response.data["misc_notes"]?.value as? String {
-            detailsModel.miscNotes = miscNotes
+            detailsModel?.miscNotes = miscNotes
         }
         if let createdBy = response.data["created_by"]?.value as? String {
-
-            detailsModel.createdBy = createdBy
+            detailsModel?.createdBy = createdBy
         } else {
-            detailsModel.createdBy = ""
+            detailsModel?.createdBy = ""
         }
     }
     
@@ -206,10 +204,10 @@ class DetailViewModel: ObservableObject {
     
     public func fetchCreatorInfo() async throws {
         do {
-            let creatorName = detailsModel.createdBy
-//            guard let creatorName = detailsModel.createdBy else {
-//                throw DetailViewError.failedToFetchCreator
-//            }
+            //let creatorName = detailsModel?.createdBy
+            guard let creatorName = detailsModel?.createdBy else {
+                throw DetailViewError.failedToFetchCreator
+            }
             guard let data = try await appwrite.getInitials(name: creatorName) else {
                 throw DetailViewError.failedToFetchInitials
             }
