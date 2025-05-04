@@ -44,7 +44,7 @@ class Appwrite: ObservableObject {
                 return ""
             }
         }
-
+        
         self.client = Client()
             .setEndpoint("https://cloud.appwrite.io/v1")
             .setProject(projectId)
@@ -97,8 +97,6 @@ class Appwrite: ObservableObject {
                 throw AuthError.invalidCredentials
             } else if error.type == "user_blocked" {
                 throw AuthError.userBlocked
-            } else if error.type == "general_argument_invalid" {
-                throw AuthError.generalArgumentError
             } else {
                 print("Get account error: \(error.localizedDescription)")
                 throw AuthError.failed
@@ -116,12 +114,14 @@ class Appwrite: ObservableObject {
             self.isAuthenticated = true
             return session
         } catch let error as AppwriteError {
-            if error.type == "user_invalid_credentials" {
+            if error.message == "Invalid `email` param: Value must be a valid email address" {
+                throw AuthError.invalidEmail
+            } else if error.message == "Invalid `password` param: Password must be between 8 and 256 characters long." {
+                throw AuthError.invalidPassword
+            } else if error.type == "user_invalid_credentials" {
                 throw AuthError.invalidCredentials
             } else if error.type == "user_blocked" {
                 throw AuthError.userBlocked
-            } else if error.type == "general_argument_invalid" {
-                throw AuthError.generalArgumentError
             } else {
                 print("Sign in error: \(error.localizedDescription)")
                 throw error
@@ -132,7 +132,7 @@ class Appwrite: ObservableObject {
     public func getInitials(name: String) async throws -> ByteBuffer? {
         do {
             //returns a ByteBuffer Object
-             let data = try await avatars.getInitials(name: name)
+            let data = try await avatars.getInitials(name: name)
             return data
         } catch {
             print("get initials error: \(error.localizedDescription)")
@@ -205,7 +205,7 @@ class Appwrite: ObservableObject {
 }
 
 enum AuthError: LocalizedError {
-    case invalidCredentials, userBlocked, signOutFailed, generalArgumentError, failed
+    case invalidCredentials, userBlocked, signOutFailed, invalidEmail, invalidPassword, failed
     
     var errorDescription: String? {
         switch self {
@@ -213,10 +213,13 @@ enum AuthError: LocalizedError {
             return "The email or password you entered is incorrect. Please try again."
         case .userBlocked:
             return "Your account has been temporarily suspended. Please contact support"
-        case .generalArgumentError:
-            return "Password must be at least 8 characters long"
+            //Incorrect email format:
         case .signOutFailed:
             return "Failed to sign out. Please try again."
+        case .invalidEmail:
+            return "Invalid email. Please enter a valid email address."
+        case .invalidPassword:
+            return "Invalid password. Password must be at least 8 characters."
         case .failed:
             return "An unknown error occurred. Please try again."
         }

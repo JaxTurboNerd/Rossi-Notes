@@ -140,6 +140,10 @@ struct SignUp: View {
                                     emailIsFocused = true
                                     showAlert = true
                                     alertMessage = "Please enter your email"
+                                } catch SignUpTextfieldError.invalidEmail {
+                                    emailIsFocused = true
+                                    showAlert = true
+                                    alertMessage = "Please enter a valid email"
                                 } catch SignUpTextfieldError.emptyPassword {
                                     passwordIsFocused = true
                                     showAlert = true
@@ -148,6 +152,10 @@ struct SignUp: View {
                                     password2IsFocused = true
                                     showAlert = true
                                     alertMessage = "Please enter your password confirmation"
+                                } catch SignUpTextfieldError.invalidPassword {
+                                    passwordIsFocused = true
+                                    showAlert = true
+                                    alertMessage = "Your password must be at least 9 characters long"
                                 } catch SignUpTextfieldError.pwordsNotMatched {
                                     passwordIsFocused = true
                                     showAlert = true
@@ -216,7 +224,7 @@ struct SignUp: View {
 }
 
 enum SignUpTextfieldError: Error {
-    case emptyFname, emptyLname, emptyEmail, emptyPassword, emptyPassword2, pwordsNotMatched
+    case emptyFname, emptyLname, emptyEmail, emptyPassword, emptyPassword2, pwordsNotMatched, invalidEmail, invalidPassword
 }
 
 private func checkSignUpFields(
@@ -226,24 +234,24 @@ private func checkSignUpFields(
     _ password: String,
     _ password2: String
 ) throws -> Bool {
+    let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
     if fname.isEmpty {
         throw SignUpTextfieldError.emptyFname
-    }
-    if lname.isEmpty {
+    } else if lname.isEmpty {
         throw SignUpTextfieldError.emptyLname
-    }
-    if email.isEmpty {
+    } else if email.isEmpty {
         throw SignUpTextfieldError.emptyEmail
-    }
-    if password.isEmpty {
+    } else if !NSPredicate(format: "SELF MATCHES %@", emailRegex).evaluate(with: email) {
+        throw SignUpTextfieldError.invalidEmail
+    } else if password.isEmpty {
         throw SignUpTextfieldError.emptyPassword
-    }
-    if password2.isEmpty {
+    } else if password2.isEmpty {
         throw SignUpTextfieldError.emptyPassword2
     } else if password != password2 {
         throw SignUpTextfieldError.pwordsNotMatched
+    } else if password.count < 9 || password2.count < 9 {
+        throw SignUpTextfieldError.invalidPassword
     }
-    
     return true
 }
 

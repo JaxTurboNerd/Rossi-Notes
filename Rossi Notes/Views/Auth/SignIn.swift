@@ -87,10 +87,20 @@ struct SignIn: View {
                                     emailIsFocused = true
                                     alertMessage = "Please enter your email"
                                     showAlert = true
+                                } catch LoginTextfieldError.invalidEmail {
+                                    viewModel.isSubmitting = false
+                                    emailIsFocused = true
+                                    alertMessage = "Please enter a valid email"
+                                    showAlert = true
                                 } catch LoginTextfieldError.emptyPassword {
                                     viewModel.isSubmitting = false
                                     passwordIsFocused = true
                                     alertMessage = "Please enter your password"
+                                    showAlert = true
+                                } catch LoginTextfieldError.invalidPassword {
+                                    viewModel.isSubmitting = false
+                                    passwordIsFocused = true
+                                    alertMessage = "Password is must me at least 8 characters long"
                                     showAlert = true
                                 } catch {
                                     viewModel.isSubmitting = false
@@ -152,14 +162,20 @@ struct SignIn: View {
 }
 
 enum LoginTextfieldError: Error {
-    case emptyEmail, emptyPassword
+    case emptyEmail, emptyPassword, invalidPassword, invalidEmail
 }
 
 private func checkLoginFields(_ email: String, _ password: String) throws -> Bool {
+    let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
     if email.isEmpty {
         throw LoginTextfieldError.emptyEmail
+    } else if !NSPredicate(format: "SELF MATCHES %@", emailRegex).evaluate(with: email) {
+        print("Sign in view invalid email")
+        throw LoginTextfieldError.invalidEmail
     } else if password.isEmpty {
         throw LoginTextfieldError.emptyPassword
+    } else if password.count < 9 {
+        throw LoginTextfieldError.invalidPassword
     }
     return true
 }
