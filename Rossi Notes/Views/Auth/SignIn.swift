@@ -166,7 +166,7 @@ enum LoginTextfieldError: Error {
 }
 
 private func checkLoginFields(_ email: String, _ password: String) throws -> Bool {
-    let emailRegex = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,64}$"
+    let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
     if email.isEmpty {
         throw LoginTextfieldError.emptyEmail
     } else if !NSPredicate(format: "SELF MATCHES %@", emailRegex).evaluate(with: email) {
