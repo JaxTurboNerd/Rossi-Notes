@@ -13,7 +13,7 @@ struct CardView: View {
     var body: some View {
         Text(name)
             .font(Font.custom("ConcertOne-Regular", size: 24))
-            .tracking(2)//adds letter spacing
+            .tracking(1.2)//adds letter spacing
             .frame(maxWidth: .infinity, minHeight: 60, maxHeight:70 ,alignment: .center)
             .background(Color("AppBlue"))
             .foregroundColor(.white)
