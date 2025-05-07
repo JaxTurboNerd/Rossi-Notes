@@ -25,7 +25,6 @@ final class UpdateViewModel: ObservableObject {
     var noteDetails: DetailsModel?
     
     @Published public var isSubmitting = false
-    @Published public var errorMessage: String?
     @Published var document: Document<[String: AnyCodable]>?
     
     init(appwrite: Appwrite){
@@ -38,7 +37,6 @@ final class UpdateViewModel: ObservableObject {
     
     func updateProtocol(collectionId: String, documentId: String, noteDetails: DetailsModel) async throws {
         isSubmitting = true
-        errorMessage = nil
         
         if let userName = appwrite.currentUser?.name {
             self.createdBy = userName
@@ -53,7 +51,6 @@ final class UpdateViewModel: ObservableObject {
             
             //convert data to json string:
             guard let dataString = String(data: data, encoding: .utf8) else {
-                self.errorMessage = "Invalid Data error.  Please try again"
                 return
             }
             let response = try await appwrite.updateDocument(collectionId, documentId, dataString)
@@ -61,8 +58,7 @@ final class UpdateViewModel: ObservableObject {
             self.isSubmitting = false
             
         } catch {
-            self.errorMessage = error.localizedDescription
-            print("Create document error \(String(describing: errorMessage))")
+            print("Create document error \(error.localizedDescription)")
             self.isSubmitting = false
             
         }

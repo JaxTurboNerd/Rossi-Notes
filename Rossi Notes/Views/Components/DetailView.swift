@@ -49,7 +49,7 @@ struct DetailView: View {
                         VStack {
                             VStack{
                                 //Display the pet name:
-                                CardView(name: viewModel.detailsModel.name)
+                                CardView(name: viewModel.detailsModel?.name ?? "Error")
                                 //Display the protocol date:
                                 HStack {
                                     Image(uiImage: viewModel.creatorImage ?? UIImage(systemName: "person.circle")!)
@@ -113,7 +113,7 @@ struct DetailView: View {
                 dismiss.callAsFunction()
             }
             Button("Cancel", role: .cancel){
-                
+                //action:
             }
         })
         .task {
@@ -142,6 +142,6 @@ struct NameBackgroundView: View {
 
 #Preview {
     @Previewable var previewAppwrite = Appwrite()
-    DetailView(appwrite: previewAppwrite, triggerRefresh: .constant(false), collectionId: "66a04db400070bffec78", documentId: "6799d9ab2ce631c69eee")
+    DetailView(appwrite: previewAppwrite, triggerRefresh: .constant(false), collectionId: "xxxxxxxxxx", documentId: "6799d9ab2ce631c69eee")
         .environmentObject(DetailsModel())
 }

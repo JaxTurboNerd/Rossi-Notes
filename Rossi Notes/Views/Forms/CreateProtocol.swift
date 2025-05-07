@@ -136,7 +136,3 @@ private func validateTextFields(name: String, date: Date) throws -> Bool {
     return true
 }
 
-//#Preview {
-//    let appwrite = Appwrite()
-//    CreateView(appwrite: appwrite, collectionId: "66a04db400070bffec78", triggerRefresh: .constant(false), isPlusNote: .constant(false))
-//}

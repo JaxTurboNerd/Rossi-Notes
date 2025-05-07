@@ -15,11 +15,17 @@ final class ProtocolViewModel: ObservableObject {
     // Published properties for UI updates
     @Published public var documents: [Document<[String: AnyCodable]>] = []
     @Published public var isLoading = false
-    @Published public var errorMessage: String?
     
     // Constants
-    private let databaseId = "66a04cba001cb48a5bd7"
-    let collectionId = "66a04db400070bffec78"
+    var collectionId: String {
+        do {
+            let IdKey: String = try Configuration.value(for: "PROTOCOL_COLL_ID")
+            return IdKey
+        } catch {
+            print("error getting collection id")
+            return ""
+        }
+    }
     
     //Initialize:
     init(appwrite: Appwrite){
@@ -32,14 +38,11 @@ final class ProtocolViewModel: ObservableObject {
     @MainActor
     func fetchDocuments() async throws {
         self.isLoading = true
-        self.errorMessage = nil
-        
         do {
             let response = try await appwrite.listDocuments(collectionId)
             self.documents = response?.documents ?? []
             self.isLoading = false
         } catch {
-            self.errorMessage = error.localizedDescription
             self.isLoading = false
             print("fetch document error \(error.localizedDescription)")
         }

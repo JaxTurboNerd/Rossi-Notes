@@ -13,11 +13,9 @@ import JSONCodable
 class LoginViewModel: ObservableObject {
     private let appwrite: Appwrite
     
-    @Published var email: String = "gboyd69@yahoo.com"
-    @Published var password: String = "11Gunner$"
-    @Published var errorMessage: String?
+    @Published var email: String = ""
+    @Published var password: String = ""
     @Published var isSubmitting = false
-    //@Published var session: Session?
     
     init(appwrite: Appwrite){
         self.appwrite = appwrite
@@ -25,9 +23,7 @@ class LoginViewModel: ObservableObject {
     
     @MainActor
     public func signIn() async throws {
-        self.isSubmitting = true
-        self.errorMessage = nil
-        
+        self.isSubmitting = true        
         do {
             let session = try await appwrite.signIn(email, password)
             self.persistSession(session)

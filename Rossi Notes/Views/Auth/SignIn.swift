@@ -14,7 +14,7 @@ struct SignIn: View {
     @State var showHomeTabView = false
     
     @State private var showAlert = false
-    @State private var alertMessage: String?
+    @State private var alertMessage = ""
     
     @FocusState var emailIsFocused: Bool
     @FocusState var passwordIsFocused: Bool
@@ -39,14 +39,14 @@ struct SignIn: View {
                         Text("email:")
                             .foregroundColor(.white)
                             .font(Font.custom("Urbanist-Regular", size: 20))
-                        TextField("email", text: $viewModel.email, onCommit: {})
+                        TextField("email", text: $viewModel.email)
                             .keyboardType(.emailAddress)
                             .textInputAutocapitalization(.never)
                             .textFieldStyle(.roundedBorder)
                             .focused($emailIsFocused)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 5)
-                                    .stroke(emailIsFocused ? Color.blue : Color.white, lineWidth: 1)
+                                    .stroke(emailIsFocused ? Color.blue : Color.white, lineWidth: 2)
                             )
                     }
                     .padding()
@@ -54,13 +54,12 @@ struct SignIn: View {
                         Text("password")
                             .foregroundColor(.white)
                             .font(Font.custom("Urbanist-Regular", size: 20))
-                        
                         SecureField("password:", text: $viewModel.password)
                             .textFieldStyle(.roundedBorder)
                             .focused($passwordIsFocused)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 5)
-                                    .stroke(passwordIsFocused ? Color.blue : Color.white, lineWidth: 1)
+                                    .stroke(passwordIsFocused ? Color.blue : Color.white, lineWidth: 2)
                             )
                     }
                     .padding()
@@ -88,17 +87,26 @@ struct SignIn: View {
                                     emailIsFocused = true
                                     alertMessage = "Please enter your email"
                                     showAlert = true
+                                } catch LoginTextfieldError.invalidEmail {
+                                    viewModel.isSubmitting = false
+                                    emailIsFocused = true
+                                    alertMessage = "Please enter a valid email"
+                                    showAlert = true
                                 } catch LoginTextfieldError.emptyPassword {
                                     viewModel.isSubmitting = false
                                     passwordIsFocused = true
                                     alertMessage = "Please enter your password"
                                     showAlert = true
+                                } catch LoginTextfieldError.invalidPassword {
+                                    viewModel.isSubmitting = false
+                                    passwordIsFocused = true
+                                    alertMessage = "Password is must me at least 8 characters long"
+                                    showAlert = true
                                 } catch {
                                     viewModel.isSubmitting = false
-                                    alertMessage = viewModel.errorMessage ?? "An error occured"
+                                    alertMessage = "An unknown error occurred"
                                     showAlert = true
                                 }
-                                
                             }
                         } label: {
                             if viewModel.isSubmitting {
@@ -116,7 +124,7 @@ struct SignIn: View {
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
                         .alert(isPresented: $showAlert){
-                            Alert(title: Text("Login Error"), message: Text(alertMessage ?? "an error has occured"), dismissButton: .default(Text("OK")))
+                            Alert(title: Text("Login Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
                         }
                     }
                     .navigationDestination(isPresented: $showHomeTabView, destination: {HomeTabView()})
@@ -142,6 +150,7 @@ struct SignIn: View {
                     }
                     .navigationDestination(isPresented: $isShowingSignUp, destination: {SignUp(appwrite: appwrite)})
                 }
+                .padding()
             }
             .ignoresSafeArea(.all)
             .onTapGesture {
@@ -153,14 +162,20 @@ struct SignIn: View {
 }
 
 enum LoginTextfieldError: Error {
-    case emptyEmail, emptyPassword
+    case emptyEmail, emptyPassword, invalidPassword, invalidEmail
 }
 
 private func checkLoginFields(_ email: String, _ password: String) throws -> Bool {
+    let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
     if email.isEmpty {
         throw LoginTextfieldError.emptyEmail
+    } else if !NSPredicate(format: "SELF MATCHES %@", emailRegex).evaluate(with: email) {
+        print("Sign in view invalid email")
+        throw LoginTextfieldError.invalidEmail
     } else if password.isEmpty {
         throw LoginTextfieldError.emptyPassword
+    } else if password.count < 9 {
+        throw LoginTextfieldError.invalidPassword
     }
     return true
 }
