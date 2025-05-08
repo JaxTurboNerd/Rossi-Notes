@@ -62,6 +62,7 @@ struct UpdateView: View {
                     Toggle("Resource Guarder", isOn: $noteDetails.resourceGuarder)
                     Toggle("Avoid Strangers", isOn: $noteDetails.strangerReactive)
                     Toggle("Door Routine", isOn: $noteDetails.doorRoutine)
+                    //Toggle("Loose Leash", isOn: $viewModel.looseLeash)
                     Toggle("Shy/Fearful", isOn: $noteDetails.shyFearful)
                 }
                 Section(header: Text("Notes")

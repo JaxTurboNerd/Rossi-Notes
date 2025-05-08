@@ -42,7 +42,7 @@ final class UpdateViewModel: ObservableObject {
             self.createdBy = userName
         }
         
-        let updatedProtocol = Protocol(name: noteDetails.name, protocol_date: noteDetails.protocolDate, dog_reactive: noteDetails.dogReactive, cat_reactive: noteDetails.catReactive, barrier_reactive: noteDetails.barrierReactive, leash_reactive: noteDetails.leashReactive, jumpy_mouthy: noteDetails.jumpyMouthy, resource_guarder: noteDetails.resourceGuarder, stranger_reactive: noteDetails.strangerReactive, place_routine: noteDetails.placeRoutine, door_routine: noteDetails .doorRoutine, shy_fearful: noteDetails.shyFearful, misc_notes: noteDetails.miscNotes, created_by: createdBy)
+        let updatedProtocol = Protocol(name: noteDetails.name, protocol_date: noteDetails.protocolDate, dog_reactive: noteDetails.dogReactive, cat_reactive: noteDetails.catReactive, barrier_reactive: noteDetails.barrierReactive, leash_reactive: noteDetails.leashReactive, jumpy_mouthy: noteDetails.jumpyMouthy, resource_guarder: noteDetails.resourceGuarder, stranger_reactive: noteDetails.strangerReactive, place_routine: noteDetails.placeRoutine, door_routine: noteDetails .doorRoutine, looseLeash: noteDetails.looseLeash, shy_fearful: noteDetails.shyFearful, misc_notes: noteDetails.miscNotes, created_by: createdBy)
         
         do {
             let encoder = JSONEncoder()
@@ -61,6 +61,17 @@ final class UpdateViewModel: ObservableObject {
             print("Create document error \(error.localizedDescription)")
             self.isSubmitting = false
             
+        }
+    }
+}
+
+enum UpdateProtocolError: LocalizedError {
+    case failedToCreateProtocol
+    
+    var errorDescription: String? {
+        switch self {
+        case .failedToCreateProtocol:
+            return "Failed to  update.  Please try again."
         }
     }
 }
