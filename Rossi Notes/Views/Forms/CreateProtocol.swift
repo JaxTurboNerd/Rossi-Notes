@@ -96,7 +96,7 @@ struct CreateView: View {
                                         noteAdded = true
                                     } catch {
                                         viewModel.isSubmitting = false
-                                        alertMessage = error.localizedDescription
+                                        alertMessage = "Failed to create protocol. Please try again."
                                         showAlert = true
                                     }
                                 }

@@ -61,10 +61,15 @@ final class CreateViewModel: ObservableObject {
             
             //convert data to json string:
             let dataString = String(data: data, encoding: .utf8)
-            guard (try await appwrite.createDocument(collectionId, documentId, dataString ?? "")) != nil else {
-                self.isSubmitting = false
-                throw CreateProtocolError.failedToCreateProtocol
-            }
+//            do {
+//                let _ = try await appwrite.createDocument(collectionId, documentId, dataString ?? "")
+//            } catch {
+//                print("create VM error: \(error)")
+//                self.isSubmitting = false
+//                throw CreateProtocolError.failedToCreateProtocol
+//            }
+            let _ = try await appwrite.createDocument(collectionId, documentId, dataString ?? "")
+            
             //self.document = response
             self.noteAdded = true
             self.isSubmitting = false
@@ -76,6 +81,7 @@ final class CreateViewModel: ObservableObject {
             self.isSubmitting = false
             
         } catch CreateProtocolError.failedToCreateProtocol {
+            print("Create VM error")
             self.isSubmitting = false
         }
     }

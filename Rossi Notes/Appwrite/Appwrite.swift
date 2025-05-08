@@ -181,8 +181,7 @@ class Appwrite: ObservableObject {
             return document
         } catch {
             print(error.localizedDescription)
-            return nil
-            //throw CreateDocumentError.failedCreate
+            throw CreateDocumentError.failedCreate
         }
     }
     
@@ -263,17 +262,17 @@ enum FetchDocumentsError: LocalizedError {
     }
 }
 
-//enum CreateDocumentError: LocalizedError {
-//    case failedCreate, invalideStructure
-//    
-//    var errorDescription: String? {
-//        switch self {
-//        case .failedCreate:
-//            return "Failed to create document.  Please try again."
-//        case .invalideStructure:
-//            return "Invalid document structure.  Please check your formatting."
-//        }
-//    }
-//}
+enum CreateDocumentError: LocalizedError {
+    case failedCreate, invalideStructure
+    
+    var errorDescription: String? {
+        switch self {
+        case .failedCreate:
+            return "Failed to create document.  Please try again."
+        case .invalideStructure:
+            return "Invalid document structure.  Please check your formatting."
+        }
+    }
+}
 
 
