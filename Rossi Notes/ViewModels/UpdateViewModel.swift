@@ -25,7 +25,6 @@ final class UpdateViewModel: ObservableObject {
     var noteDetails: DetailsModel?
     
     @Published public var isSubmitting = false
-    @Published var document: Document<[String: AnyCodable]>?
     
     init(appwrite: Appwrite){
         self.appwrite = appwrite
@@ -47,30 +46,37 @@ final class UpdateViewModel: ObservableObject {
         do {
             let encoder = JSONEncoder()
             encoder.dateEncodingStrategy = .iso8601
-            guard let data = try? encoder.encode(updatedProtocol) else {return}
+            guard let data = try? encoder.encode(updatedProtocol) else {
+                self.isSubmitting = false
+                throw JSONError.invalidData
+            }
             
             //convert data to json string:
             guard let dataString = String(data: data, encoding: .utf8) else {
-                return
+                throw UpdateProtocolError.failedToUpdateProtocol
             }
-            let response = try await appwrite.updateDocument(collectionId, documentId, dataString)
-            self.document = response
+            let _ = try await appwrite.updateDocument(collectionId, documentId, dataString)
             self.isSubmitting = false
             
-        } catch {
-            print("Create document error \(error.localizedDescription)")
+        } catch JSONError.invalidData {
             self.isSubmitting = false
             
+        } catch JSONError.typeMismatch {
+            self.isSubmitting = false
+            
+        } catch UpdateProtocolError.failedToUpdateProtocol {
+            print("Update VM error")
+            self.isSubmitting = false
         }
     }
 }
 
 enum UpdateProtocolError: LocalizedError {
-    case failedToCreateProtocol
+    case failedToUpdateProtocol
     
     var errorDescription: String? {
         switch self {
-        case .failedToCreateProtocol:
+        case .failedToUpdateProtocol:
             return "Failed to  update.  Please try again."
         }
     }

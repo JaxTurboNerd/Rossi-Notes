@@ -62,7 +62,7 @@ struct UpdateView: View {
                     Toggle("Resource Guarder", isOn: $noteDetails.resourceGuarder)
                     Toggle("Avoid Strangers", isOn: $noteDetails.strangerReactive)
                     Toggle("Door Routine", isOn: $noteDetails.doorRoutine)
-                    //Toggle("Loose Leash", isOn: $viewModel.looseLeash)
+                    Toggle("Loose Leash", isOn: $noteDetails.looseLeash)
                     Toggle("Shy/Fearful", isOn: $noteDetails.shyFearful)
                 }
                 Section(header: Text("Notes")
@@ -95,7 +95,7 @@ struct UpdateView: View {
                                         dismiss.callAsFunction()
                                     } catch {
                                         viewModel.isSubmitting = false
-                                        alertMessage = error.localizedDescription
+                                        alertMessage = "Failed to update protocol. Please try again later."
                                         showAlert = true
                                     }
                                 }
@@ -115,7 +115,7 @@ struct UpdateView: View {
                 viewModel.modelSetup(noteDetails)
             }
             .alert(isPresented: $showAlert){
-                Alert(title: Text("Input Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                Alert(title: Text("Update Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
             }
         }
     }

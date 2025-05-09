@@ -15,10 +15,8 @@ final class CreateViewModel: ObservableObject {
     
     //Probably don't need these to be @Published:
     @Published public var isSubmitting = false
-    //@Published public var errorMessage: String?
     @Published public var noteAdded = false
     
-    var document: Document<[String: AnyCodable]>?
     var documentId = ID.unique()
     var name = ""
     var protocolDate = Date.now
@@ -60,17 +58,10 @@ final class CreateViewModel: ObservableObject {
             }
             
             //convert data to json string:
-            let dataString = String(data: data, encoding: .utf8)
-//            do {
-//                let _ = try await appwrite.createDocument(collectionId, documentId, dataString ?? "")
-//            } catch {
-//                print("create VM error: \(error)")
-//                self.isSubmitting = false
-//                throw CreateProtocolError.failedToCreateProtocol
-//            }
-            let _ = try await appwrite.createDocument(collectionId, documentId, dataString ?? "")
-            
-            //self.document = response
+            guard let dataString = String(data: data, encoding: .utf8) else {
+                throw CreateProtocolError.failedToCreateProtocol
+            }
+            let _ = try await appwrite.createDocument(collectionId, documentId, dataString)
             self.noteAdded = true
             self.isSubmitting = false
             
