@@ -11,8 +11,9 @@ struct DetailView: View {
     @StateObject private var viewModel: DetailViewModel
     @StateObject private var updateViewModel: UpdateViewModel
     @EnvironmentObject private var detailsModel: DetailsModel
-    @State private var showUpdateForm = false
-    @State private var isShowingDeleteAlert = false
+    @State private var showUpdateForm: Bool = false
+    @State private var isShowingDeleteAlert: Bool = false
+    @State private var showNamePopover: Bool = false
     private var appwrite: Appwrite
     
     
