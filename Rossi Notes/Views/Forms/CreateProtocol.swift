@@ -18,6 +18,7 @@ struct CreateView: View {
     @FocusState var nameIsFocused: Bool
     var collectionId: String
     private var alertTitle: String { noteAdded ? "Note Added!" : "Error" }
+    @State private var shouldDismiss: Bool = false
     
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
@@ -57,11 +58,11 @@ struct CreateView: View {
                     .font(Font.custom("Urbanist-Medium", size: 16))
                     .foregroundColor(Color("AppBlue")))
                 {
+                    Toggle("Loose Leash", isOn: $viewModel.looseLeash)
                     Toggle("Jumpy/Mouthy", isOn: $viewModel.jumpy)
                     Toggle("Resource Guarder", isOn: $viewModel.resourceGuarder)
                     Toggle("Avoid Strangers", isOn: $viewModel.avoidStrangers)
                     Toggle("Door Routine", isOn: $viewModel.doorRoutine)
-                    Toggle("Loose Leash", isOn: $viewModel.looseLeash)
                     Toggle("Shy/Fearful", isOn: $viewModel.shyFearful)
                 }
                 Section(header: Text("Notes")
@@ -95,6 +96,7 @@ struct CreateView: View {
                                         try await viewModel.createProtocol(collectionId: collectionId)
                                         noteAdded = true
                                         alertMessage = "Note added successfully!"
+                                        shouldDismiss = true
                                         showAlert = true
                                     } catch {
                                         viewModel.isSubmitting = false
@@ -120,7 +122,7 @@ struct CreateView: View {
                 }
             }
             .alert(isPresented: $showAlert){
-                Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")){dismiss.callAsFunction()})
+                Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")){shouldDismiss ? dismiss.callAsFunction() : nil})
             }
         }
     }

@@ -11,7 +11,6 @@ struct UpdateView: View {
     
     @StateObject var viewModel: UpdateViewModel
     @EnvironmentObject var noteDetails: DetailsModel
-    @Binding var triggerRefresh: Bool
     @Binding var noteUpdated: Bool
     @State private var alertMessage = ""
     @State private var showAlert = false
@@ -25,9 +24,8 @@ struct UpdateView: View {
     @Environment(\.dismiss) private var dismiss
     
     //view initializer:
-    init(appwrite: Appwrite, triggerRefresh: Binding<Bool>, noteUpdated: Binding<Bool>, collectionId: String, documentId: String){
+    init(appwrite: Appwrite, noteUpdated: Binding<Bool>, collectionId: String, documentId: String){
         _viewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite))
-        _triggerRefresh = triggerRefresh
         _noteUpdated = noteUpdated
         self.collectionId = collectionId
         self.documentId = documentId
@@ -59,6 +57,7 @@ struct UpdateView: View {
                     .font(Font.custom("Urbanist-Medium", size: 16))
                     .foregroundColor(Color("AppBlue")))
                 {
+                    Toggle("Loose Leash", isOn: $noteDetails.looseLeash)
                     Toggle("Jumpy/Mouthy", isOn: $noteDetails.jumpyMouthy)
                     Toggle("Resource Guarder", isOn: $noteDetails.resourceGuarder)
                     Toggle("Avoid Strangers", isOn: $noteDetails.strangerReactive)
@@ -72,7 +71,6 @@ struct UpdateView: View {
                     TextField("Notes", text: $noteDetails.miscNotes, axis: .vertical)
                 }
             }
-            //.navigationTitle("Protocol")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading, content: {
@@ -92,11 +90,11 @@ struct UpdateView: View {
                                     do {
                                         try await viewModel.updateProtocol(collectionId: collectionId, documentId: documentId, noteDetails: noteDetails)
                                         noteUpdated = true
-                                        alertMessage = "Protocol updated successfully."
+                                        alertMessage = "\(noteDetails.name) Updated!"
                                         showAlert = true
                                     } catch {
                                         viewModel.isSubmitting = false
-                                        alertMessage = error.localizedDescription
+                                        alertMessage = "Failed to update protocol. Please try again later."
                                         showAlert = true
                                     }
                                 }
@@ -127,7 +125,6 @@ enum UpdateTextfieldError: Error {
 }
 
 private func validateTextFields(name: String, date: Date) throws -> Bool {
-    //let dateFormatter = DateFormatter()    
     if name.isEmpty {
         throw UpdateTextfieldError.nameIsEmpty
     }
