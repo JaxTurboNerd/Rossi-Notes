@@ -96,7 +96,7 @@ struct DetailView: View {
                         }
                         noteUpdated = false
                     }},
-                       content: {UpdateView(appwrite: appwrite, triggerRefresh: $triggerRefresh, noteUpdated: $noteUpdated, collectionId: collectionId, documentId: documentId)}
+                       content: {UpdateView(appwrite: appwrite, noteUpdated: $noteUpdated, collectionId: collectionId, documentId: documentId)}
                 )
             })
             ToolbarItem(placement: .topBarTrailing,
