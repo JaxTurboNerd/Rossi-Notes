@@ -19,6 +19,7 @@ struct Protocol: Codable {
     var stranger_reactive: Bool
     var place_routine: Bool
     var door_routine: Bool
+    var looseLeash: Bool
     var shy_fearful: Bool
     var misc_notes: String
     var created_by: String

@@ -21,6 +21,7 @@ class DetailsModel: Identifiable, ObservableObject {
     var doorRoutine: Bool = false
     var placeRoutine: Bool = false
     var leashReactive: Bool = false
+    var looseLeash: Bool = false
     var shyFearful: Bool = false
     var createdBy: String = ""
     //var updatedBy: String = ""
@@ -40,6 +41,7 @@ class DetailsStringModel: Identifiable, ObservableObject {
     var doorRoutine: String = ""
     var placeRoutine: String = ""
     var leashReactive: String = ""
+    var looseLeash: String = ""
     var shyFearful: String = ""
     var createdBy: String = ""
     //var updatedBy: String = ""
