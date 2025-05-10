@@ -67,13 +67,20 @@ final class CreateViewModel: ObservableObject {
             
         } catch JSONError.invalidData {
             self.isSubmitting = false
+            throw JSONError.invalidData
             
         } catch JSONError.typeMismatch {
             self.isSubmitting = false
+            throw JSONError.typeMismatch
             
         } catch CreateProtocolError.failedToCreateProtocol {
-            print("Create VM error")
             self.isSubmitting = false
+            throw CreateProtocolError.failedToCreateProtocol
+            
+        } catch {
+            print("Create VM Error: \(error.localizedDescription)")
+            self.isSubmitting = false
+            throw CreateProtocolError.failedToCreateProtocol
         }
     }
 }

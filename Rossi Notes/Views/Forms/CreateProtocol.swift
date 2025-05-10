@@ -17,6 +17,7 @@ struct CreateView: View {
     @Binding var isPlusNote: Bool
     @FocusState var nameIsFocused: Bool
     var collectionId: String
+    private var alertTitle: String { noteAdded ? "Note Added!" : "Error" }
     
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
@@ -96,7 +97,7 @@ struct CreateView: View {
                                         noteAdded = true
                                     } catch {
                                         viewModel.isSubmitting = false
-                                        alertMessage = "Failed to create protocol. Please try again."
+                                        alertMessage = error.localizedDescription
                                         showAlert = true
                                     }
                                 }
@@ -118,7 +119,7 @@ struct CreateView: View {
                 }
             }
             .alert(isPresented: $showAlert){
-                Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")){dismiss.callAsFunction()})
             }
         }
     }

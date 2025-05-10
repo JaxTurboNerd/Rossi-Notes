@@ -180,7 +180,7 @@ class Appwrite: ObservableObject {
             let document = try await databases.createDocument(databaseId: databaseId, collectionId: collectionId, documentId: documentId, data: data)
             return document
         } catch {
-            print(error.localizedDescription)
+            print("Appwrite create error: \(error.localizedDescription)")
             throw CreateDocumentError.failedCreate
         }
     }

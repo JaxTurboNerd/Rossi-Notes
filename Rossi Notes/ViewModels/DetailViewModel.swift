@@ -120,6 +120,9 @@ class DetailViewModel: ObservableObject {
         if let shyFearful = response.data["shy_fearful"]?.value as? Bool {
             detailsModel?.shyFearful = shyFearful
         }
+        if let looseLeash = response.data["loose_leash"]?.value as? Bool {
+            detailsModel?.looseLeash = looseLeash
+        }
         if let miscNotes = response.data["misc_notes"]?.value as? String {
             detailsModel?.miscNotes = miscNotes
         }
@@ -163,6 +166,8 @@ class DetailViewModel: ObservableObject {
                     detailsStringModel.jumpyMouthy = "Jumpy/Mouthy"
                 case "shy_fearful":
                     detailsStringModel.shyFearful = "Shy / Fearful"
+                case "loose_leash":
+                    detailsStringModel.looseLeash = "Practice Loose Leash"
                 default:
                     return
                 }
