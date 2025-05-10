@@ -93,8 +93,9 @@ struct CreateView: View {
                                 if isValidFields {
                                     do {
                                         try await viewModel.createProtocol(collectionId: collectionId)
-                                        dismiss.callAsFunction()
                                         noteAdded = true
+                                        alertMessage = "Note added successfully!"
+                                        showAlert = true
                                     } catch {
                                         viewModel.isSubmitting = false
                                         alertMessage = error.localizedDescription

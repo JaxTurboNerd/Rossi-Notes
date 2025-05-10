@@ -16,6 +16,7 @@ struct UpdateView: View {
     @State private var alertMessage = ""
     @State private var showAlert = false
     @FocusState var nameIsFocused: Bool
+    private var alertTitle: String {noteUpdated ? "Note Updated" : "Error"}
     
     var collectionId: String
     var documentId: String
@@ -92,7 +93,8 @@ struct UpdateView: View {
                                     do {
                                         try await viewModel.updateProtocol(collectionId: collectionId, documentId: documentId, noteDetails: noteDetails)
                                         noteUpdated = true
-                                        dismiss.callAsFunction()
+                                        alertMessage = "Protocol updated successfully."
+                                        showAlert = true
                                     } catch {
                                         viewModel.isSubmitting = false
                                         alertMessage = "Failed to update protocol. Please try again later."
@@ -115,7 +117,7 @@ struct UpdateView: View {
                 viewModel.modelSetup(noteDetails)
             }
             .alert(isPresented: $showAlert){
-                Alert(title: Text("Update Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")){dismiss.callAsFunction()})
             }
         }
     }
