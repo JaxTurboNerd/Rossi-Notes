@@ -12,10 +12,9 @@ struct DetailView: View {
     @StateObject private var updateViewModel: UpdateViewModel
     @EnvironmentObject private var detailsModel: DetailsModel
     @State private var showUpdateForm: Bool = false
-    @State private var isShowingDeleteAlert: Bool = false
+    @State private var showAlert: Bool = false
     @State private var showNamePopover: Bool = false
     private var appwrite: Appwrite
-    
     
     var collectionId: String
     var documentId: String
@@ -45,6 +44,9 @@ struct DetailView: View {
                         ProgressView()
                             .progressViewStyle(CircularProgressViewStyle())
                             .controlSize(.large)
+                    } else if viewModel.failedToFetch {
+                        Text("Failed to fetch note.")
+                            .font(.headline)
                     } else {
                         VStack {
                             VStack{
@@ -89,6 +91,7 @@ struct DetailView: View {
                        onDismiss: {
                     if noteUpdated {
                         Task {
+                            //need do/catch:
                             try await viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
                         }
                         noteUpdated = false
@@ -99,12 +102,12 @@ struct DetailView: View {
             ToolbarItem(placement: .topBarTrailing,
                         content: {
                 Button("Delete"){
-                    isShowingDeleteAlert = true
+                    showAlert = true
                 }
                 .foregroundStyle(Color.red)
             })
         }
-        .alert("Confirm Deletion", isPresented: $isShowingDeleteAlert, actions: {
+        .alert("Confirm Deletion", isPresented: $showAlert, actions: {
             Button("Delete", role: .destructive){
                 Task {
                     try await viewModel.deleteNote(collectionId: collectionId, documentId: documentId)

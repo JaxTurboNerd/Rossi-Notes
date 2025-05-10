@@ -21,6 +21,7 @@ struct DetailGroupView: View {
         }
         .padding(.vertical, 2)
         Group {
+            viewModel.detailsModel?.looseLeash ?? false ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.looseLeash)) : AnyView(EmptyView())
             viewModel.detailsModel?.shyFearful ?? false ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.shyFearful)) : AnyView(EmptyView())
             viewModel.detailsModel?.jumpyMouthy ?? false ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.jumpyMouthy)) : AnyView(EmptyView())
             viewModel.detailsModel?.resourceGuarder ?? false ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.resourceGuarder)) : AnyView(EmptyView())

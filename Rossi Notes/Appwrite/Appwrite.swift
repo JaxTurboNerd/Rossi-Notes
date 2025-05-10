@@ -258,7 +258,7 @@ enum FetchDocumentsError: LocalizedError {
     case failedFetch
     
     var errorDescription: String? {
-        return "Failed to load protocols.  Please try again."
+        return "Failed to load details.  Please try again."
     }
 }
 

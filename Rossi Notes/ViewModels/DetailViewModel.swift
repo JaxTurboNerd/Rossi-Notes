@@ -21,10 +21,10 @@ class DetailViewModel: ObservableObject {
     @Published var initialsImage: UIImage? = nil
     @Published var creatorImage: UIImage? = nil
     @Published var initialsImageData: Data? = nil
-    //@Published var creatorImageData: Data? = nil
+    @Published var formattedStringDate = ""
+    @Published var failedToFetch: Bool = false
     //This model used to display string values from the details model:
     @ObservedObject var detailsStringModel = DetailsStringModel()
-    @Published var formattedStringDate = ""
     @State var noteWillDelete = false
     
     init(appwrite: Appwrite){
@@ -40,18 +40,24 @@ class DetailViewModel: ObservableObject {
         isLoading = true
         do {
             guard let document = try await appwrite.listDocument(collectionId, documentId) else {
-                throw DetailViewError.failedToFetchDocument
+                self.failedToFetch = true
+                throw FetchDocumentsError.failedFetch
             }
             self.document = document
             self.isLoading = false
             setDetailsModel(response: document)
             formattedStringDate = formatDate(from: detailsModel?.protocolDate ?? Date.now)
             setDetailsStringModel(responseData: document.data)
-            try await fetchCreatorInfo()
-        } catch DetailViewError.failedToFetchDocument {
-            self.isLoading = false
         } catch {
             self.isLoading = false
+            throw FetchDocumentsError.failedFetch
+        }
+        
+        do {
+            try await fetchCreatorInfo()
+        } catch {
+            self.isLoading = false
+            throw DetailViewError.failedToFetchCreator
         }
     }
     
@@ -165,9 +171,9 @@ class DetailViewModel: ObservableObject {
                 case "jumpy_mouthy":
                     detailsStringModel.jumpyMouthy = "Jumpy/Mouthy"
                 case "shy_fearful":
-                    detailsStringModel.shyFearful = "Shy / Fearful"
+                    detailsStringModel.shyFearful = "Shy / Fearful\n Avoid Petting!"
                 case "loose_leash":
-                    detailsStringModel.looseLeash = "Practice Loose Leash"
+                    detailsStringModel.looseLeash = "Practice Loose Leash Walking"
                 default:
                     return
                 }

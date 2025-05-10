@@ -47,7 +47,7 @@ final class CreateViewModel: ObservableObject {
             self.createdBy = userName
         }
         
-        let newProtocol = Protocol(name: name, protocol_date: protocolDate, dog_reactive: dogReactive, cat_reactive: catReactive, barrier_reactive: barrierReactive, leash_reactive: leashReactive, jumpy_mouthy: jumpy, resource_guarder: resourceGuarder, stranger_reactive: avoidStrangers, place_routine: placeRoutine, door_routine: doorRoutine, looseLeash: looseLeash, shy_fearful: shyFearful, misc_notes: notes, created_by: createdBy)
+        let newProtocol = Protocol(name: name, protocol_date: protocolDate, dog_reactive: dogReactive, cat_reactive: catReactive, barrier_reactive: barrierReactive, leash_reactive: leashReactive, jumpy_mouthy: jumpy, resource_guarder: resourceGuarder, stranger_reactive: avoidStrangers, place_routine: placeRoutine, door_routine: doorRoutine, loose_leash: looseLeash, shy_fearful: shyFearful, misc_notes: notes, created_by: createdBy)
         
         do {
             let encoder = JSONEncoder()
