@@ -49,10 +49,19 @@ struct CreateView: View {
                     .font(Font.custom("Urbanist-Medium", size: 16))
                     .foregroundColor(Color("AppBlue")))
                 {
-                    Toggle("Dog", isOn: $viewModel.dogReactive)
-                    Toggle("Cat", isOn: $viewModel.catReactive)
                     Toggle("Barrier", isOn: $viewModel.barrierReactive)
+                    Toggle("Dog", isOn: $viewModel.dogReactive)
                     Toggle("Leash", isOn: $viewModel.leashReactive)
+                    Toggle("Cat", isOn: $viewModel.catReactive)
+                }
+                Section(header: Text("Tools")
+                    .font(Font.custom("Urbanist-Medium", size: 16))
+                    .foregroundColor(Color("AppBlue")))
+                {
+                    Toggle("Dragline", isOn: $viewModel.dragline)
+                    Toggle("Chain Leash", isOn: $viewModel.chainLeash)
+                    Toggle("Harness", isOn: $viewModel.harness)
+                    Toggle("Gentle Leader", isOn: $viewModel.gentleLeader)
                 }
                 Section(header: Text("Miscellaneous")
                     .font(Font.custom("Urbanist-Medium", size: 16))

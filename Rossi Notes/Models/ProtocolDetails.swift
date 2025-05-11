@@ -23,6 +23,10 @@ class DetailsModel: Identifiable, ObservableObject {
     var leashReactive: Bool = false
     var looseLeash: Bool = false
     var shyFearful: Bool = false
+    var dragline: Bool = false
+    var harness: Bool = false
+    var chainLeash: Bool = false
+    var gentleLeader: Bool = false
     var createdBy: String = ""
     //var updatedBy: String = ""
 }
@@ -44,6 +48,10 @@ class DetailsStringModel: Identifiable, ObservableObject {
     var looseLeash: String = ""
     var shyFearful: String = ""
     var createdBy: String = ""
+    var dragline: String = ""
+    var harness: String = ""
+    var chainLeash: String = ""
+    var gentleLeader: String = ""
     //var updatedBy: String = ""
     
     func formatDate(from dateString: String) -> String {

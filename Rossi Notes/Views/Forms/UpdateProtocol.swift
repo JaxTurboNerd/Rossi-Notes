@@ -48,10 +48,19 @@ struct UpdateView: View {
                     .font(Font.custom("Urbanist-Medium", size: 16))
                     .foregroundColor(Color("AppBlue")))
                 {
-                    Toggle("Dog", isOn: $noteDetails.dogReactive)
-                    Toggle("Cat", isOn: $noteDetails.catReactive)
                     Toggle("Barrier", isOn: $noteDetails.barrierReactive)
+                    Toggle("Dog", isOn: $noteDetails.dogReactive)
                     Toggle("Leash", isOn: $noteDetails.leashReactive)
+                    Toggle("Cat", isOn: $noteDetails.catReactive)
+                }
+                Section(header: Text("Tools")
+                    .font(Font.custom("Urbanist-Medium", size: 16))
+                    .foregroundColor(Color("AppBlue")))
+                {
+                    Toggle("Dragline", isOn: $noteDetails.dragline)
+                    Toggle("Chain Leash", isOn: $noteDetails.chainLeash)
+                    Toggle("Harness", isOn: $noteDetails.harness)
+                    Toggle("Gentle Leader", isOn: $noteDetails.gentleLeader)
                 }
                 Section(header: Text("Miscellaneous")
                     .font(Font.custom("Urbanist-Medium", size: 16))

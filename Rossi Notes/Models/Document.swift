@@ -21,6 +21,10 @@ struct Protocol: Codable {
     var door_routine: Bool
     var loose_leash: Bool
     var shy_fearful: Bool
+    var dragline: Bool
+    var chain_leash: Bool
+    var harness: Bool
+    var gentle_leader: Bool
     var misc_notes: String
     var created_by: String
     //var updated_by: String
