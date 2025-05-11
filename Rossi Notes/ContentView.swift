@@ -59,7 +59,6 @@ struct ContentView: View {
             }
         }
         .task({
-            await appwrite.checkAuthStatus()
         })
     }
 }

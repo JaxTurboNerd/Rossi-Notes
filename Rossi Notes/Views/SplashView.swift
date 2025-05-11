@@ -20,7 +20,10 @@ struct SplashView: View {
             }
         }
         .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5, execute: {
+            Task {
+                await appwrite.checkAuthStatus()
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
                 withAnimation {
                     self.shouldDisplaySplashView = false
                 }
