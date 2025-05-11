@@ -35,8 +35,8 @@ struct UpdateView: View {
         NavigationStack {
             Form {
                 Section(header: Text("Name/Date")
-                    .font(Font.custom("Urbanist-Medium", size: 16))
-                    .foregroundColor(Color("AppBlue")))
+                    .font(Font.custom("Urbanist-ExtraBold", size: 16))
+                    .foregroundColor(Color("SectionTitleColor")))
                 {
                     VStack {
                         TextField("Name", text: $noteDetails.name).focused($nameIsFocused)
@@ -45,8 +45,8 @@ struct UpdateView: View {
                         .datePickerStyle(.compact)
                 }
                 Section(header: Text("Reactivities")
-                    .font(Font.custom("Urbanist-Medium", size: 16))
-                    .foregroundColor(Color("AppBlue")))
+                    .font(Font.custom("Urbanist-ExtraBold", size: 16))
+                    .foregroundColor(Color("SectionTitleColor")))
                 {
                     Toggle("Barrier", isOn: $noteDetails.barrierReactive)
                     Toggle("Dog", isOn: $noteDetails.dogReactive)
@@ -54,8 +54,8 @@ struct UpdateView: View {
                     Toggle("Cat", isOn: $noteDetails.catReactive)
                 }
                 Section(header: Text("Tools")
-                    .font(Font.custom("Urbanist-Medium", size: 16))
-                    .foregroundColor(Color("AppBlue")))
+                    .font(Font.custom("Urbanist-ExtraBold", size: 16))
+                    .foregroundColor(Color("SectionTitleColor")))
                 {
                     Toggle("Dragline", isOn: $noteDetails.dragline)
                     Toggle("Chain Leash", isOn: $noteDetails.chainLeash)
@@ -63,8 +63,8 @@ struct UpdateView: View {
                     Toggle("Gentle Leader", isOn: $noteDetails.gentleLeader)
                 }
                 Section(header: Text("Miscellaneous")
-                    .font(Font.custom("Urbanist-Medium", size: 16))
-                    .foregroundColor(Color("AppBlue")))
+                    .font(Font.custom("Urbanist-ExtraBold", size: 16))
+                    .foregroundColor(Color("SectionTitleColor")))
                 {
                     Toggle("Loose Leash", isOn: $noteDetails.looseLeash)
                     Toggle("Jumpy/Mouthy", isOn: $noteDetails.jumpyMouthy)
@@ -74,8 +74,8 @@ struct UpdateView: View {
                     Toggle("Shy/Fearful", isOn: $noteDetails.shyFearful)
                 }
                 Section(header: Text("Notes")
-                    .font(Font.custom("Urbanist-Medium", size: 16))
-                    .foregroundColor(Color("AppBlue")))
+                    .font(Font.custom("Urbanist-ExtraBold", size: 16))
+                    .foregroundColor(Color("SectionTitleColor")))
                 {
                     TextField("Notes", text: $noteDetails.miscNotes, axis: .vertical)
                 }
