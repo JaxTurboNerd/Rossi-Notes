@@ -35,8 +35,8 @@ struct CreateView: View {
             Form {
                 Section(
                     header:Text("Name/Date")
-                        .font(Font.custom("Urbanist-Medium", size: 16))
-                        .foregroundColor(Color("AppBlue")))
+                        .font(Font.custom("Urbanist-ExtraBold", size: 16))
+                        .foregroundColor(Color("SectionTitleColor")))
                 {
                     VStack {
                         TextField("Name", text: $viewModel.name).focused($nameIsFocused)
@@ -46,17 +46,26 @@ struct CreateView: View {
                         .datePickerStyle(.compact)
                 }
                 Section(header: Text("Reactivities")
-                    .font(Font.custom("Urbanist-Medium", size: 16))
-                    .foregroundColor(Color("AppBlue")))
+                    .font(Font.custom("Urbanist-ExtraBold", size: 16))
+                    .foregroundColor(Color("SectionTitleColor")))
                 {
-                    Toggle("Dog", isOn: $viewModel.dogReactive)
-                    Toggle("Cat", isOn: $viewModel.catReactive)
                     Toggle("Barrier", isOn: $viewModel.barrierReactive)
+                    Toggle("Dog", isOn: $viewModel.dogReactive)
                     Toggle("Leash", isOn: $viewModel.leashReactive)
+                    Toggle("Cat", isOn: $viewModel.catReactive)
+                }
+                Section(header: Text("Tools")
+                    .font(Font.custom("Urbanist-ExtraBold", size: 16))
+                    .foregroundColor(Color("SectionTitleColor")))
+                {
+                    Toggle("Dragline", isOn: $viewModel.dragline)
+                    Toggle("Chain Leash", isOn: $viewModel.chainLeash)
+                    Toggle("Harness", isOn: $viewModel.harness)
+                    Toggle("Gentle Leader", isOn: $viewModel.gentleLeader)
                 }
                 Section(header: Text("Miscellaneous")
-                    .font(Font.custom("Urbanist-Medium", size: 16))
-                    .foregroundColor(Color("AppBlue")))
+                    .font(Font.custom("Urbanist-ExtraBold", size: 16))
+                    .foregroundColor(Color("SectionTitleColor")))
                 {
                     Toggle("Loose Leash", isOn: $viewModel.looseLeash)
                     Toggle("Jumpy/Mouthy", isOn: $viewModel.jumpy)
@@ -66,8 +75,8 @@ struct CreateView: View {
                     Toggle("Shy/Fearful", isOn: $viewModel.shyFearful)
                 }
                 Section(header: Text("Notes")
-                    .font(Font.custom("Urbanist-Medium", size: 16))
-                    .foregroundColor(Color("AppBlue")))
+                    .font(Font.custom("Urbanist-ExtraBold", size: 16))
+                    .foregroundColor(Color("SectionTitleColor")))
                 {
                     TextField("Notes", text: $viewModel.notes, axis: .vertical)
                 }

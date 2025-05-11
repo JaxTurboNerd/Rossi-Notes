@@ -129,6 +129,18 @@ class DetailViewModel: ObservableObject {
         if let looseLeash = response.data["loose_leash"]?.value as? Bool {
             detailsModel?.looseLeash = looseLeash
         }
+        if let dragline = response.data["dragline"]?.value as? Bool {
+            detailsModel?.dragline = dragline
+        }
+        if let chainLeash = response.data["chain_leash"]?.value as? Bool {
+            detailsModel?.chainLeash = chainLeash
+        }
+        if let harness = response.data["harness"]?.value as? Bool {
+            detailsModel?.harness = harness
+        }
+        if let gentleLeader = response.data["gentle_leader"]?.value as? Bool {
+            detailsModel?.gentleLeader = gentleLeader
+        }
         if let miscNotes = response.data["misc_notes"]?.value as? String {
             detailsModel?.miscNotes = miscNotes
         }
@@ -174,6 +186,14 @@ class DetailViewModel: ObservableObject {
                     detailsStringModel.shyFearful = "Shy / Fearful\n Avoid Petting!"
                 case "loose_leash":
                     detailsStringModel.looseLeash = "Practice Loose Leash Walking"
+                case "dragline":
+                    detailsStringModel.dragline = "Dragline"
+                case "chain_leash":
+                    detailsStringModel.chainLeash = "Use Chain Leash"
+                case "harness":
+                    detailsStringModel.harness = "Harness"
+                case "gentle_leader":
+                    detailsStringModel.gentleLeader = "Gentle Leader"
                 default:
                     return
                 }

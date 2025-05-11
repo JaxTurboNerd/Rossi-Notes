@@ -21,6 +21,13 @@ struct DetailGroupView: View {
         }
         .padding(.vertical, 2)
         Group {
+            viewModel.detailsModel?.dragline ?? false ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.dragline)) : AnyView(EmptyView())
+            viewModel.detailsModel?.chainLeash ?? false ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.chainLeash)) : AnyView(EmptyView())
+            viewModel.detailsModel?.harness ?? false ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.harness)) : AnyView(EmptyView())
+            viewModel.detailsModel?.gentleLeader ?? false ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.gentleLeader)) : AnyView(EmptyView())
+        }
+        .padding(.vertical, 2)
+        Group {
             viewModel.detailsModel?.looseLeash ?? false ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.looseLeash)) : AnyView(EmptyView())
             viewModel.detailsModel?.shyFearful ?? false ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.shyFearful)) : AnyView(EmptyView())
             viewModel.detailsModel?.jumpyMouthy ?? false ? AnyView(DetailLineView(detail: viewModel.detailsStringModel.jumpyMouthy)) : AnyView(EmptyView())

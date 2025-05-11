@@ -31,6 +31,10 @@ final class CreateViewModel: ObservableObject {
     var doorRoutine = false
     var looseLeash = false
     var shyFearful = false
+    var dragline = false
+    var chainLeash = false
+    var gentleLeader = false
+    var harness = false
     var notes = ""
     var createdBy = ""
     //var updatedBy = ""
@@ -47,7 +51,7 @@ final class CreateViewModel: ObservableObject {
             self.createdBy = userName
         }
         
-        let newProtocol = Protocol(name: name, protocol_date: protocolDate, dog_reactive: dogReactive, cat_reactive: catReactive, barrier_reactive: barrierReactive, leash_reactive: leashReactive, jumpy_mouthy: jumpy, resource_guarder: resourceGuarder, stranger_reactive: avoidStrangers, place_routine: placeRoutine, door_routine: doorRoutine, loose_leash: looseLeash, shy_fearful: shyFearful, misc_notes: notes, created_by: createdBy)
+        let newProtocol = Protocol(name: name, protocol_date: protocolDate, dog_reactive: dogReactive, cat_reactive: catReactive, barrier_reactive: barrierReactive, leash_reactive: leashReactive, jumpy_mouthy: jumpy, resource_guarder: resourceGuarder, stranger_reactive: avoidStrangers, place_routine: placeRoutine, door_routine: doorRoutine, loose_leash: looseLeash, shy_fearful: shyFearful, dragline: dragline, chain_leash: chainLeash, harness: harness, gentle_leader: gentleLeader, misc_notes: notes, created_by: createdBy)
         
         do {
             let encoder = JSONEncoder()
