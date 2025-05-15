@@ -11,7 +11,7 @@ import Appwrite
 struct DeleteAlertButton: View {
     @StateObject private var viewModel: DetailViewModel
     @Binding var noteDeleted: Bool
-    @Binding var showAlert: Bool
+    //@Binding var showAlert: Bool
     private var appwrite: Appwrite
     var collectionId: String
     var documentId: String
@@ -19,13 +19,12 @@ struct DeleteAlertButton: View {
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
     
-    init(appwrite: Appwrite, collectionId: String, documentId: String, noteDeleted: Binding<Bool>, showAlert: Binding<Bool>) {
+    init(appwrite: Appwrite, collectionId: String, documentId: String, noteDeleted: Binding<Bool>) {
         _viewModel = StateObject(wrappedValue: DetailViewModel(appwrite: appwrite))
         self.appwrite = appwrite
         self.collectionId = collectionId
         self.documentId = documentId
         _noteDeleted = noteDeleted
-        _showAlert = showAlert
     }
     
     var body: some View {
@@ -36,7 +35,6 @@ struct DeleteAlertButton: View {
                     noteDeleted = true
                 } catch {
                     print("Deleting note error: \(error.localizedDescription)")
-                    showAlert = true
                 }
             }
             dismiss.callAsFunction()
@@ -49,5 +47,5 @@ struct DeleteAlertButton: View {
 
 #Preview {
     @Previewable var previewAppwrite = Appwrite()
-    DeleteAlertButton(appwrite: previewAppwrite, collectionId: "11l1jlj1l", documentId: "lakdoiuldj", noteDeleted: .constant(false), showAlert: .constant(false))
+    DeleteAlertButton(appwrite: previewAppwrite, collectionId: "11l1jlj1l", documentId: "lakdoiuldj", noteDeleted: .constant(false))
 }

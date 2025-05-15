@@ -76,24 +76,6 @@ struct DetailView: View {
                             .background(Color("BackgroundMain"))
                             Spacer()
                         }
-                        .alert("Confirm Deletion", isPresented: $showAlert, actions: {
-//                            Button("Delete", role: .destructive){
-//                                Task {
-//                                    do {
-//                                        try await viewModel.deleteNote(collectionId: collectionId, documentId: documentId)
-//                                        noteDeleted = true
-//                                    } catch {
-//                                        print("Deleting note error: \(error.localizedDescription)")
-//                                        showDeleteAlert = true
-//                                    }
-//                                }
-//                                dismiss.callAsFunction()
-//                            }
-//                            Button("Cancel", role: .cancel){
-//                                //action:
-//                            }
-                            DeleteAlertButton(appwrite: appwrite, collectionId: collectionId, documentId: documentId, noteDeleted: $noteDeleted, showAlert: $showAlert)
-                        })
                     }
                 }
                 .padding()//adds padding to the outer-most view
@@ -126,6 +108,9 @@ struct DetailView: View {
                 .foregroundStyle(Color.red)
             })
         }
+        .alert("Confirm Deletion", isPresented: $showAlert){
+            DeleteAlertButton(appwrite: appwrite, collectionId: collectionId, documentId: documentId, noteDeleted: $noteDeleted)
+        }
         .task {
             viewModel.modelSetup(detailsModel)
             do {
@@ -139,9 +124,6 @@ struct DetailView: View {
                 triggerRefresh = true
             }
         }
-//        .alert("Deletion Error", isPresented: $showDeleteAlert, actions: {
-//            Alert(title: Text("Error"), message: Text("Note could not be deleted."), dismissButton: .default(Text("OK")))
-//        })
     }
 }
 
