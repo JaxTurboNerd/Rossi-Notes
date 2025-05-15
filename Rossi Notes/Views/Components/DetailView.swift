@@ -13,6 +13,7 @@ struct DetailView: View {
     @EnvironmentObject private var detailsModel: DetailsModel
     @State private var showUpdateForm: Bool = false
     @State private var showAlert: Bool = false
+    @State private var showDeleteAlert: Bool = false
     @State private var showNamePopover: Bool = false
     private var appwrite: Appwrite
     
@@ -20,7 +21,7 @@ struct DetailView: View {
     var documentId: String
     //Do not move the two lines below up near the other @State vars (causes odd errors):
     @Binding var triggerRefresh: Bool
-    @State private var noteDeleted = false
+    @State var noteDeleted = false
     @State var noteUpdated = false
     
     //Used to dismiss the form:
@@ -75,6 +76,24 @@ struct DetailView: View {
                             .background(Color("BackgroundMain"))
                             Spacer()
                         }
+                        .alert("Confirm Deletion", isPresented: $showAlert, actions: {
+//                            Button("Delete", role: .destructive){
+//                                Task {
+//                                    do {
+//                                        try await viewModel.deleteNote(collectionId: collectionId, documentId: documentId)
+//                                        noteDeleted = true
+//                                    } catch {
+//                                        print("Deleting note error: \(error.localizedDescription)")
+//                                        showDeleteAlert = true
+//                                    }
+//                                }
+//                                dismiss.callAsFunction()
+//                            }
+//                            Button("Cancel", role: .cancel){
+//                                //action:
+//                            }
+                            DeleteAlertButton(appwrite: appwrite, collectionId: collectionId, documentId: documentId, noteDeleted: $noteDeleted, showAlert: $showAlert)
+                        })
                     }
                 }
                 .padding()//adds padding to the outer-most view
@@ -107,18 +126,6 @@ struct DetailView: View {
                 .foregroundStyle(Color.red)
             })
         }
-        .alert("Confirm Deletion", isPresented: $showAlert, actions: {
-            Button("Delete", role: .destructive){
-                Task {
-                    try await viewModel.deleteNote(collectionId: collectionId, documentId: documentId)
-                    noteDeleted = true
-                }
-                dismiss.callAsFunction()
-            }
-            Button("Cancel", role: .cancel){
-                //action:
-            }
-        })
         .task {
             viewModel.modelSetup(detailsModel)
             do {
@@ -127,11 +134,14 @@ struct DetailView: View {
                 print("fetching document error: \(error.localizedDescription)")
             }
         }
-        .onDisappear{
+        .onDisappear {
             if noteDeleted {
                 triggerRefresh = true
             }
         }
+//        .alert("Deletion Error", isPresented: $showDeleteAlert, actions: {
+//            Alert(title: Text("Error"), message: Text("Note could not be deleted."), dismissButton: .default(Text("OK")))
+//        })
     }
 }
 

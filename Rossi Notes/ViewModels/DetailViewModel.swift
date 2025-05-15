@@ -205,9 +205,12 @@ class DetailViewModel: ObservableObject {
         do {
             let _ = try await appwrite.deleteDocument(collectionId, documentId)
             noteWillDelete = true
-        } catch {
-            print("delete document error \(error.localizedDescription)")
+        } catch let error as AppwriteError {
             self.isLoading = false
+            if error.type == "user_unauthorized" {
+                throw UserPermissionsError.userUnauthorized
+            }
+            throw error
         }
     }
     
@@ -274,6 +277,17 @@ enum DetailViewError: LocalizedError {
             return "Failed to fetch creator."
         case .failedToFetchInitials:
             return "Failed to fetch initials."
+        }
+    }
+}
+
+enum UserPermissionsError: LocalizedError {
+    case userUnauthorized
+    
+    var errorDescription: String? {
+        switch self {
+        case .userUnauthorized:
+            return "User is not authorized to perform this action."
         }
     }
 }

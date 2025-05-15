@@ -199,7 +199,7 @@ class Appwrite: ObservableObject {
         do {
             let _ = try await databases.deleteDocument(databaseId: databaseId, collectionId: collectionId, documentId: documentId)
         } catch {
-            print(error.localizedDescription)
+            throw error
         }
     }
 }
