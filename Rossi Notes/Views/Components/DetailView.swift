@@ -13,9 +13,10 @@ struct DetailView: View {
     @EnvironmentObject private var detailsModel: DetailsModel
     @State private var showUpdateForm: Bool = false
     @State private var showAlert: Bool = false
-    @State private var showDeleteAlert: Bool = false
-    @State private var showNamePopover: Bool = false
+    @State private var changeAlert: Bool = false
+    @State private var deleteError: Bool = false
     private var appwrite: Appwrite
+    @State private var alertTitle: String = "Confirm Deletion"
     
     var collectionId: String
     var documentId: String
@@ -108,8 +109,30 @@ struct DetailView: View {
                 .foregroundStyle(Color.red)
             })
         }
-        .alert("Confirm Deletion", isPresented: $showAlert){
-            DeleteAlertButton(appwrite: appwrite, collectionId: collectionId, documentId: documentId, noteDeleted: $noteDeleted)
+        .alert(alertTitle, isPresented: $showAlert){
+            if !deleteError {
+                Button("Delete", role: .destructive){
+                    Task {
+                        do {
+                            try await viewModel.deleteNote(collectionId: collectionId, documentId: documentId)
+                            noteDeleted = true
+                            dismiss.callAsFunction()
+                        } catch {
+                            //print("Deleting note error: \(error.localizedDescription)")
+                            deleteError = true
+                            alertTitle = "User not authorized to delete this note."
+                            showAlert = true
+                        }
+                    }
+                }
+                Button("Cancel", role: .cancel){
+                    //action:
+                }
+            } else {
+                Button("OK", role: .cancel){
+                    //action:
+                }
+            }
         }
         .task {
             viewModel.modelSetup(detailsModel)
