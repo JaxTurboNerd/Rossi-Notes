@@ -111,6 +111,7 @@ struct CreateView: View {
                                         viewModel.isSubmitting = false
                                         alertMessage = error.localizedDescription
                                         showAlert = true
+                                        shouldDismiss = true
                                     }
                                 }
                             } catch CreateTextfieldError.nameIsEmpty {

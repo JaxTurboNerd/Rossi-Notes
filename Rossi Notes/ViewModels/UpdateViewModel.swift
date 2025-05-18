@@ -67,6 +67,13 @@ final class UpdateViewModel: ObservableObject {
         } catch UpdateProtocolError.failedToUpdateProtocol {
             print("Update VM error")
             self.isSubmitting = false
+        } catch let error as AppwriteError {
+            print("Update error: \(String(describing: error.type))")
+            if error.type == "user_unauthorized" {
+                throw AuthError.unauthorized
+            } else {
+                throw UpdateProtocolError.failedToUpdateProtocol
+            }
         }
     }
 }

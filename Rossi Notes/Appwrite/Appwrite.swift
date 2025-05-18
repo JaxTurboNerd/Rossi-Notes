@@ -177,21 +177,22 @@ class Appwrite: ObservableObject {
     public func createDocument(_ collectionId: String, _ documentId: String, _ data: String) async throws -> Document<[String: AnyCodable]>? {
         
         do {
-            let document = try await databases.createDocument(databaseId: databaseId, collectionId: collectionId, documentId: documentId, data: data)
+            let document = try await databases.createDocument(databaseId: databaseId, collectionId: collectionId, documentId: documentId, data: data, permissions: [Permission.read("users/verified"), Permission.update("users/verified"), Permission.delete("users/verified"), Permission.write("users/verified")])
             return document
-        } catch {
-            print("Appwrite create error: \(error.localizedDescription)")
-            throw CreateDocumentError.failedCreate
+        } catch let error as AppwriteError {
+            //unauthorized user error.type == "user_unauthorized"
+            print("Appwrite create error type: \(String(describing: error.type))")
+            throw error
         }
     }
     
     public func updateDocument(_ collectionId: String, _ documentId: String, _ data: String) async throws -> Document<[String: AnyCodable]>? {
         do {
-            let document = try await databases.updateDocument(databaseId: databaseId, collectionId: collectionId, documentId: documentId, data: data)
+            let document = try await databases.updateDocument(databaseId: databaseId, collectionId: collectionId, documentId: documentId, data: data, permissions: [Permission.read("users/verified"), Permission.update("users/verified"), Permission.delete("users/verified"), Permission.write("users/verified")])
             return document
-        } catch {
+        } catch let error as AppwriteError {
             print(error.localizedDescription)
-            throw UpdateDocumentError.failedToUpdate
+            throw error
         }
     }
     
@@ -205,7 +206,7 @@ class Appwrite: ObservableObject {
 }
 
 enum AuthError: LocalizedError {
-    case invalidCredentials, userBlocked, signOutFailed, invalidEmail, invalidPassword, failed
+    case invalidCredentials, userBlocked, signOutFailed, invalidEmail, invalidPassword, failed, unauthorized
     
     var errorDescription: String? {
         switch self {
@@ -222,6 +223,8 @@ enum AuthError: LocalizedError {
             return "Invalid password. Password must be at least 8 characters."
         case .failed:
             return "An unknown error occurred. Please try again."
+        case .unauthorized:
+            return "Unauthrorized to perform this action."
         }
     }
 }
@@ -261,31 +264,4 @@ enum FetchDocumentsError: LocalizedError {
         return "Failed to load details.  Please try again."
     }
 }
-
-enum CreateDocumentError: LocalizedError {
-    case failedCreate, invalideStructure
-    
-    var errorDescription: String? {
-        switch self {
-        case .failedCreate:
-            return "Failed to create document.  Please try again."
-        case .invalideStructure:
-            return "Invalid document structure.  Please check your formatting."
-        }
-    }
-}
-
-enum UpdateDocumentError: LocalizedError {
-    case failedToUpdate, invalidStructure
-    
-    var errorDescription: String? {
-        switch self {
-        case .failedToUpdate:
-            return "Failed to update document.  Please try again."
-        case .invalidStructure:
-            return "Invalid document structure.  Please check your formatting."
-        }
-    }
-}
-
 

@@ -16,6 +16,7 @@ struct UpdateView: View {
     @State private var showAlert = false
     @FocusState var nameIsFocused: Bool
     private var alertTitle: String {noteUpdated ? "Note Updated" : "Error"}
+    @State private var shouldDismiss: Bool = false
     
     var collectionId: String
     var documentId: String
@@ -100,10 +101,12 @@ struct UpdateView: View {
                                         try await viewModel.updateProtocol(collectionId: collectionId, documentId: documentId, noteDetails: noteDetails)
                                         noteUpdated = true
                                         alertMessage = "\(noteDetails.name) Updated!"
+                                        shouldDismiss = true
                                         showAlert = true
                                     } catch {
                                         viewModel.isSubmitting = false
-                                        alertMessage = "Failed to update protocol. Please try again later."
+                                        alertMessage = error.localizedDescription
+                                        shouldDismiss = true 
                                         showAlert = true
                                     }
                                 }
@@ -123,7 +126,7 @@ struct UpdateView: View {
                 viewModel.modelSetup(noteDetails)
             }
             .alert(isPresented: $showAlert){
-                Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")){dismiss.callAsFunction()})
+                Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")){shouldDismiss ? dismiss.callAsFunction() : nil})
             }
         }
     }

@@ -81,10 +81,14 @@ final class CreateViewModel: ObservableObject {
             self.isSubmitting = false
             throw CreateProtocolError.failedToCreateProtocol
             
-        } catch {
+        } catch let error as AppwriteError {
             print("Create VM Error: \(error.localizedDescription)")
             self.isSubmitting = false
-            throw CreateProtocolError.failedToCreateProtocol
+            if error.type == "user_unauthorized" {
+                throw AuthError.unauthorized
+            } else {
+                throw CreateProtocolError.failedToCreateProtocol
+            }
         }
     }
 }
