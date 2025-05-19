@@ -12,6 +12,7 @@ struct UpdateView: View {
     @StateObject var viewModel: UpdateViewModel
     @EnvironmentObject var noteDetails: DetailsModel
     @Binding var noteUpdated: Bool
+    @Binding var isPlusNote: Bool
     @State private var alertMessage = ""
     @State private var showAlert = false
     @FocusState var nameIsFocused: Bool
@@ -24,9 +25,10 @@ struct UpdateView: View {
     @Environment(\.dismiss) private var dismiss
     
     //view initializer:
-    init(appwrite: Appwrite, noteUpdated: Binding<Bool>, collectionId: String, documentId: String){
+    init(appwrite: Appwrite, noteUpdated: Binding<Bool>, collectionId: String, documentId: String, isPlusNote: Binding<Bool>){
         _viewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite))
         _noteUpdated = noteUpdated
+        _isPlusNote = isPlusNote
         self.collectionId = collectionId
         self.documentId = documentId
     }
@@ -38,11 +40,10 @@ struct UpdateView: View {
                     .font(Font.custom("Urbanist-ExtraBold", size: 16))
                     .foregroundColor(Color("SectionTitleColor")))
                 {
-                    VStack {
-                        TextField("Name", text: $noteDetails.name).focused($nameIsFocused)
-                    }
+                    TextField("Name", text: $noteDetails.name).focused($nameIsFocused)
                     DatePicker("Protocol Date", selection: $noteDetails.protocolDate, displayedComponents: [.date])//shows only the date excludes time
                         .datePickerStyle(.compact)
+                    Button(isPlusNote ? "Protocol" : "Protocol +", systemImage: isPlusNote ? "arrow.down" : "arrow.up", action: {})
                 }
                 Section(header: Text("Reactivities")
                     .font(Font.custom("Urbanist-ExtraBold", size: 16))
@@ -138,4 +139,10 @@ private func validateTextFields(name: String, date: Date) throws -> Bool {
         throw UpdateTextfieldError.nameIsEmpty
     }
     return true
+}
+
+#Preview {
+    @Previewable var previewAppwrite = Appwrite()
+    UpdateView(appwrite: previewAppwrite, noteUpdated: .constant(false), collectionId: "xxxx", documentId: "cxlks", isPlusNote: .constant(false))
+        .environmentObject(DetailsModel())
 }

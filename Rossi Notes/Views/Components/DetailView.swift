@@ -20,16 +20,18 @@ struct DetailView: View {
     var documentId: String
     //Do not move the two lines below up near the other @State vars (causes odd errors):
     @Binding var triggerRefresh: Bool
+    @Binding var isPlusNote: Bool
     @State private var noteDeleted = false
     @State var noteUpdated = false
     
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
     
-    init(appwrite: Appwrite, triggerRefresh: Binding<Bool>, collectionId: String, documentId: String){
+    init(appwrite: Appwrite, triggerRefresh: Binding<Bool>, collectionId: String, documentId: String, isPlusNote: Binding<Bool>){
         _viewModel = StateObject(wrappedValue: DetailViewModel(appwrite: appwrite))
         _updateViewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite))
         _triggerRefresh = triggerRefresh
+        _isPlusNote = isPlusNote
         self.appwrite = appwrite
         self.collectionId = collectionId
         self.documentId = documentId
@@ -45,7 +47,7 @@ struct DetailView: View {
                             .progressViewStyle(CircularProgressViewStyle())
                             .controlSize(.large)
                     } else if viewModel.failedToFetch {
-                        Text("Failed to fetch note.")
+                        Text("Failed to load protocol.")
                             .font(.headline)
                     } else {
                         VStack {
@@ -96,7 +98,7 @@ struct DetailView: View {
                         }
                         noteUpdated = false
                     }},
-                       content: {UpdateView(appwrite: appwrite, noteUpdated: $noteUpdated, collectionId: collectionId, documentId: documentId)}
+                       content: {UpdateView(appwrite: appwrite, noteUpdated: $noteUpdated, collectionId: collectionId, documentId: documentId, isPlusNote: $isPlusNote)}
                 )
             })
             ToolbarItem(placement: .topBarTrailing,
@@ -145,6 +147,6 @@ struct NameBackgroundView: View {
 
 #Preview {
     @Previewable var previewAppwrite = Appwrite()
-    DetailView(appwrite: previewAppwrite, triggerRefresh: .constant(false), collectionId: "xxxxxxxxxx", documentId: "6799d9ab2ce631c69eee")
+    DetailView(appwrite: previewAppwrite, triggerRefresh: .constant(false), collectionId: "xxxxxxxxxx", documentId: "6799d9ab2ce631c69eee", isPlusNote: .constant(false))
         .environmentObject(DetailsModel())
 }

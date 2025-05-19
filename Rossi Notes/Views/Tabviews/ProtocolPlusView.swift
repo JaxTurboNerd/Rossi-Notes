@@ -32,7 +32,7 @@ struct ProtocolPlusView: View {
                         let name = document.data["name"]?.description ?? ""
                         let id = document.data["$id"]?.description ?? ""
                         CardView(name: name)
-                            .background(NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()}))
+                            .background(NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id, isPlusNote: $isPlusNote), label: {EmptyView()}))
                             .listRowBackground(Color.clear)
                             .listRowSeparator(.hidden)
                     }
