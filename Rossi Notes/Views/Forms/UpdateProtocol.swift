@@ -26,7 +26,7 @@ struct UpdateView: View {
     
     //view initializer:
     init(appwrite: Appwrite, noteUpdated: Binding<Bool>, collectionId: String, documentId: String, isPlusNote: Binding<Bool>){
-        _viewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite))
+        _viewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite, isPlusNote: isPlusNote))
         _noteUpdated = noteUpdated
         _isPlusNote = isPlusNote
         self.collectionId = collectionId
@@ -43,7 +43,15 @@ struct UpdateView: View {
                     TextField("Name", text: $noteDetails.name).focused($nameIsFocused)
                     DatePicker("Protocol Date", selection: $noteDetails.protocolDate, displayedComponents: [.date])//shows only the date excludes time
                         .datePickerStyle(.compact)
-                    Button(isPlusNote ? "Protocol" : "Protocol +", systemImage: isPlusNote ? "arrow.down" : "arrow.up", action: {})
+                    Button(isPlusNote ? "Protocol" : "Protocol +", systemImage: isPlusNote ? "arrow.down" : "arrow.up", action: {
+                        Task {
+                            do {
+                                try await viewModel.changeProtocolLevel(noteDetails: noteDetails)
+                            } catch {
+                               print("error changing protocols")
+                            }
+                        }
+                    })
                 }
                 Section(header: Text("Reactivities")
                     .font(Font.custom("Urbanist-ExtraBold", size: 16))

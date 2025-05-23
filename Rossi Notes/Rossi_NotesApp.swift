@@ -15,8 +15,7 @@ struct Rossi_NotesApp: App {
         WindowGroup {
             SplashView()
                 .environmentObject(appwrite)
-                .environmentObject(detailsModel)
-        }
+                .environmentObject(detailsModel)        }
     }
 }
 
