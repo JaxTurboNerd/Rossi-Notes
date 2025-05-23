@@ -47,7 +47,6 @@ struct UpdateView: View {
                         Task {
                             do {
                                 try await viewModel.changeProtocolLevel(originalCollectionID: collectionId, originalDocumentID: documentId, noteDetails: noteDetails)
-                                noteUpdated = true
                                 alertMessage = "\(noteDetails.name) Protocol Level Updated"
                                 showAlert = true
                             } catch {

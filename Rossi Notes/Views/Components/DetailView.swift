@@ -50,32 +50,34 @@ struct DetailView: View {
                         Text("Failed to load protocol.")
                             .font(.headline)
                     } else {
-                        VStack {
-                            VStack{
-                                //Display the pet name:
-                                CardView(name: viewModel.detailsModel?.name ?? "Error")
-                                //Display the protocol date:
-                                HStack {
-                                    Image(uiImage: viewModel.creatorImage ?? UIImage(systemName: "person.circle")!)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 35, height: 35)
-                                        .clipShape(.circle)
-                                    Text("Protocol Date: \(viewModel.formattedStringDate)")
-                                        .font(.system(size: 20))
-                                        .fontWeight(.bold)
-                                        .padding(.vertical)
+                        ScrollView {
+                            VStack {
+                                VStack{
+                                    //Display the pet name:
+                                    CardView(name: viewModel.detailsModel?.name ?? "Error")
+                                    //Display the protocol date:
+                                    HStack {
+                                        Image(uiImage: viewModel.creatorImage ?? UIImage(systemName: "person.circle")!)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 35, height: 35)
+                                            .clipShape(.circle)
+                                        Text("Protocol Date: \(viewModel.formattedStringDate)")
+                                            .font(.system(size: 20))
+                                            .fontWeight(.bold)
+                                            .padding(.vertical)
+                                    }
+                                    //Details:
+                                    DetailGroupView(viewModel: viewModel)
                                 }
-                                //Details:
-                                DetailGroupView(viewModel: viewModel)
+                                .padding()
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10).stroke(Color("AppBlue"), lineWidth: 1)
+                                        .shadow(color: Color("AppBlue").opacity(0.4), radius: 2, x: 2, y: 2)
+                                )
+                                .background(Color("BackgroundMain"))
+                                Spacer()
                             }
-                            .padding()
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 10).stroke(Color("AppBlue"), lineWidth: 1)
-                                    .shadow(color: Color("AppBlue").opacity(0.4), radius: 2, x: 2, y: 2)
-                            )
-                            .background(Color("BackgroundMain"))
-                            Spacer()
                         }
                     }
                 }
