@@ -46,7 +46,7 @@ struct UpdateView: View {
                     Button(isPlusNote ? "Protocol" : "Protocol +", systemImage: isPlusNote ? "arrow.down" : "arrow.up", action: {
                         Task {
                             do {
-                                try await viewModel.changeProtocolLevel(noteDetails: noteDetails)
+                                try await viewModel.changeProtocolLevel(originalCollectionID: collectionId, originalDocumentID: documentId, noteDetails: noteDetails)
                             } catch {
                                print("error changing protocols")
                             }
