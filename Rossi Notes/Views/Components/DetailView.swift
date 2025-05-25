@@ -27,9 +27,9 @@ struct DetailView: View {
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
     
-    init(appwrite: Appwrite, collectionId: String, documentId: String, isPlusNote: Binding<Bool>){
+    init(appwrite: Appwrite, collectionId: String, documentId: String, isPlusNote: Binding<Bool>, refresh: Refresh){
         _viewModel = StateObject(wrappedValue: DetailViewModel(appwrite: appwrite))
-        _updateViewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite, isPlusNote: isPlusNote))
+        _updateViewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite, isPlusNote: isPlusNote, refresh: refresh))
         _isPlusNote = isPlusNote
         self.appwrite = appwrite
         self.collectionId = collectionId
@@ -99,7 +99,7 @@ struct DetailView: View {
                         }
                         noteUpdated = false
                     }},
-                       content: {UpdateView(appwrite: appwrite, noteUpdated: $noteUpdated, collectionId: collectionId, documentId: documentId, isPlusNote: $isPlusNote)}
+                       content: {UpdateView(appwrite: appwrite, noteUpdated: $noteUpdated, collectionId: collectionId, documentId: documentId, isPlusNote: $isPlusNote, refresh: refresh)}
                 )
             })
             ToolbarItem(placement: .topBarTrailing,
@@ -148,6 +148,6 @@ struct NameBackgroundView: View {
 
 #Preview {
     @Previewable var previewAppwrite = Appwrite()
-    DetailView(appwrite: previewAppwrite, collectionId: "xxxxxxxxxx", documentId: "6799d9ab2ce631c69eee", isPlusNote: .constant(false))
+    DetailView(appwrite: previewAppwrite, collectionId: "xxxxxxxxxx", documentId: "6799d9ab2ce631c69eee", isPlusNote: .constant(false), refresh: Refresh())
         .environmentObject(DetailsModel())
 }

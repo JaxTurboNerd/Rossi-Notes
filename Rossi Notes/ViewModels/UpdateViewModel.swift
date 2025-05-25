@@ -26,10 +26,11 @@ final class UpdateViewModel: ObservableObject {
     
     @Published public var isSubmitting = false
     @Binding var isPlusNote: Bool
-    @EnvironmentObject private var refresh: Refresh
+    var refresh: Refresh
     
-    init(appwrite: Appwrite, isPlusNote: Binding<Bool>){
+    init(appwrite: Appwrite, isPlusNote: Binding<Bool>, refresh: Refresh){
         self.appwrite = appwrite
+        self.refresh = refresh
         _isPlusNote = isPlusNote
     }
     

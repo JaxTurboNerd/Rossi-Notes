@@ -26,8 +26,8 @@ struct UpdateView: View {
     @Environment(\.dismiss) private var dismiss
     
     //view initializer:
-    init(appwrite: Appwrite, noteUpdated: Binding<Bool>, collectionId: String, documentId: String, isPlusNote: Binding<Bool>){
-        _viewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite, isPlusNote: isPlusNote))
+    init(appwrite: Appwrite, noteUpdated: Binding<Bool>, collectionId: String, documentId: String, isPlusNote: Binding<Bool>, refresh: Refresh){
+        _viewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite, isPlusNote: isPlusNote, refresh: refresh))
         _noteUpdated = noteUpdated
         _isPlusNote = isPlusNote
         self.collectionId = collectionId
@@ -161,8 +161,8 @@ class Refresh: ObservableObject {
     @Published var triggerRefresh: Bool = false
 }
 
-#Preview {
-    @Previewable var previewAppwrite = Appwrite()
-    UpdateView(appwrite: previewAppwrite, noteUpdated: .constant(false), collectionId: "xxxx", documentId: "cxlks", isPlusNote: .constant(false))
-        .environmentObject(DetailsModel())
-}
+//#Preview {
+//    @Previewable var previewAppwrite = Appwrite()
+//    UpdateView(appwrite: previewAppwrite, noteUpdated: .constant(false), collectionId: "xxxx", documentId: "cxlks", isPlusNote: .constant(false), refresh: <#Refresh#>)
+//        .environmentObject(DetailsModel())
+//}
