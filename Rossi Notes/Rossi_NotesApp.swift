@@ -10,14 +10,14 @@ import SwiftUI
 @main
 struct Rossi_NotesApp: App {
     @StateObject private var detailsModel = DetailsModel()
-    @StateObject private var protocolLevel = Refresh()
+    @StateObject private var refresh = Refresh()
     let appwrite = Appwrite()
     var body: some Scene {
         WindowGroup {
             SplashView()
                 .environmentObject(appwrite)
                 .environmentObject(detailsModel)
-                .environmentObject(protocolLevel)
+                .environmentObject(refresh)
         }
     }
 }

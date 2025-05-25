@@ -11,7 +11,7 @@ import Foundation
 struct ProtocolView: View {
     @StateObject private var viewModel: ProtocolViewModel
     let appwrite: Appwrite
-    @State var triggerRefresh: Bool = false
+    @EnvironmentObject private var refresh: Refresh
     @State var isPlusNote: Bool = false
     @State private var showForm = false
     
@@ -34,7 +34,7 @@ struct ProtocolView: View {
                         let name = document.data["name"]?.description ?? ""
                         let id = document.data["$id"]?.description ?? ""
                         CardView(name: name)
-                            .background(NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id, isPlusNote: $isPlusNote), label: {EmptyView()}))
+                            .background(NavigationLink(destination: DetailView(appwrite: appwrite, collectionId: viewModel.collectionId, documentId: id, isPlusNote: $isPlusNote), label: {EmptyView()}))
                             .listRowBackground(Color.clear)
                             .listRowSeparator(.hidden)
                     }
@@ -48,13 +48,13 @@ struct ProtocolView: View {
                             Button("Add Note"){
                                 showForm = true
                             }
-                            .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, triggerRefresh: $triggerRefresh, isPlusNote: $isPlusNote)})
+                            .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, isPlusNote: $isPlusNote)})
                         })
                     }
                 }
             }
         }
-        .onChange(of: triggerRefresh, {
+        .onChange(of: refresh.triggerRefresh, {
             Task {
                 do {
                     try await viewModel.refreshDocuments()
@@ -63,7 +63,7 @@ struct ProtocolView: View {
                 }
                 
             }
-            triggerRefresh = false
+            refresh.triggerRefresh = false
         })
         .refreshable {
             Task {

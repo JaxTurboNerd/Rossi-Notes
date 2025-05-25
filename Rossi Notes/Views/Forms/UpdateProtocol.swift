@@ -11,10 +11,9 @@ struct UpdateView: View {
     
     @StateObject private var viewModel: UpdateViewModel
     @EnvironmentObject var noteDetails: DetailsModel
-    //@State var protocolLevelChanged: Bool = false
+    @EnvironmentObject private var refresh: Refresh
     @Binding var noteUpdated: Bool
     @Binding var isPlusNote: Bool
-    @Binding var triggerRefresh: Bool
     @State private var alertMessage = ""
     @State private var showAlert = false
     @FocusState var nameIsFocused: Bool
@@ -27,11 +26,10 @@ struct UpdateView: View {
     @Environment(\.dismiss) private var dismiss
     
     //view initializer:
-    init(appwrite: Appwrite, noteUpdated: Binding<Bool>, collectionId: String, documentId: String, isPlusNote: Binding<Bool>, triggerRefresh: Binding<Bool>){
-        _viewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite, isPlusNote: isPlusNote, triggerRefresh: triggerRefresh))
+    init(appwrite: Appwrite, noteUpdated: Binding<Bool>, collectionId: String, documentId: String, isPlusNote: Binding<Bool>){
+        _viewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite, isPlusNote: isPlusNote))
         _noteUpdated = noteUpdated
         _isPlusNote = isPlusNote
-        _triggerRefresh = triggerRefresh
         self.collectionId = collectionId
         self.documentId = documentId
     }
@@ -165,6 +163,6 @@ class Refresh: ObservableObject {
 
 #Preview {
     @Previewable var previewAppwrite = Appwrite()
-    UpdateView(appwrite: previewAppwrite, noteUpdated: .constant(false), collectionId: "xxxx", documentId: "cxlks", isPlusNote: .constant(false), triggerRefresh: .constant(false))
+    UpdateView(appwrite: previewAppwrite, noteUpdated: .constant(false), collectionId: "xxxx", documentId: "cxlks", isPlusNote: .constant(false))
         .environmentObject(DetailsModel())
 }
