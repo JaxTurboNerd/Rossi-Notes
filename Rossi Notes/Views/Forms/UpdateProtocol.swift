@@ -9,10 +9,12 @@ import SwiftUI
 
 struct UpdateView: View {
     
-    @StateObject var viewModel: UpdateViewModel
+    @StateObject private var viewModel: UpdateViewModel
     @EnvironmentObject var noteDetails: DetailsModel
+    //@State var protocolLevelChanged: Bool = false
     @Binding var noteUpdated: Bool
     @Binding var isPlusNote: Bool
+    @Binding var triggerRefresh: Bool
     @State private var alertMessage = ""
     @State private var showAlert = false
     @FocusState var nameIsFocused: Bool
@@ -25,10 +27,11 @@ struct UpdateView: View {
     @Environment(\.dismiss) private var dismiss
     
     //view initializer:
-    init(appwrite: Appwrite, noteUpdated: Binding<Bool>, collectionId: String, documentId: String, isPlusNote: Binding<Bool>){
-        _viewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite, isPlusNote: isPlusNote))
+    init(appwrite: Appwrite, noteUpdated: Binding<Bool>, collectionId: String, documentId: String, isPlusNote: Binding<Bool>, triggerRefresh: Binding<Bool>){
+        _viewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite, isPlusNote: isPlusNote, triggerRefresh: triggerRefresh))
         _noteUpdated = noteUpdated
         _isPlusNote = isPlusNote
+        _triggerRefresh = triggerRefresh
         self.collectionId = collectionId
         self.documentId = documentId
     }
@@ -47,6 +50,7 @@ struct UpdateView: View {
                         Task {
                             do {
                                 try await viewModel.changeProtocolLevel(originalCollectionID: collectionId, originalDocumentID: documentId, noteDetails: noteDetails)
+                                noteUpdated = true
                                 alertMessage = "\(noteDetails.name) Protocol Level Updated"
                                 showAlert = true
                             } catch {
@@ -115,7 +119,7 @@ struct UpdateView: View {
                                         showAlert = true
                                     } catch {
                                         viewModel.isSubmitting = false
-                                        alertMessage = "Failed to update protocol. Please try again later."
+                                        alertMessage = "Failed to update protocol. Please try again."
                                         showAlert = true
                                     }
                                 }
@@ -135,7 +139,9 @@ struct UpdateView: View {
                 viewModel.modelSetup(noteDetails)
             }
             .alert(isPresented: $showAlert){
-                Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")){dismiss.callAsFunction()})
+                Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")){
+                    dismiss.callAsFunction()
+                })
             }
         }
     }
@@ -152,8 +158,13 @@ private func validateTextFields(name: String, date: Date) throws -> Bool {
     return true
 }
 
+class Refresh: ObservableObject {
+    @Published var protocolLevelChanged: Bool = false
+    @Published var triggerRefresh: Bool = false
+}
+
 #Preview {
     @Previewable var previewAppwrite = Appwrite()
-    UpdateView(appwrite: previewAppwrite, noteUpdated: .constant(false), collectionId: "xxxx", documentId: "cxlks", isPlusNote: .constant(false))
+    UpdateView(appwrite: previewAppwrite, noteUpdated: .constant(false), collectionId: "xxxx", documentId: "cxlks", isPlusNote: .constant(false), triggerRefresh: .constant(false))
         .environmentObject(DetailsModel())
 }

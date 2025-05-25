@@ -38,6 +38,7 @@ struct ProtocolView: View {
                             .listRowBackground(Color.clear)
                             .listRowSeparator(.hidden)
                     }
+                    //used to hide the arrow on the right side from the List of items
                     .scrollContentBackground(.hidden)
                     .navigationTitle("Protocol")
                     .navigationBarTitleDisplayMode(.inline)

@@ -29,7 +29,7 @@ struct DetailView: View {
     
     init(appwrite: Appwrite, triggerRefresh: Binding<Bool>, collectionId: String, documentId: String, isPlusNote: Binding<Bool>){
         _viewModel = StateObject(wrappedValue: DetailViewModel(appwrite: appwrite))
-        _updateViewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite, isPlusNote: isPlusNote))
+        _updateViewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite, isPlusNote: isPlusNote, triggerRefresh: triggerRefresh))
         _triggerRefresh = triggerRefresh
         _isPlusNote = isPlusNote
         self.appwrite = appwrite
@@ -100,7 +100,7 @@ struct DetailView: View {
                         }
                         noteUpdated = false
                     }},
-                       content: {UpdateView(appwrite: appwrite, noteUpdated: $noteUpdated, collectionId: collectionId, documentId: documentId, isPlusNote: $isPlusNote)}
+                       content: {UpdateView(appwrite: appwrite, noteUpdated: $noteUpdated, collectionId: collectionId, documentId: documentId, isPlusNote: $isPlusNote, triggerRefresh: $triggerRefresh)}
                 )
             })
             ToolbarItem(placement: .topBarTrailing,

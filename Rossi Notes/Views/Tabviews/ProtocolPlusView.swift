@@ -10,6 +10,7 @@ import SwiftUI
 struct ProtocolPlusView: View {
     @StateObject private var viewModel: PlusViewModel
     @State var triggerRefresh: Bool = false
+    //@Binding var protocolLevelChanged: Bool //used to trigger a refresh if a protocol note level is changed
     @State private var showForm = false
     @State var isPlusNote: Bool = true
     let appwrite: Appwrite
