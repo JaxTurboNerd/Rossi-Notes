@@ -27,7 +27,7 @@ struct UpdateView: View {
     
     //view initializer:
     init(appwrite: Appwrite, noteUpdated: Binding<Bool>, collectionId: String, documentId: String, isPlusNote: Binding<Bool>, refresh: Refresh){
-        _viewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite, isPlusNote: isPlusNote, refresh: refresh))
+        _viewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite, isPlusNote: isPlusNote))
         _noteUpdated = noteUpdated
         _isPlusNote = isPlusNote
         self.collectionId = collectionId
@@ -50,6 +50,7 @@ struct UpdateView: View {
                                 try await viewModel.changeProtocolLevel(originalCollectionID: collectionId, originalDocumentID: documentId, noteDetails: noteDetails)
                                 noteUpdated = true
                                 alertMessage = "\(noteDetails.name) Protocol Level Updated"
+                                refresh.triggerRefresh = true
                                 showAlert = true
                             } catch {
                                 alertMessage = error.localizedDescription

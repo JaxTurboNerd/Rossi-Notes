@@ -29,7 +29,7 @@ struct DetailView: View {
     
     init(appwrite: Appwrite, collectionId: String, documentId: String, isPlusNote: Binding<Bool>, refresh: Refresh){
         _viewModel = StateObject(wrappedValue: DetailViewModel(appwrite: appwrite))
-        _updateViewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite, isPlusNote: isPlusNote, refresh: refresh))
+        _updateViewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite, isPlusNote: isPlusNote))
         _isPlusNote = isPlusNote
         self.appwrite = appwrite
         self.collectionId = collectionId

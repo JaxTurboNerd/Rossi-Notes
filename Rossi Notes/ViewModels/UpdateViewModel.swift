@@ -26,11 +26,9 @@ final class UpdateViewModel: ObservableObject {
     
     @Published public var isSubmitting = false
     @Binding var isPlusNote: Bool
-    var refresh: Refresh
     
-    init(appwrite: Appwrite, isPlusNote: Binding<Bool>, refresh: Refresh){
+    init(appwrite: Appwrite, isPlusNote: Binding<Bool>){
         self.appwrite = appwrite
-        self.refresh = refresh
         _isPlusNote = isPlusNote
     }
     
@@ -128,7 +126,7 @@ final class UpdateViewModel: ObservableObject {
         //Deleted the "Old" document:
         do {
             try await appwrite.deleteDocument(originalCollectionID, originalDocumentID)
-            refresh.triggerRefresh = true
+            //refresh.triggerRefresh = true
         } catch {
             print("Error deleting old document")
             throw UpdateProtocolError.failedToChangeProtocolLevel
