@@ -158,12 +158,11 @@ private func validateTextFields(name: String, date: Date) throws -> Bool {
 }
 
 class Refresh: ObservableObject {
-    @Published var protocolLevelChanged: Bool = false
     @Published var triggerRefresh: Bool = false
 }
 
-//#Preview {
-//    @Previewable var previewAppwrite = Appwrite()
-//    UpdateView(appwrite: previewAppwrite, noteUpdated: .constant(false), collectionId: "xxxx", documentId: "cxlks", isPlusNote: .constant(false), refresh: <#Refresh#>)
-//        .environmentObject(DetailsModel())
-//}
+#Preview {
+    @Previewable var previewAppwrite = Appwrite()
+    UpdateView(appwrite: previewAppwrite, noteUpdated: .constant(false), collectionId: "xxxx", documentId: "cxlks", isPlusNote: .constant(false), refresh: Refresh())
+        .environmentObject(DetailsModel())
+}
