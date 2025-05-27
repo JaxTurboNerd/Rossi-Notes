@@ -55,8 +55,12 @@ struct DetailView: View {
                                 VStack{
                                     //Display the pet name:
                                     CardView(name: viewModel.detailsModel?.name ?? "Error")
-                                    //Display the protocol date:
-                                    HStack {
+                                        .popover(isPresented: $showPopover, content: {
+                                            Text("Test Popover")
+                                                .padding(30)
+                                                .presentationCompactAdaptation(.popover)
+                                        })
+                                    HStack { //Display the protocol date:
                                         Image(uiImage: viewModel.creatorImage ?? UIImage(systemName: "person.circle")!)
                                             .resizable()
                                             .scaledToFit()
