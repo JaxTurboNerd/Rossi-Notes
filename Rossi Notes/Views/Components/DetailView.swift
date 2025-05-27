@@ -63,6 +63,9 @@ struct DetailView: View {
                                                     Task {
                                                         do {
                                                             try await updateViewModel.changeProtocolLevel(originalCollectionID: collectionId, originalDocumentID: documentId, noteDetails: viewModel.detailsModel!)
+                                                            noteUpdated = true
+                                                            refresh.triggerRefresh = true
+                                                            dismiss.callAsFunction()
                                                         } catch {
                                                             print("\(error.localizedDescription)")
                                                         }
