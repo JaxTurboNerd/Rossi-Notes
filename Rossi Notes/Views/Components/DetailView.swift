@@ -60,7 +60,13 @@ struct DetailView: View {
                                                 Text("Change the protocol level:")
                                                 Divider()
                                                 Button(isPlusNote ? "Protocol" : "Protocol +", systemImage: isPlusNote ? "arrow.down" : "arrow.up") {
-                                                    
+                                                    Task {
+                                                        do {
+                                                            try await updateViewModel.changeProtocolLevel(originalCollectionID: collectionId, originalDocumentID: documentId, noteDetails: viewModel.detailsModel!)
+                                                        } catch {
+                                                            print("\(error.localizedDescription)")
+                                                        }
+                                                    }
                                                 }
                                             }
                                             .padding(20)
