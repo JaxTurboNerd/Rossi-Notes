@@ -13,6 +13,7 @@ struct DetailView: View {
     @EnvironmentObject private var detailsModel: DetailsModel
     @EnvironmentObject private var refresh: Refresh
     @State private var showUpdateForm: Bool = false
+    @State private var showPopover: Bool = false
     @State private var showAlert: Bool = false
     @State private var showNamePopover: Bool = false
     private var appwrite: Appwrite
@@ -82,33 +83,36 @@ struct DetailView: View {
                 }
                 .padding()//adds padding to the outer-most view
             }
+            //Displays the update form:
+            .sheet(isPresented: $showUpdateForm,
+                   onDismiss: {
+                if noteUpdated {
+                    Task {
+                        //need do/catch:
+                        try await viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
+                    }
+                    noteUpdated = false
+                }},
+                   content: {UpdateView(appwrite: appwrite, noteUpdated: $noteUpdated, collectionId: collectionId, documentId: documentId, isPlusNote: $isPlusNote, refresh: refresh)}
+            )
         }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing,
-                        content: {
-                Button("Update"){
-                    showUpdateForm = true
+            ToolbarItem(placement: .topBarTrailing){
+                Menu("Update") {
+                    Button("Update Details"){
+                        showUpdateForm = true
+                    }
+                    Button("Update Protocol Level", systemImage: "arrow.up.arrow.down"){
+                       showPopover = true
+                    }
                 }
-                //Displays the update form:
-                .sheet(isPresented: $showUpdateForm,
-                       onDismiss: {
-                    if noteUpdated {
-                        Task {
-                            //need do/catch:
-                            try await viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
-                        }
-                        noteUpdated = false
-                    }},
-                       content: {UpdateView(appwrite: appwrite, noteUpdated: $noteUpdated, collectionId: collectionId, documentId: documentId, isPlusNote: $isPlusNote, refresh: refresh)}
-                )
-            })
-            ToolbarItem(placement: .topBarTrailing,
-                        content: {
+            }
+            ToolbarItem(placement: .topBarTrailing) {
                 Button("Delete"){
                     showAlert = true
                 }
                 .foregroundStyle(Color.red)
-            })
+            }
         }
         .alert("Confirm Deletion", isPresented: $showAlert, actions: {
             Button("Delete", role: .destructive){
