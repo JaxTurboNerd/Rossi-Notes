@@ -15,7 +15,6 @@ struct DetailView: View {
     @State private var showUpdateForm: Bool = false
     @State private var showPopover: Bool = false
     @State private var showAlert: Bool = false
-    @State private var showNamePopover: Bool = false
     private var appwrite: Appwrite
     
     var collectionId: String
@@ -58,6 +57,7 @@ struct DetailView: View {
                                         .popover(isPresented: $showPopover) {
                                             VStack {
                                                 Text("Change the protocol level:")
+                                                    .padding(.bottom, 10)
                                                 Divider()
                                                 Button(isPlusNote ? "Protocol" : "Protocol +", systemImage: isPlusNote ? "arrow.down" : "arrow.up") {
                                                     Task {
@@ -71,7 +71,9 @@ struct DetailView: View {
                                                         }
                                                     }
                                                 }
+                                                .padding(.top, 10)
                                             }
+                                            .frame(width: 200, height: 100)
                                             .padding(20)
                                             .presentationCompactAdaptation(.popover)
                                         }
