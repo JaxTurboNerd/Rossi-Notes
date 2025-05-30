@@ -121,6 +121,7 @@ struct DetailView: View {
                         } catch {
                             print("fetch document error: \(error.localizedDescription)")
                             //view model will throw and error and set .failedToFetch = true
+                            //so probably no need to show another alert to notify the user the delete failed
                         }
                     }
                     noteUpdated = false
@@ -161,8 +162,8 @@ struct DetailView: View {
                             //action:
                         }
                     } else {
-                        Button("Update Failed"){
-                            
+                        Button("OK"){
+                            dismiss.callAsFunction()
                         }
                     }
                 })
