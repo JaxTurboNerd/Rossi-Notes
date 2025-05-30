@@ -15,10 +15,13 @@ struct DetailView: View {
     @State private var showUpdateForm: Bool = false
     @State private var showPopover: Bool = false
     @State private var showAlert: Bool = false
+    @State private var isDeleteAlert: Bool = true
+
     private var appwrite: Appwrite
     
     var collectionId: String
     var documentId: String
+    private var alertTitle: String {isDeleteAlert ? "Confirm Delete" : "Update Failed"}
     //Do not move the two lines below up near the other @State vars (causes odd errors):
     @Binding var isPlusNote: Bool
     @State private var noteDeleted = false
@@ -46,7 +49,7 @@ struct DetailView: View {
                             .progressViewStyle(CircularProgressViewStyle())
                             .controlSize(.large)
                     } else if viewModel.failedToFetch {
-                        Text("Failed to load protocol.")
+                        Text("Failed to load protocol.  Please try again later.")
                             .font(.headline)
                     } else {
                         ScrollView {
@@ -65,9 +68,12 @@ struct DetailView: View {
                                                             try await updateViewModel.changeProtocolLevel(originalCollectionID: collectionId, originalDocumentID: documentId, noteDetails: viewModel.detailsModel!)
                                                             noteUpdated = true
                                                             refresh.triggerRefresh = true
+                                                            showPopover = false
                                                             dismiss.callAsFunction()
                                                         } catch {
                                                             print("\(error.localizedDescription)")
+                                                            isDeleteAlert = false
+                                                            showAlert = true
                                                         }
                                                     }
                                                 }
@@ -110,7 +116,12 @@ struct DetailView: View {
                 if noteUpdated {
                     Task {
                         //need do/catch:
-                        try await viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
+                        do {
+                            try await viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
+                        } catch {
+                            print("fetch document error: \(error.localizedDescription)")
+                            //view model will throw and error and set .failedToFetch = true
+                        }
                     }
                     noteUpdated = false
                 }},
@@ -126,27 +137,37 @@ struct DetailView: View {
                     Button("Update Protocol Level", systemImage: "arrow.up.arrow.down"){
                        showPopover = true
                     }
+//                    Button("Blue Dot"){
+//                        
+//                    }
                 }
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Delete"){
+                    isDeleteAlert = true
                     showAlert = true
                 }
                 .foregroundStyle(Color.red)
+                .alert(alertTitle, isPresented: $showAlert, actions: {
+                    if isDeleteAlert {
+                        Button("Delete", role: .destructive){
+                            Task {
+                                try await viewModel.deleteNote(collectionId: collectionId, documentId: documentId)
+                                noteDeleted = true
+                            }
+                            dismiss.callAsFunction()
+                        }
+                        Button("Cancel", role: .cancel){
+                            //action:
+                        }
+                    } else {
+                        Button("Update Failed"){
+                            
+                        }
+                    }
+                })
             }
         }
-        .alert("Confirm Deletion", isPresented: $showAlert, actions: {
-            Button("Delete", role: .destructive){
-                Task {
-                    try await viewModel.deleteNote(collectionId: collectionId, documentId: documentId)
-                    noteDeleted = true
-                }
-                dismiss.callAsFunction()
-            }
-            Button("Cancel", role: .cancel){
-                //action:
-            }
-        })
         .task {
             viewModel.modelSetup(detailsModel)
             do {
