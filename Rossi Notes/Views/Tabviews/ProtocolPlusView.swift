@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ProtocolPlusView: View {
     @StateObject private var viewModel: PlusViewModel
-    @State var triggerRefresh: Bool = false
+    @EnvironmentObject private var refresh: Refresh
     @State private var showForm = false
     @State var isPlusNote: Bool = true
     let appwrite: Appwrite
@@ -32,7 +32,7 @@ struct ProtocolPlusView: View {
                         let name = document.data["name"]?.description ?? ""
                         let id = document.data["$id"]?.description ?? ""
                         CardView(name: name)
-                            .background(NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()}))
+                            .background(NavigationLink(destination: DetailView(appwrite: appwrite, collectionId: viewModel.collectionId, documentId: id, isPlusNote: $isPlusNote, refresh: refresh), label: {EmptyView()}))
                             .listRowBackground(Color.clear)
                             .listRowSeparator(.hidden)
                     }
@@ -46,14 +46,14 @@ struct ProtocolPlusView: View {
                                 showForm = true
                             }
                             //Displays the protocol form to create a new note
-                            .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, triggerRefresh: $triggerRefresh, isPlusNote: $isPlusNote)})
+                            .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, isPlusNote: $isPlusNote)})
                             
                         })
                     }
                 }
             }
         }
-        .onChange(of: triggerRefresh, {
+        .onChange(of: refresh.triggerRefresh, {
             Task {
                 do {
                     try await viewModel.refreshDocuments()
@@ -61,7 +61,7 @@ struct ProtocolPlusView: View {
                     print("fetch error: \(error.localizedDescription)")
                 }
             }
-            triggerRefresh = false
+            refresh.triggerRefresh = false
         })
         .refreshable {
             Task {

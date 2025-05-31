@@ -9,9 +9,11 @@ import SwiftUI
 
 struct UpdateView: View {
     
-    @StateObject var viewModel: UpdateViewModel
+    @StateObject private var viewModel: UpdateViewModel
     @EnvironmentObject var noteDetails: DetailsModel
+    @EnvironmentObject private var refresh: Refresh
     @Binding var noteUpdated: Bool
+    @Binding var isPlusNote: Bool
     @State private var alertMessage = ""
     @State private var showAlert = false
     @FocusState var nameIsFocused: Bool
@@ -24,9 +26,10 @@ struct UpdateView: View {
     @Environment(\.dismiss) private var dismiss
     
     //view initializer:
-    init(appwrite: Appwrite, noteUpdated: Binding<Bool>, collectionId: String, documentId: String){
-        _viewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite))
+    init(appwrite: Appwrite, noteUpdated: Binding<Bool>, collectionId: String, documentId: String, isPlusNote: Binding<Bool>, refresh: Refresh){
+        _viewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite, isPlusNote: isPlusNote))
         _noteUpdated = noteUpdated
+        _isPlusNote = isPlusNote
         self.collectionId = collectionId
         self.documentId = documentId
     }
@@ -38,11 +41,23 @@ struct UpdateView: View {
                     .font(Font.custom("Urbanist-ExtraBold", size: 16))
                     .foregroundColor(Color("SectionTitleColor")))
                 {
-                    VStack {
-                        TextField("Name", text: $noteDetails.name).focused($nameIsFocused)
-                    }
+                    TextField("Name", text: $noteDetails.name).focused($nameIsFocused)
                     DatePicker("Protocol Date", selection: $noteDetails.protocolDate, displayedComponents: [.date])//shows only the date excludes time
                         .datePickerStyle(.compact)
+                    Button(isPlusNote ? "Protocol" : "Protocol +", systemImage: isPlusNote ? "arrow.down" : "arrow.up", action: {
+                        Task {
+                            do {
+                                try await viewModel.changeProtocolLevel(originalCollectionID: collectionId, originalDocumentID: documentId, noteDetails: noteDetails)
+                                noteUpdated = true
+                                alertMessage = "\(noteDetails.name) Protocol Level Updated"
+                                refresh.triggerRefresh = true
+                                showAlert = true
+                            } catch {
+                                alertMessage = error.localizedDescription
+                                showAlert = true
+                            }
+                        }
+                    })
                 }
                 Section(header: Text("Reactivities")
                     .font(Font.custom("Urbanist-ExtraBold", size: 16))
@@ -103,7 +118,7 @@ struct UpdateView: View {
                                         showAlert = true
                                     } catch {
                                         viewModel.isSubmitting = false
-                                        alertMessage = "Failed to update protocol. Please try again later."
+                                        alertMessage = "Failed to update protocol. Please try again."
                                         showAlert = true
                                     }
                                 }
@@ -123,7 +138,9 @@ struct UpdateView: View {
                 viewModel.modelSetup(noteDetails)
             }
             .alert(isPresented: $showAlert){
-                Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")){dismiss.callAsFunction()})
+                Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")){
+                    dismiss.callAsFunction()
+                })
             }
         }
     }
@@ -138,4 +155,14 @@ private func validateTextFields(name: String, date: Date) throws -> Bool {
         throw UpdateTextfieldError.nameIsEmpty
     }
     return true
+}
+
+class Refresh: ObservableObject {
+    @Published var triggerRefresh: Bool = false
+}
+
+#Preview {
+    @Previewable var previewAppwrite = Appwrite()
+    UpdateView(appwrite: previewAppwrite, noteUpdated: .constant(false), collectionId: "xxxx", documentId: "cxlks", isPlusNote: .constant(false), refresh: Refresh())
+        .environmentObject(DetailsModel())
 }

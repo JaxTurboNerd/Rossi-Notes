@@ -11,7 +11,7 @@ import Foundation
 struct ProtocolView: View {
     @StateObject private var viewModel: ProtocolViewModel
     let appwrite: Appwrite
-    @State var triggerRefresh: Bool = false
+    @EnvironmentObject private var refresh: Refresh
     @State var isPlusNote: Bool = false
     @State private var showForm = false
     
@@ -34,10 +34,11 @@ struct ProtocolView: View {
                         let name = document.data["name"]?.description ?? ""
                         let id = document.data["$id"]?.description ?? ""
                         CardView(name: name)
-                            .background(NavigationLink(destination: DetailView(appwrite: appwrite, triggerRefresh: $triggerRefresh, collectionId: viewModel.collectionId, documentId: id), label: {EmptyView()}))
+                            .background(NavigationLink(destination: DetailView(appwrite: appwrite, collectionId: viewModel.collectionId, documentId: id, isPlusNote: $isPlusNote, refresh: refresh), label: {EmptyView()}))
                             .listRowBackground(Color.clear)
                             .listRowSeparator(.hidden)
                     }
+                    //used to hide the arrow on the right side from the List of items
                     .scrollContentBackground(.hidden)
                     .navigationTitle("Protocol")
                     .navigationBarTitleDisplayMode(.inline)
@@ -47,22 +48,21 @@ struct ProtocolView: View {
                             Button("Add Note"){
                                 showForm = true
                             }
-                            .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, triggerRefresh: $triggerRefresh, isPlusNote: $isPlusNote)})
+                            .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, isPlusNote: $isPlusNote)})
                         })
                     }
                 }
             }
         }
-        .onChange(of: triggerRefresh, {
+        .onChange(of: refresh.triggerRefresh, {
             Task {
                 do {
                     try await viewModel.refreshDocuments()
                 } catch {
                     print("Error refreshing documents: \(error.localizedDescription)")
                 }
-                
             }
-            triggerRefresh = false
+            refresh.triggerRefresh = false
         })
         .refreshable {
             Task {
@@ -77,6 +77,6 @@ struct ProtocolView: View {
 }
 
 #Preview {
-    let appwrite = Appwrite()
-    ProtocolView(appwrite: appwrite)
+    @Previewable var previewAppwrite = Appwrite()
+    ProtocolView(appwrite: previewAppwrite)
 }

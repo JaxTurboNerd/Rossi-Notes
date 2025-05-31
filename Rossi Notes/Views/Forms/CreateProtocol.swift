@@ -10,10 +10,10 @@ import SwiftUI
 struct CreateView: View {
     
     @StateObject private var viewModel: CreateViewModel
+    @EnvironmentObject private var refresh: Refresh
     @State private var noteAdded = false
     @State private var alertMessage = ""
     @State private var showAlert = false
-    @Binding var triggerRefresh: Bool
     @Binding var isPlusNote: Bool
     @FocusState var nameIsFocused: Bool
     var collectionId: String
@@ -23,10 +23,9 @@ struct CreateView: View {
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
     
-    init(appwrite: Appwrite, collectionId: String, triggerRefresh: Binding<Bool>, isPlusNote: Binding<Bool>){
+    init(appwrite: Appwrite, collectionId: String, isPlusNote: Binding<Bool>){
         _viewModel = StateObject(wrappedValue: CreateViewModel(appwrite: appwrite))
         self.collectionId = collectionId
-        _triggerRefresh = triggerRefresh
         _isPlusNote = isPlusNote
     }
     
@@ -127,7 +126,7 @@ struct CreateView: View {
             }
             .onDisappear {
                 if noteAdded {
-                    triggerRefresh = true
+                    refresh.triggerRefresh = true
                 }
             }
             .alert(isPresented: $showAlert){
