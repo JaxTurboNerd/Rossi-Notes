@@ -30,7 +30,7 @@ struct DetailView: View {
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
     
-    init(appwrite: Appwrite, collectionId: String, documentId: String, isPlusNote: Binding<Bool>, refresh: Refresh){
+    init(appwrite: Appwrite, collectionId: String, documentId: String, isPlusNote: Binding<Bool>){
         _viewModel = StateObject(wrappedValue: DetailViewModel(appwrite: appwrite))
         _updateViewModel = StateObject(wrappedValue: UpdateViewModel(appwrite: appwrite, isPlusNote: isPlusNote))
         _isPlusNote = isPlusNote
@@ -60,7 +60,7 @@ struct DetailView: View {
                                     CardView(name: viewModel.detailsModel?.name ?? "Error")
                                         .popover(isPresented: $showPopover) {
                                             VStack {
-                                                Text("Change the protocol level:")
+                                                Text("Change to:")
                                                     .padding(.bottom, 10)
                                                 Divider()
                                                 Button(isPlusNote ? "Protocol" : "Protocol +", systemImage: isPlusNote ? "arrow.down" : "arrow.up") {
@@ -68,7 +68,8 @@ struct DetailView: View {
                                                         do {
                                                             try await updateViewModel.changeProtocolLevel(originalCollectionID: collectionId, originalDocumentID: documentId, noteDetails: viewModel.detailsModel!)
                                                             noteUpdated = true
-                                                            refresh.triggerRefresh = true
+                                                            //refresh.triggerRefresh = true
+                                                            refresh.protocolLevelChanged = true
                                                             showPopover = false
                                                             dismiss.callAsFunction()
                                                         } catch {
@@ -196,6 +197,6 @@ struct NameBackgroundView: View {
 
 #Preview {
     @Previewable var previewAppwrite = Appwrite()
-    DetailView(appwrite: previewAppwrite, collectionId: "xxxxxxxxxx", documentId: "6799d9ab2ce631c69eee", isPlusNote: .constant(false), refresh: Refresh())
+    DetailView(appwrite: previewAppwrite, collectionId: "xxxxxxxxxx", documentId: "6799d9ab2ce631c69eee", isPlusNote: .constant(false))
         .environmentObject(DetailsModel())
 }
