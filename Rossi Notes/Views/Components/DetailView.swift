@@ -49,8 +49,9 @@ struct DetailView: View {
                             .progressViewStyle(CircularProgressViewStyle())
                             .controlSize(.large)
                     } else if viewModel.failedToFetch {
-                        Text("Failed to load protocol.  Please try again later.")
-                            .font(.headline)
+                        Text("Failed to load protocol.  \nPlease try again later.")
+                            .font(.title2)
+                            .multilineTextAlignment(.center)
                     } else {
                         ScrollView {
                             VStack {
