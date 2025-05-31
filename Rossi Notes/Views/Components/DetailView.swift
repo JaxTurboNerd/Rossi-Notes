@@ -60,7 +60,7 @@ struct DetailView: View {
                                     CardView(name: viewModel.detailsModel?.name ?? "Error")
                                         .popover(isPresented: $showPopover) {
                                             VStack {
-                                                Text("Change the protocol level:")
+                                                Text("Change to:")
                                                     .padding(.bottom, 10)
                                                 Divider()
                                                 Button(isPlusNote ? "Protocol" : "Protocol +", systemImage: isPlusNote ? "arrow.down" : "arrow.up") {
