@@ -32,7 +32,7 @@ struct ProtocolPlusView: View {
                         let name = document.data["name"]?.description ?? ""
                         let id = document.data["$id"]?.description ?? ""
                         CardView(name: name)
-                            .background(NavigationLink(destination: DetailView(appwrite: appwrite, collectionId: viewModel.collectionId, documentId: id, isPlusNote: $isPlusNote, refresh: refresh), label: {EmptyView()}))
+                            .background(NavigationLink(destination: DetailView(appwrite: appwrite, collectionId: viewModel.collectionId, documentId: id, isPlusNote: $isPlusNote), label: {EmptyView()}))
                             .listRowBackground(Color.clear)
                             .listRowSeparator(.hidden)
                     }
@@ -49,6 +49,17 @@ struct ProtocolPlusView: View {
                             .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, isPlusNote: $isPlusNote)})
                             
                         })
+                    }
+                }
+            }
+        }
+        .onAppear {
+            if refresh.protocolLevelChanged {
+                Task {
+                    do {
+                        try await viewModel.refreshDocuments()
+                    } catch {
+                        print("fetch error: \(error.localizedDescription)")
                     }
                 }
             }

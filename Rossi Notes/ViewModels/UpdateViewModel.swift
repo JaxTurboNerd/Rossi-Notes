@@ -126,7 +126,6 @@ final class UpdateViewModel: ObservableObject {
         //Deleted the "Old" document:
         do {
             try await appwrite.deleteDocument(originalCollectionID, originalDocumentID)
-            //refresh.triggerRefresh = true
         } catch {
             print("Error deleting old document")
             throw UpdateProtocolError.failedToChangeProtocolLevel

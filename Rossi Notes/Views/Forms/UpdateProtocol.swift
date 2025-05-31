@@ -159,6 +159,7 @@ private func validateTextFields(name: String, date: Date) throws -> Bool {
 
 class Refresh: ObservableObject {
     @Published var triggerRefresh: Bool = false
+    @Published var protocolLevelChanged: Bool = false
 }
 
 #Preview {
