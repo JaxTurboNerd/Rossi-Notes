@@ -16,7 +16,7 @@ struct DetailView: View {
     @State private var showPopover: Bool = false
     @State private var showAlert: Bool = false
     @State private var isDeleteAlert: Bool = true
-
+    
     private var appwrite: Appwrite
     
     var collectionId: String
@@ -53,8 +53,8 @@ struct DetailView: View {
                             .font(.title2)
                             .multilineTextAlignment(.center)
                     } else {
-                        ScrollView {
-                            VStack {
+                        VStack {
+                            ScrollView {
                                 VStack{
                                     //Display the pet name:
                                     CardView(name: viewModel.detailsModel?.name ?? "Error")
@@ -138,11 +138,11 @@ struct DetailView: View {
                         showUpdateForm = true
                     }
                     Button("Update Protocol Level", systemImage: "arrow.up.arrow.down"){
-                       showPopover = true
+                        showPopover = true
                     }
-//                    Button("Blue Dot"){
-//                        
-//                    }
+                    //                    Button("Blue Dot"){
+                    //
+                    //                    }
                 }
             }
             ToolbarItem(placement: .topBarTrailing) {
