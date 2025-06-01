@@ -68,8 +68,8 @@ struct DetailView: View {
                                                         do {
                                                             try await updateViewModel.changeProtocolLevel(originalCollectionID: collectionId, originalDocumentID: documentId, noteDetails: viewModel.detailsModel!)
                                                             noteUpdated = true
-                                                            //refresh.triggerRefresh = true
-                                                            refresh.protocolLevelChanged = true
+                                                            refresh.triggerRefresh = true
+                                                            //refresh.protocolLevelChanged = true
                                                             showPopover = false
                                                             dismiss.callAsFunction()
                                                         } catch {

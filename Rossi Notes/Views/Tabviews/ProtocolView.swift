@@ -54,21 +54,22 @@ struct ProtocolView: View {
                 }
             }
         }
-        .onAppear {
-            if refresh.protocolLevelChanged {
-                Task {
-                    do {
-                        try await viewModel.refreshDocuments()
-                    } catch {
-                        print("Error refreshing documents: \(error.localizedDescription)")
-                    }
-                }
-            }
-        }
+//        .onAppear {
+//            if refresh.protocolLevelChanged {
+//                Task {
+//                    do {
+//                        try await viewModel.refreshDocuments()
+//                    } catch {
+//                        print("Error refreshing documents: \(error.localizedDescription)")
+//                    }
+//                }
+//            }
+//        }
         .onChange(of: refresh.triggerRefresh, {
             Task {
                 do {
                     try await viewModel.refreshDocuments()
+                    print("Protocol View refresh was triggered")
                 } catch {
                     print("Error refreshing documents: \(error.localizedDescription)")
                 }
