@@ -39,11 +39,11 @@ final class UpdateViewModel: ObservableObject {
     func updateProtocol(collectionId: String, documentId: String, noteDetails: DetailsModel) async throws {
         isSubmitting = true
         
-        if let userName = appwrite.currentUser?.name {
-            self.createdBy = userName
-        }
+//        if let userName = appwrite.currentUser?.name {
+//            self.createdBy = userName
+//        }
         
-        let updatedProtocol = Protocol(name: noteDetails.name, protocol_date: noteDetails.protocolDate, dog_reactive: noteDetails.dogReactive, cat_reactive: noteDetails.catReactive, barrier_reactive: noteDetails.barrierReactive, leash_reactive: noteDetails.leashReactive, jumpy_mouthy: noteDetails.jumpyMouthy, resource_guarder: noteDetails.resourceGuarder, stranger_reactive: noteDetails.strangerReactive, place_routine: noteDetails.placeRoutine, door_routine: noteDetails .doorRoutine, loose_leash: noteDetails.looseLeash, shy_fearful: noteDetails.shyFearful, dragline: noteDetails.dragline, chain_leash: noteDetails.chainLeash, harness: noteDetails.harness, gentle_leader: noteDetails.gentleLeader, misc_notes: noteDetails.miscNotes, created_by: createdBy)
+        let updatedProtocol = Protocol(name: noteDetails.name, protocol_date: noteDetails.protocolDate, dog_reactive: noteDetails.dogReactive, cat_reactive: noteDetails.catReactive, barrier_reactive: noteDetails.barrierReactive, leash_reactive: noteDetails.leashReactive, jumpy_mouthy: noteDetails.jumpyMouthy, resource_guarder: noteDetails.resourceGuarder, stranger_reactive: noteDetails.strangerReactive, place_routine: noteDetails.placeRoutine, door_routine: noteDetails .doorRoutine, loose_leash: noteDetails.looseLeash, shy_fearful: noteDetails.shyFearful, dragline: noteDetails.dragline, chain_leash: noteDetails.chainLeash, harness: noteDetails.harness, gentle_leader: noteDetails.gentleLeader, misc_notes: noteDetails.miscNotes, created_by: noteDetails.createdBy)
         
         do {
             let encoder = JSONEncoder()

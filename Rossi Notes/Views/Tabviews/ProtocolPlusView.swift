@@ -53,21 +53,22 @@ struct ProtocolPlusView: View {
                 }
             }
         }
-        .onAppear {
-            if refresh.protocolLevelChanged {
-                Task {
-                    do {
-                        try await viewModel.refreshDocuments()
-                    } catch {
-                        print("fetch error: \(error.localizedDescription)")
-                    }
-                }
-            }
-        }
+//        .onAppear {
+//            if refresh.protocolLevelChanged {
+//                Task {
+//                    do {
+//                        try await viewModel.refreshDocuments()
+//                    } catch {
+//                        print("fetch error: \(error.localizedDescription)")
+//                    }
+//                }
+//            }
+//        }
         .onChange(of: refresh.triggerRefresh, {
             Task {
                 do {
                     try await viewModel.refreshDocuments()
+                    print("Protocol PLUS View refresh was triggered")
                 } catch {
                     print("fetch error: \(error.localizedDescription)")
                 }

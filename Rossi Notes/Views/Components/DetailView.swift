@@ -16,7 +16,7 @@ struct DetailView: View {
     @State private var showPopover: Bool = false
     @State private var showAlert: Bool = false
     @State private var isDeleteAlert: Bool = true
-
+    
     private var appwrite: Appwrite
     
     var collectionId: String
@@ -53,8 +53,8 @@ struct DetailView: View {
                             .font(.title2)
                             .multilineTextAlignment(.center)
                     } else {
-                        ScrollView {
-                            VStack {
+                        VStack {
+                            ScrollView {
                                 VStack{
                                     //Display the pet name:
                                     CardView(name: viewModel.detailsModel?.name ?? "Error")
@@ -68,8 +68,8 @@ struct DetailView: View {
                                                         do {
                                                             try await updateViewModel.changeProtocolLevel(originalCollectionID: collectionId, originalDocumentID: documentId, noteDetails: viewModel.detailsModel!)
                                                             noteUpdated = true
-                                                            //refresh.triggerRefresh = true
-                                                            refresh.protocolLevelChanged = true
+                                                            refresh.triggerRefresh = true
+                                                            //refresh.protocolLevelChanged = true
                                                             showPopover = false
                                                             dismiss.callAsFunction()
                                                         } catch {
@@ -91,10 +91,24 @@ struct DetailView: View {
                                             .scaledToFit()
                                             .frame(width: 35, height: 35)
                                             .clipShape(.circle)
-                                        Text("Protocol Date: \(viewModel.formattedStringDate)")
+                                            .padding(.leading, 10)
+                                        Spacer()
+                                        VStack {
+                                            Group {
+                                                Text("Protocol Date:")
+                                                Text(" \(viewModel.formattedStringDate)")
+                                            }
                                             .font(.system(size: 20))
                                             .fontWeight(.bold)
-                                            .padding(.vertical)
+                                            .padding(.leading, -45)
+                                        }
+                                        Spacer()
+                                        //Possibly for the Update User initials image:
+//                                        Image(uiImage: viewModel.creatorImage ?? UIImage(systemName: "person.circle")!)
+//                                            .resizable()
+//                                            .scaledToFit()
+//                                            .frame(width: 35, height: 35)
+//                                            .clipShape(.circle)
                                     }
                                     //Details:
                                     DetailGroupView(viewModel: viewModel)
@@ -138,11 +152,11 @@ struct DetailView: View {
                         showUpdateForm = true
                     }
                     Button("Update Protocol Level", systemImage: "arrow.up.arrow.down"){
-                       showPopover = true
+                        showPopover = true
                     }
-//                    Button("Blue Dot"){
-//                        
-//                    }
+                    //                    Button("Blue Dot"){
+                    //
+                    //                    }
                 }
             }
             ToolbarItem(placement: .topBarTrailing) {
