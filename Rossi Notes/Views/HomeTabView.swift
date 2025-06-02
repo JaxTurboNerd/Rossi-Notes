@@ -13,21 +13,24 @@ struct HomeTabView: View {
     
     var body: some View {
         TabView (selection: $selectedTab){
-            Home(appwrite: appwrite)
-                .tabItem {
-                    Label("Home", systemImage: "house")
-                }
-                .tag(0)
-            ProtocolView(appwrite: appwrite)
-                .tabItem {
-                    Label("Protocol", systemImage: "dog")
-                }
-                .tag(1)
-            ProtocolPlusView(appwrite: appwrite)
-                .tabItem {
-                    Label("Protocol +", systemImage: "cross")
-                }
-                .tag(2)
+            Group {
+                Home(appwrite: appwrite)
+                    .tabItem {
+                        Label("Home", systemImage: "house")
+                    }
+                    .tag(0)
+                ProtocolView(appwrite: appwrite)
+                    .tabItem {
+                        Label("Protocol", systemImage: "dog")
+                    }
+                    .tag(1)
+                ProtocolPlusView(appwrite: appwrite)
+                    .tabItem {
+                        Label("Protocol +", systemImage: "cross")
+                    }
+                    .tag(2)
+            }
+            .toolbarBackground(.visible, for: .tabBar)
         }
         .navigationBarBackButtonHidden()
     }

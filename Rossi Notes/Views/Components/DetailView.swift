@@ -91,10 +91,24 @@ struct DetailView: View {
                                             .scaledToFit()
                                             .frame(width: 35, height: 35)
                                             .clipShape(.circle)
-                                        Text("Protocol Date: \(viewModel.formattedStringDate)")
+                                            .padding(.leading, 10)
+                                        Spacer()
+                                        VStack {
+                                            Group {
+                                                Text("Protocol Date:")
+                                                Text(" \(viewModel.formattedStringDate)")
+                                            }
                                             .font(.system(size: 20))
                                             .fontWeight(.bold)
-                                            .padding(.vertical)
+                                            .padding(.leading, -45)
+                                        }
+                                        Spacer()
+                                        //Possibly for the Update User initials image:
+//                                        Image(uiImage: viewModel.creatorImage ?? UIImage(systemName: "person.circle")!)
+//                                            .resizable()
+//                                            .scaledToFit()
+//                                            .frame(width: 35, height: 35)
+//                                            .clipShape(.circle)
                                     }
                                     //Details:
                                     DetailGroupView(viewModel: viewModel)
