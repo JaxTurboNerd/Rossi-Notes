@@ -38,4 +38,9 @@ class LoginViewModel: ObservableObject {
         UserDefaults.standard.set(session.userId, forKey: "userId")
         UserDefaults.standard.set(session.secret, forKey: "sessionSecret")
     }
+    
+    private func setRememberMe(_ email: String){
+        //Save the user's login email to the User Defaults:
+        UserDefaults.standard.set(email, forKey: "userEmail")
+    }
 }

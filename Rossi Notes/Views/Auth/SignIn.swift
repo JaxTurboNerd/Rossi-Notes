@@ -15,6 +15,7 @@ struct SignIn: View {
     
     @State private var showAlert = false
     @State private var alertMessage = ""
+    @State private var rememberMeIsOn: Bool = false
     
     @FocusState var emailIsFocused: Bool
     @FocusState var passwordIsFocused: Bool
@@ -48,6 +49,10 @@ struct SignIn: View {
                                 RoundedRectangle(cornerRadius: 5)
                                     .stroke(emailIsFocused ? Color.blue : Color.white, lineWidth: 2)
                             )
+                        Toggle("remember me", isOn: $rememberMeIsOn)
+                            .toggleStyle(.switch)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: 200)
                     }
                     .padding()
                     VStack(alignment: .leading) {
