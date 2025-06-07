@@ -60,6 +60,8 @@ struct SignIn: View {
                             .foregroundColor(.white)
                             .font(Font.custom("Urbanist-Regular", size: 20))
                         SecureField("password:", text: $viewModel.password)
+                            .textInputAutocapitalization(.never)
+                            .autocorrectionDisabled(true)
                             .textFieldStyle(.roundedBorder)
                             .focused($passwordIsFocused)
                             .overlay(

@@ -47,7 +47,7 @@ final class LoginViewModel: ObservableObject {
     }
     
     func setRememberMe(rememberMeSelected: Bool, email: String, password: String) {
-        //Save the user's login email to the User Defaults:
+        //Save the user's login email and password to the User Defaults:
         UserDefaults.standard.set(rememberMeSelected, forKey: "rememberMeSelected")
         UserDefaults.standard.set(email, forKey: "userEmail")
         UserDefaults.standard.set(password, forKey: "password")
