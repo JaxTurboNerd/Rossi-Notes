@@ -8,14 +8,17 @@
 import Foundation
 import Appwrite
 import JSONCodable
+import SwiftUI
 
 @MainActor
-class LoginViewModel: ObservableObject {
+final class LoginViewModel: ObservableObject {
     private let appwrite: Appwrite
+    //@Binding var rememberMeIsOn: Bool
     
     @Published var email: String = ""
     @Published var password: String = ""
     @Published var isSubmitting = false
+    @Published var rememberMe = false
     
     init(appwrite: Appwrite){
         self.appwrite = appwrite
@@ -23,7 +26,11 @@ class LoginViewModel: ObservableObject {
     
     @MainActor
     public func signIn() async throws {
-        self.isSubmitting = true        
+        if rememberMe {
+            print("remember me is on")//works
+            //need to set to user defaults and check if there is a set value from a previous log on
+        }
+        self.isSubmitting = true
         do {
             let session = try await appwrite.signIn(email, password)
             self.persistSession(session)
@@ -39,8 +46,9 @@ class LoginViewModel: ObservableObject {
         UserDefaults.standard.set(session.secret, forKey: "sessionSecret")
     }
     
-    private func setRememberMe(_ email: String){
+    func setRememberMe(_ email: String){
         //Save the user's login email to the User Defaults:
         UserDefaults.standard.set(email, forKey: "userEmail")
+        print("remember me set to User Defaults")
     }
 }

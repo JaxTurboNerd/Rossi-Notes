@@ -49,10 +49,15 @@ struct SignIn: View {
                                 RoundedRectangle(cornerRadius: 5)
                                     .stroke(emailIsFocused ? Color.blue : Color.white, lineWidth: 2)
                             )
-                        Toggle("remember me", isOn: $rememberMeIsOn)
+                        Toggle("remember me", isOn: $viewModel.rememberMe)
                             .toggleStyle(.switch)
                             .foregroundColor(.white)
                             .frame(maxWidth: 200)
+                            .onChange(of: rememberMeIsOn, {
+                                if viewModel.rememberMe {
+                                    viewModel.setRememberMe(viewModel.email)
+                                }
+                            })
                     }
                     .padding()
                     VStack(alignment: .leading) {
@@ -77,7 +82,6 @@ struct SignIn: View {
                                     
                                     if isValidFields {
                                         viewModel.isSubmitting = true
-                                        //need guard or if let for the sign in:??
                                         do {
                                             try await viewModel.signIn()
                                             showHomeTabView = true
