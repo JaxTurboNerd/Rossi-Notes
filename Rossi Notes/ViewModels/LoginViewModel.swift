@@ -13,22 +13,22 @@ import SwiftUI
 @MainActor
 final class LoginViewModel: ObservableObject {
     private let appwrite: Appwrite
-    //@Binding var rememberMeIsOn: Bool
     
-    @Published var email: String = ""
-    @Published var password: String = ""
+    @Published var email: String = UserDefaults.standard.string(forKey: "userEmail") ?? ""
+    @Published var password: String = UserDefaults.standard.string(forKey: "password") ?? ""
     @Published var isSubmitting = false
-    @Published var rememberMe = false
-    
+    @Published var rememberMeSelected = UserDefaults.standard.bool(forKey: "rememberMeSelected")
     init(appwrite: Appwrite){
         self.appwrite = appwrite
     }
     
     @MainActor
     public func signIn() async throws {
-        if rememberMe {
-            print("remember me is on")//works
-            //need to set to user defaults and check if there is a set value from a previous log on
+        if rememberMeSelected {
+            //need to set to user defaults and check if there is a set value from a previous log on:
+            setRememberMe(rememberMeSelected: rememberMeSelected, email: email, password: password)
+        } else {
+            setRememberMe(rememberMeSelected: false, email: "", password: "")
         }
         self.isSubmitting = true
         do {
@@ -46,9 +46,10 @@ final class LoginViewModel: ObservableObject {
         UserDefaults.standard.set(session.secret, forKey: "sessionSecret")
     }
     
-    func setRememberMe(_ email: String){
+    func setRememberMe(rememberMeSelected: Bool, email: String, password: String) {
         //Save the user's login email to the User Defaults:
+        UserDefaults.standard.set(rememberMeSelected, forKey: "rememberMeSelected")
         UserDefaults.standard.set(email, forKey: "userEmail")
-        print("remember me set to User Defaults")
+        UserDefaults.standard.set(password, forKey: "password")
     }
 }

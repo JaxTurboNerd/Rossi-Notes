@@ -15,7 +15,7 @@ struct SignIn: View {
     
     @State private var showAlert = false
     @State private var alertMessage = ""
-    @State private var rememberMeIsOn: Bool = false
+    //@State private var rememberMeSelected: Bool = UserDefaults.standard.bool(forKey: "rememberMeSelected")
     
     @FocusState var emailIsFocused: Bool
     @FocusState var passwordIsFocused: Bool
@@ -49,15 +49,10 @@ struct SignIn: View {
                                 RoundedRectangle(cornerRadius: 5)
                                     .stroke(emailIsFocused ? Color.blue : Color.white, lineWidth: 2)
                             )
-                        Toggle("remember me", isOn: $viewModel.rememberMe)
+                        Toggle("remember me", isOn: $viewModel.rememberMeSelected)
                             .toggleStyle(.switch)
                             .foregroundColor(.white)
                             .frame(maxWidth: 200)
-                            .onChange(of: rememberMeIsOn, {
-                                if viewModel.rememberMe {
-                                    viewModel.setRememberMe(viewModel.email)
-                                }
-                            })
                     }
                     .padding()
                     VStack(alignment: .leading) {
