@@ -69,7 +69,6 @@ struct DetailView: View {
                                                             try await updateViewModel.changeProtocolLevel(originalCollectionID: collectionId, originalDocumentID: documentId, noteDetails: viewModel.detailsModel!)
                                                             noteUpdated = true
                                                             refresh.triggerRefresh = true
-                                                            //refresh.protocolLevelChanged = true
                                                             showPopover = false
                                                             dismiss.callAsFunction()
                                                         } catch {
@@ -154,15 +153,17 @@ struct DetailView: View {
                     Button("Update Protocol Level", systemImage: "arrow.up.arrow.down"){
                         showPopover = true
                     }
-                    //                    Button("Blue Dot"){
-                    //
-                    //                    }
                 }
             }
             ToolbarItem(placement: .topBarTrailing) {
-                Button("Delete"){
-                    isDeleteAlert = true
-                    showAlert = true
+                Menu("Delete"){
+                    Button("Archive"){
+                        
+                    }
+                    Button("Delete"){
+                        isDeleteAlert = true
+                        showAlert = true
+                    }
                 }
                 .foregroundStyle(Color.red)
                 .alert(alertTitle, isPresented: $showAlert, actions: {
