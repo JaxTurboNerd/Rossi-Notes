@@ -15,7 +15,7 @@ struct DetailView: View {
     @State private var showUpdateForm: Bool = false
     @State private var showPopover: Bool = false
     @State private var showAlert: Bool = false
-    @State private var isDeleteAlert: Bool = true
+    @State private var isDeleteAlert: Bool = false
     
     private var appwrite: Appwrite
     
@@ -26,6 +26,9 @@ struct DetailView: View {
     @Binding var isPlusNote: Bool
     @State private var noteDeleted = false
     @State var noteUpdated = false
+    
+    
+    @State var isArchivePopover: Bool = false
     
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
@@ -59,26 +62,32 @@ struct DetailView: View {
                                     //Display the pet name:
                                     CardView(name: viewModel.detailsModel?.name ?? "Error")
                                         .popover(isPresented: $showPopover) {
-                                            VStack {
-                                                Text("Change to:")
-                                                    .padding(.bottom, 10)
-                                                Divider()
-                                                Button(isPlusNote ? "Protocol" : "Protocol +", systemImage: isPlusNote ? "arrow.down" : "arrow.up") {
-                                                    Task {
-                                                        do {
-                                                            try await updateViewModel.changeProtocolLevel(originalCollectionID: collectionId, originalDocumentID: documentId, noteDetails: viewModel.detailsModel!)
-                                                            noteUpdated = true
-                                                            refresh.triggerRefresh = true
-                                                            showPopover = false
-                                                            dismiss.callAsFunction()
-                                                        } catch {
-                                                            print("\(error.localizedDescription)")
-                                                            isDeleteAlert = false
-                                                            showAlert = true
+                                            Group {
+                                                if isArchivePopover {
+                                                    Text("Archive")
+                                                } else {
+                                                    VStack {
+                                                        Text("Change to:")
+                                                            .padding(.bottom, 10)
+                                                        Divider()
+                                                        Button(isPlusNote ? "Protocol" : "Protocol +", systemImage: isPlusNote ? "arrow.down" : "arrow.up") {
+                                                            Task {
+                                                                do {
+                                                                    try await updateViewModel.changeProtocolLevel(originalCollectionID: collectionId, originalDocumentID: documentId, noteDetails: viewModel.detailsModel!)
+                                                                    noteUpdated = true
+                                                                    refresh.triggerRefresh = true
+                                                                    showPopover = false
+                                                                    dismiss.callAsFunction()
+                                                                } catch {
+                                                                    print("\(error.localizedDescription)")
+                                                                    isDeleteAlert = false
+                                                                    showAlert = true
+                                                                }
+                                                            }
                                                         }
+                                                        .padding(.top, 10)
                                                     }
                                                 }
-                                                .padding(.top, 10)
                                             }
                                             .frame(width: 200, height: 100)
                                             .padding(20)
@@ -103,11 +112,11 @@ struct DetailView: View {
                                         }
                                         Spacer()
                                         //Possibly for the Update User initials image:
-//                                        Image(uiImage: viewModel.creatorImage ?? UIImage(systemName: "person.circle")!)
-//                                            .resizable()
-//                                            .scaledToFit()
-//                                            .frame(width: 35, height: 35)
-//                                            .clipShape(.circle)
+                                        //                                        Image(uiImage: viewModel.creatorImage ?? UIImage(systemName: "person.circle")!)
+                                        //                                            .resizable()
+                                        //                                            .scaledToFit()
+                                        //                                            .frame(width: 35, height: 35)
+                                        //                                            .clipShape(.circle)
                                     }
                                     //Details:
                                     DetailGroupView(viewModel: viewModel)
@@ -147,20 +156,22 @@ struct DetailView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing){
                 Menu("Update") {
-                    Button("Update Details"){
+                    Button("Update Details", systemImage: "square.and.pencil"){
                         showUpdateForm = true
                     }
                     Button("Update Protocol Level", systemImage: "arrow.up.arrow.down"){
+                        isArchivePopover = false
                         showPopover = true
                     }
                 }
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Menu("Delete"){
-                    Button("Archive"){
-                        
+                    Button("Archive", systemImage: "archivebox"){
+                        isArchivePopover = true
+                        showPopover = true
                     }
-                    Button("Delete"){
+                    Button("Delete", systemImage: "trash"){
                         isDeleteAlert = true
                         showAlert = true
                     }
@@ -182,6 +193,7 @@ struct DetailView: View {
                         Button("OK"){
                             dismiss.callAsFunction()
                         }
+                        
                     }
                 })
             }
