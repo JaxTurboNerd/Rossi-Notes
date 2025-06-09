@@ -68,7 +68,6 @@ struct ProtocolPlusView: View {
             Task {
                 do {
                     try await viewModel.refreshDocuments()
-                    print("Protocol PLUS View refresh was triggered")
                 } catch {
                     print("fetch error: \(error.localizedDescription)")
                 }

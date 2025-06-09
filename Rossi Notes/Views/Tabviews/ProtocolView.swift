@@ -69,7 +69,6 @@ struct ProtocolView: View {
             Task {
                 do {
                     try await viewModel.refreshDocuments()
-                    print("Protocol View refresh was triggered")
                 } catch {
                     print("Error refreshing documents: \(error.localizedDescription)")
                 }

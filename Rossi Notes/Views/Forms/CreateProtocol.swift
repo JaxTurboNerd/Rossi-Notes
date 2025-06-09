@@ -17,7 +17,7 @@ struct CreateView: View {
     @Binding var isPlusNote: Bool
     @FocusState var nameIsFocused: Bool
     var collectionId: String
-    private var alertTitle: String { noteAdded ? "Note Added!" : "Error" }
+    private var alertTitle: String { noteAdded ? "\(viewModel.name) Protocol Added" : "Error" }
     @State private var shouldDismiss: Bool = false
     
     //Used to dismiss the form:
