@@ -16,13 +16,13 @@ class DetailViewModel: ObservableObject {
     var detailsModel: DetailsModel?
     
     @Published var isLoading = false
-    //@Published var errorMessage: String = ""
     @Published var document: Document<[String: AnyCodable]>?
     @Published var initialsImage: UIImage? = nil
     @Published var creatorImage: UIImage? = nil
     @Published var initialsImageData: Data? = nil
     @Published var formattedStringDate = ""
     @Published var failedToFetch: Bool = false
+    @Published var isSubmitting: Bool = false
     //This model used to display string values from the details model:
     @ObservedObject var detailsStringModel = DetailsStringModel()
     @State var noteWillDelete = false
@@ -208,6 +208,7 @@ class DetailViewModel: ObservableObject {
         } catch {
             print("delete document error \(error.localizedDescription)")
             self.isLoading = false
+            throw ArchiveProtocolError.failedToDelete
         }
     }
     
@@ -256,6 +257,60 @@ class DetailViewModel: ObservableObject {
             print("error fetching creator initials \(error.localizedDescription)")
         }
     }
+    
+    public func archiveProtocol(originalCollectionID: String, originalDocumentID: String, noteDetails: DetailsModel) async throws {
+        //Determine which collection API key to use:
+        var collectionId: String {
+            do {
+                let IdKey: String = try Configuration.value(for: "ARCHIVE_COLL_ID")
+                return IdKey
+            } catch {
+                print("error getting collection id")
+                return ""
+            }
+        }
+        
+        let protcol = Protocol(name: noteDetails.name, protocol_date: noteDetails.protocolDate, dog_reactive: noteDetails.dogReactive, cat_reactive: noteDetails.catReactive, barrier_reactive: noteDetails.barrierReactive, leash_reactive: noteDetails.leashReactive, jumpy_mouthy: noteDetails.jumpyMouthy, resource_guarder: noteDetails.resourceGuarder, stranger_reactive: noteDetails.strangerReactive, place_routine: noteDetails.placeRoutine, door_routine: noteDetails.doorRoutine, loose_leash: noteDetails.looseLeash, shy_fearful: noteDetails.shyFearful, dragline: noteDetails.dragline, chain_leash: noteDetails.chainLeash, harness: noteDetails.harness, gentle_leader: noteDetails.gentleLeader, misc_notes: noteDetails.miscNotes, created_by: noteDetails.createdBy)
+        
+        //convert protocol details to data object:
+        do {
+            let encoder = JSONEncoder()
+            encoder.dateEncodingStrategy = .iso8601
+            guard let data = try? encoder.encode(protcol) else {
+                self.isSubmitting = false
+                throw JSONError.invalidData
+            }
+            
+            //convert data to json string:
+            guard let dataString = String(data: data, encoding: .utf8) else {
+                throw ArchiveProtocolError.failedToArchive
+            }
+            //Need to pass in the ARCHIVE collection id to the createDocument func:
+            let _ = try await appwrite.createDocument(collectionId, ID.unique(), dataString)
+            self.isSubmitting = false
+            
+        } catch JSONError.invalidData {
+            self.isSubmitting = false
+            
+        } catch JSONError.typeMismatch {
+            self.isSubmitting = false
+            
+        } catch ArchiveProtocolError.failedToArchive {
+            self.isSubmitting = false
+        } catch {
+            self.isSubmitting = false
+            throw ArchiveProtocolError.failedToArchive
+        }
+        
+        //Deleted the "Old" document:
+        do {
+            try await appwrite.deleteDocument(originalCollectionID, originalDocumentID)
+        } catch {
+            print("Error deleting old document")
+            throw UpdateProtocolError.failedToChangeProtocolLevel
+        }
+    }
+    
 }
 
 enum DetailViewError: LocalizedError {
@@ -277,3 +332,17 @@ enum DetailViewError: LocalizedError {
         }
     }
 }
+
+enum ArchiveProtocolError: LocalizedError {
+    case failedToArchive, failedToDelete
+    
+    var errorDescription: String? {
+        switch self {
+        case .failedToArchive:
+            return "Failed to archive.  Please try again."
+        case .failedToDelete:
+            return "Failed to delete.  Please try again."
+        }
+    }
+}
+
