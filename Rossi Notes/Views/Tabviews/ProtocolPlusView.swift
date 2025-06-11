@@ -28,7 +28,7 @@ struct ProtocolPlusView: View {
                         .progressViewStyle(CircularProgressViewStyle())
                         .controlSize(.large)
                 } else {
-                    List(viewModel.documents, id: \.id){ document in
+                    List(viewModel.documents.sorted {$0.data["name"]?.description ?? "" < $1.data["name"]?.description ?? ""}, id: \.id){ document in
                         let name = document.data["name"]?.description ?? ""
                         let id = document.data["$id"]?.description ?? ""
                         CardView(name: name)
