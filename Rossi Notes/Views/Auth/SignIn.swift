@@ -15,6 +15,7 @@ struct SignIn: View {
     
     @State private var showAlert = false
     @State private var alertMessage = ""
+    //@State private var rememberMeSelected: Bool = UserDefaults.standard.bool(forKey: "rememberMeSelected")
     
     @FocusState var emailIsFocused: Bool
     @FocusState var passwordIsFocused: Bool
@@ -48,6 +49,10 @@ struct SignIn: View {
                                 RoundedRectangle(cornerRadius: 5)
                                     .stroke(emailIsFocused ? Color.blue : Color.white, lineWidth: 2)
                             )
+                        Toggle("remember me", isOn: $viewModel.rememberMeSelected)
+                            .toggleStyle(.switch)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: 200)
                     }
                     .padding()
                     VStack(alignment: .leading) {
@@ -55,6 +60,8 @@ struct SignIn: View {
                             .foregroundColor(.white)
                             .font(Font.custom("Urbanist-Regular", size: 20))
                         SecureField("password:", text: $viewModel.password)
+                            .textInputAutocapitalization(.never)
+                            .autocorrectionDisabled(true)
                             .textFieldStyle(.roundedBorder)
                             .focused($passwordIsFocused)
                             .overlay(
@@ -72,7 +79,6 @@ struct SignIn: View {
                                     
                                     if isValidFields {
                                         viewModel.isSubmitting = true
-                                        //need guard or if let for the sign in:??
                                         do {
                                             try await viewModel.signIn()
                                             showHomeTabView = true

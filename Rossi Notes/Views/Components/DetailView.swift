@@ -115,7 +115,7 @@ struct DetailView: View {
                                                 Text("Protocol Date:")
                                                 Text(" \(viewModel.formattedStringDate)")
                                             }
-                                            .font(.system(size: 20))
+                                            .font(.system(size: 22))
                                             .fontWeight(.bold)
                                             .padding(.leading, -45)
                                         }
