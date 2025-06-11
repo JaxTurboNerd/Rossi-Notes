@@ -201,6 +201,7 @@ struct DetailView: View {
                                     showAlert = true
                                 }
                             }
+                            dismiss.callAsFunction()
                         }
                         Button("Cancel", role: .cancel){
                             //action:
@@ -218,6 +219,7 @@ struct DetailView: View {
                                     showAlert = true
                                 }
                             }
+                            dismiss.callAsFunction()
                         }
                     case .failedToDelete, .failedToArchive, .defaultAlert:
                         Button("OK"){
@@ -249,15 +251,15 @@ struct NameBackgroundView: View {
 enum ActiveAlert {
     case delete, archive, defaultAlert, failedToDelete, failedToArchive
     
-    var alertTitle: String? {
-        switch self {
-        case .delete: return "Delete"
-        case .archive: return "Archive"
-        case .failedToDelete: return "Failed to delete"
-        case .failedToArchive: return "Failed to archive"
-        case .defaultAlert: return "Error"
-        }
-    }
+//    var alertTitle: String? {
+//        switch self {
+//        case .delete: return "Delete"
+//        case .archive: return "Archive"
+//        case .failedToDelete: return "Failed to delete"
+//        case .failedToArchive: return "Failed to archive"
+//        case .defaultAlert: return "Error"
+//        }
+//    }
 }
 
 #Preview {
