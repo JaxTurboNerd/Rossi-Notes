@@ -10,22 +10,22 @@ import SwiftUI
 struct CreateView: View {
     
     @StateObject private var viewModel: CreateViewModel
+    @EnvironmentObject private var refresh: Refresh
     @State private var noteAdded = false
     @State private var alertMessage = ""
     @State private var showAlert = false
-    @Binding var triggerRefresh: Bool
     @Binding var isPlusNote: Bool
     @FocusState var nameIsFocused: Bool
     var collectionId: String
     private var alertTitle: String { noteAdded ? "Note Added!" : "Error" }
+    @State private var shouldDismiss: Bool = false
     
     //Used to dismiss the form:
     @Environment(\.dismiss) private var dismiss
     
-    init(appwrite: Appwrite, collectionId: String, triggerRefresh: Binding<Bool>, isPlusNote: Binding<Bool>){
+    init(appwrite: Appwrite, collectionId: String, isPlusNote: Binding<Bool>){
         _viewModel = StateObject(wrappedValue: CreateViewModel(appwrite: appwrite))
         self.collectionId = collectionId
-        _triggerRefresh = triggerRefresh
         _isPlusNote = isPlusNote
     }
     
@@ -34,8 +34,8 @@ struct CreateView: View {
             Form {
                 Section(
                     header:Text("Name/Date")
-                        .font(Font.custom("Urbanist-Medium", size: 16))
-                        .foregroundColor(Color("AppBlue")))
+                        .font(Font.custom("Urbanist-ExtraBold", size: 16))
+                        .foregroundColor(Color("SectionTitleColor")))
                 {
                     VStack {
                         TextField("Name", text: $viewModel.name).focused($nameIsFocused)
@@ -45,28 +45,37 @@ struct CreateView: View {
                         .datePickerStyle(.compact)
                 }
                 Section(header: Text("Reactivities")
-                    .font(Font.custom("Urbanist-Medium", size: 16))
-                    .foregroundColor(Color("AppBlue")))
+                    .font(Font.custom("Urbanist-ExtraBold", size: 16))
+                    .foregroundColor(Color("SectionTitleColor")))
                 {
-                    Toggle("Dog", isOn: $viewModel.dogReactive)
-                    Toggle("Cat", isOn: $viewModel.catReactive)
                     Toggle("Barrier", isOn: $viewModel.barrierReactive)
+                    Toggle("Dog", isOn: $viewModel.dogReactive)
                     Toggle("Leash", isOn: $viewModel.leashReactive)
+                    Toggle("Cat", isOn: $viewModel.catReactive)
+                }
+                Section(header: Text("Tools")
+                    .font(Font.custom("Urbanist-ExtraBold", size: 16))
+                    .foregroundColor(Color("SectionTitleColor")))
+                {
+                    Toggle("Dragline", isOn: $viewModel.dragline)
+                    Toggle("Chain Leash", isOn: $viewModel.chainLeash)
+                    Toggle("Harness", isOn: $viewModel.harness)
+                    Toggle("Gentle Leader", isOn: $viewModel.gentleLeader)
                 }
                 Section(header: Text("Miscellaneous")
-                    .font(Font.custom("Urbanist-Medium", size: 16))
-                    .foregroundColor(Color("AppBlue")))
+                    .font(Font.custom("Urbanist-ExtraBold", size: 16))
+                    .foregroundColor(Color("SectionTitleColor")))
                 {
+                    Toggle("Loose Leash", isOn: $viewModel.looseLeash)
                     Toggle("Jumpy/Mouthy", isOn: $viewModel.jumpy)
                     Toggle("Resource Guarder", isOn: $viewModel.resourceGuarder)
                     Toggle("Avoid Strangers", isOn: $viewModel.avoidStrangers)
                     Toggle("Door Routine", isOn: $viewModel.doorRoutine)
-                    Toggle("Loose Leash", isOn: $viewModel.looseLeash)
                     Toggle("Shy/Fearful", isOn: $viewModel.shyFearful)
                 }
                 Section(header: Text("Notes")
-                    .font(Font.custom("Urbanist-Medium", size: 16))
-                    .foregroundColor(Color("AppBlue")))
+                    .font(Font.custom("Urbanist-ExtraBold", size: 16))
+                    .foregroundColor(Color("SectionTitleColor")))
                 {
                     TextField("Notes", text: $viewModel.notes, axis: .vertical)
                 }
@@ -95,6 +104,7 @@ struct CreateView: View {
                                         try await viewModel.createProtocol(collectionId: collectionId)
                                         noteAdded = true
                                         alertMessage = "Note added successfully!"
+                                        shouldDismiss = true
                                         showAlert = true
                                     } catch {
                                         viewModel.isSubmitting = false
@@ -116,11 +126,11 @@ struct CreateView: View {
             }
             .onDisappear {
                 if noteAdded {
-                    triggerRefresh = true
+                    refresh.triggerRefresh = true
                 }
             }
             .alert(isPresented: $showAlert){
-                Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")){dismiss.callAsFunction()})
+                Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")){shouldDismiss ? dismiss.callAsFunction() : nil})
             }
         }
     }

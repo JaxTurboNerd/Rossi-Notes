@@ -1,4 +1,5 @@
 // Code from NSHipster: https://nshipster.com/xcconfig/
+//This file is used for the Config.xcconfig file setup
 import Foundation
 
 enum Configuration {

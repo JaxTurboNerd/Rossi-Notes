@@ -180,8 +180,8 @@ class Appwrite: ObservableObject {
             let document = try await databases.createDocument(databaseId: databaseId, collectionId: collectionId, documentId: documentId, data: data)
             return document
         } catch {
-            print(error.localizedDescription)
-            return nil
+            print("Appwrite create error: \(error.localizedDescription)")
+            throw CreateDocumentError.failedCreate
         }
     }
     
@@ -191,7 +191,7 @@ class Appwrite: ObservableObject {
             return document
         } catch {
             print(error.localizedDescription)
-            return nil
+            throw UpdateDocumentError.failedToUpdate
         }
     }
     
@@ -258,9 +258,34 @@ enum FetchDocumentsError: LocalizedError {
     case failedFetch
     
     var errorDescription: String? {
-        return "Failed to load protocols.  Please try again."
+        return "Failed to load details.  Please try again."
     }
 }
 
+enum CreateDocumentError: LocalizedError {
+    case failedCreate, invalideStructure
+    
+    var errorDescription: String? {
+        switch self {
+        case .failedCreate:
+            return "Failed to create document.  Please try again."
+        case .invalideStructure:
+            return "Invalid document structure.  Please check your formatting."
+        }
+    }
+}
+
+enum UpdateDocumentError: LocalizedError {
+    case failedToUpdate, invalidStructure
+    
+    var errorDescription: String? {
+        switch self {
+        case .failedToUpdate:
+            return "Failed to update document.  Please try again."
+        case .invalidStructure:
+            return "Invalid document structure.  Please check your formatting."
+        }
+    }
+}
 
 

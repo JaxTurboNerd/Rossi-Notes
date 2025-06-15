@@ -161,7 +161,7 @@ struct SignUp: View {
                                     showAlert = true
                                     alertMessage = "Your passwords do not match!"
                                 } catch {
-                                    alertMessage = "An error logging in occured"
+                                    alertMessage = "An error creating your account occured"
                                     showAlert = true
                                 }
                             }

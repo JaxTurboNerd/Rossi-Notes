@@ -21,10 +21,10 @@ class DetailViewModel: ObservableObject {
     @Published var initialsImage: UIImage? = nil
     @Published var creatorImage: UIImage? = nil
     @Published var initialsImageData: Data? = nil
-    //@Published var creatorImageData: Data? = nil
+    @Published var formattedStringDate = ""
+    @Published var failedToFetch: Bool = false
     //This model used to display string values from the details model:
     @ObservedObject var detailsStringModel = DetailsStringModel()
-    @Published var formattedStringDate = ""
     @State var noteWillDelete = false
     
     init(appwrite: Appwrite){
@@ -40,18 +40,24 @@ class DetailViewModel: ObservableObject {
         isLoading = true
         do {
             guard let document = try await appwrite.listDocument(collectionId, documentId) else {
-                throw DetailViewError.failedToFetchDocument
+                self.failedToFetch = true
+                throw FetchDocumentsError.failedFetch
             }
             self.document = document
             self.isLoading = false
             setDetailsModel(response: document)
             formattedStringDate = formatDate(from: detailsModel?.protocolDate ?? Date.now)
             setDetailsStringModel(responseData: document.data)
-            try await fetchCreatorInfo()
-        } catch DetailViewError.failedToFetchDocument {
-            self.isLoading = false
         } catch {
             self.isLoading = false
+            throw FetchDocumentsError.failedFetch
+        }
+        
+        do {
+            try await fetchCreatorInfo()
+        } catch {
+            self.isLoading = false
+            throw DetailViewError.failedToFetchCreator
         }
     }
     
@@ -120,6 +126,21 @@ class DetailViewModel: ObservableObject {
         if let shyFearful = response.data["shy_fearful"]?.value as? Bool {
             detailsModel?.shyFearful = shyFearful
         }
+        if let looseLeash = response.data["loose_leash"]?.value as? Bool {
+            detailsModel?.looseLeash = looseLeash
+        }
+        if let dragline = response.data["dragline"]?.value as? Bool {
+            detailsModel?.dragline = dragline
+        }
+        if let chainLeash = response.data["chain_leash"]?.value as? Bool {
+            detailsModel?.chainLeash = chainLeash
+        }
+        if let harness = response.data["harness"]?.value as? Bool {
+            detailsModel?.harness = harness
+        }
+        if let gentleLeader = response.data["gentle_leader"]?.value as? Bool {
+            detailsModel?.gentleLeader = gentleLeader
+        }
         if let miscNotes = response.data["misc_notes"]?.value as? String {
             detailsModel?.miscNotes = miscNotes
         }
@@ -162,7 +183,17 @@ class DetailViewModel: ObservableObject {
                 case "jumpy_mouthy":
                     detailsStringModel.jumpyMouthy = "Jumpy/Mouthy"
                 case "shy_fearful":
-                    detailsStringModel.shyFearful = "Shy / Fearful"
+                    detailsStringModel.shyFearful = "Shy / Fearful\n Avoid Petting!"
+                case "loose_leash":
+                    detailsStringModel.looseLeash = "Practice Loose Leash Walking"
+                case "dragline":
+                    detailsStringModel.dragline = "Dragline"
+                case "chain_leash":
+                    detailsStringModel.chainLeash = "Use Chain Leash"
+                case "harness":
+                    detailsStringModel.harness = "Harness"
+                case "gentle_leader":
+                    detailsStringModel.gentleLeader = "Gentle Leader"
                 default:
                     return
                 }

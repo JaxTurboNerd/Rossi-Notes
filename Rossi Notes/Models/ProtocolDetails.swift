@@ -21,7 +21,12 @@ class DetailsModel: Identifiable, ObservableObject {
     var doorRoutine: Bool = false
     var placeRoutine: Bool = false
     var leashReactive: Bool = false
+    var looseLeash: Bool = false
     var shyFearful: Bool = false
+    var dragline: Bool = false
+    var harness: Bool = false
+    var chainLeash: Bool = false
+    var gentleLeader: Bool = false
     var createdBy: String = ""
     //var updatedBy: String = ""
 }
@@ -40,8 +45,13 @@ class DetailsStringModel: Identifiable, ObservableObject {
     var doorRoutine: String = ""
     var placeRoutine: String = ""
     var leashReactive: String = ""
+    var looseLeash: String = ""
     var shyFearful: String = ""
     var createdBy: String = ""
+    var dragline: String = ""
+    var harness: String = ""
+    var chainLeash: String = ""
+    var gentleLeader: String = ""
     //var updatedBy: String = ""
     
     func formatDate(from dateString: String) -> String {

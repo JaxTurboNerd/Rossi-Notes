@@ -15,10 +15,8 @@ final class CreateViewModel: ObservableObject {
     
     //Probably don't need these to be @Published:
     @Published public var isSubmitting = false
-    //@Published public var errorMessage: String?
     @Published public var noteAdded = false
     
-    var document: Document<[String: AnyCodable]>?
     var documentId = ID.unique()
     var name = ""
     var protocolDate = Date.now
@@ -33,6 +31,10 @@ final class CreateViewModel: ObservableObject {
     var doorRoutine = false
     var looseLeash = false
     var shyFearful = false
+    var dragline = false
+    var chainLeash = false
+    var gentleLeader = false
+    var harness = false
     var notes = ""
     var createdBy = ""
     //var updatedBy = ""
@@ -49,7 +51,7 @@ final class CreateViewModel: ObservableObject {
             self.createdBy = userName
         }
         
-        let newProtocol = Protocol(name: name, protocol_date: protocolDate, dog_reactive: dogReactive, cat_reactive: catReactive, barrier_reactive: barrierReactive, leash_reactive: leashReactive, jumpy_mouthy: jumpy, resource_guarder: resourceGuarder, stranger_reactive: avoidStrangers, place_routine: placeRoutine, door_routine: doorRoutine, shy_fearful: shyFearful, misc_notes: notes, created_by: createdBy)
+        let newProtocol = Protocol(name: name, protocol_date: protocolDate, dog_reactive: dogReactive, cat_reactive: catReactive, barrier_reactive: barrierReactive, leash_reactive: leashReactive, jumpy_mouthy: jumpy, resource_guarder: resourceGuarder, stranger_reactive: avoidStrangers, place_routine: placeRoutine, door_routine: doorRoutine, loose_leash: looseLeash, shy_fearful: shyFearful, dragline: dragline, chain_leash: chainLeash, harness: harness, gentle_leader: gentleLeader, misc_notes: notes, created_by: createdBy)
         
         do {
             let encoder = JSONEncoder()
@@ -60,23 +62,29 @@ final class CreateViewModel: ObservableObject {
             }
             
             //convert data to json string:
-            let dataString = String(data: data, encoding: .utf8)
-            guard (try await appwrite.createDocument(collectionId, documentId, dataString ?? "")) != nil else {
-                self.isSubmitting = false
+            guard let dataString = String(data: data, encoding: .utf8) else {
                 throw CreateProtocolError.failedToCreateProtocol
             }
-            //self.document = response
+            let _ = try await appwrite.createDocument(collectionId, documentId, dataString)
             self.noteAdded = true
             self.isSubmitting = false
             
         } catch JSONError.invalidData {
             self.isSubmitting = false
+            throw JSONError.invalidData
             
         } catch JSONError.typeMismatch {
             self.isSubmitting = false
+            throw JSONError.typeMismatch
             
         } catch CreateProtocolError.failedToCreateProtocol {
             self.isSubmitting = false
+            throw CreateProtocolError.failedToCreateProtocol
+            
+        } catch {
+            print("Create VM Error: \(error.localizedDescription)")
+            self.isSubmitting = false
+            throw CreateProtocolError.failedToCreateProtocol
         }
     }
 }
