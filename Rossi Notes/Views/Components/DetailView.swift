@@ -148,7 +148,6 @@ struct DetailView: View {
                    onDismiss: {
                 if noteUpdated {
                     Task {
-                        //need do/catch:
                         do {
                             try await viewModel.fetchDocument(collectionId: collectionId, documentId: documentId)
                         } catch {
