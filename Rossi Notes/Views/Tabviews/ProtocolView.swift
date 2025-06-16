@@ -12,8 +12,10 @@ struct ProtocolView: View {
     @StateObject private var viewModel: ProtocolViewModel
     let appwrite: Appwrite
     @EnvironmentObject private var refresh: Refresh
+    @Environment(\.dismiss) private var dismiss
     @State var isPlusNote: Bool = false
     @State private var showForm = false
+    @State private var showAlert = false
     
     init(appwrite: Appwrite){
         self.appwrite = appwrite
@@ -51,20 +53,12 @@ struct ProtocolView: View {
                             .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, isPlusNote: $isPlusNote)})
                         })
                     }
+                    .alert(isPresented: $showAlert){
+                        Alert(title: Text("Error"), message: Text("An error occurred fetching data. Please try again later."), dismissButton: .default(Text("OK")))
+                    }
                 }
             }
         }
-//        .onAppear {
-//            if refresh.protocolLevelChanged {
-//                Task {
-//                    do {
-//                        try await viewModel.refreshDocuments()
-//                    } catch {
-//                        print("Error refreshing documents: \(error.localizedDescription)")
-//                    }
-//                }
-//            }
-//        }
         .onChange(of: refresh.triggerRefresh, {
             Task {
                 do {
@@ -72,6 +66,7 @@ struct ProtocolView: View {
                     print("Protocol View refresh was triggered")
                 } catch {
                     print("Error refreshing documents: \(error.localizedDescription)")
+                    showAlert = true
                 }
             }
             refresh.triggerRefresh = false
@@ -82,6 +77,7 @@ struct ProtocolView: View {
                     try await viewModel.refreshDocuments()
                 } catch {
                     print("refresh error \(error.localizedDescription)")
+                    showAlert = true
                 }
             }
         }

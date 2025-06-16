@@ -31,7 +31,12 @@ final class ProtocolViewModel: ObservableObject {
     init(appwrite: Appwrite){
         self.appwrite = appwrite
         Task {
-            try await fetchDocuments()
+            do {
+                try await fetchDocuments()
+            } catch {
+                print("fetching document error: \(error.localizedDescription)")
+                throw FetchDocumentsError.failedFetch
+            }
         }
     }
     
@@ -45,6 +50,7 @@ final class ProtocolViewModel: ObservableObject {
         } catch {
             self.isLoading = false
             print("fetch document error \(error.localizedDescription)")
+            throw FetchDocumentsError.failedFetch
         }
     }
     
@@ -54,6 +60,7 @@ final class ProtocolViewModel: ObservableObject {
             try await fetchDocuments()
         } catch {
             print("refresh error \(error.localizedDescription)")
+            throw FetchDocumentsError.failedFetch
         }
         
     }
