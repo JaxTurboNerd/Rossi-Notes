@@ -58,8 +58,6 @@ struct ContentView: View {
                 
             }
         }
-        .task({
-        })
     }
 }
 

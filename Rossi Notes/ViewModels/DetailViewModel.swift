@@ -208,6 +208,7 @@ class DetailViewModel: ObservableObject {
         } catch {
             print("delete document error \(error.localizedDescription)")
             self.isLoading = false
+            throw DetailViewError.failedToDeleteDocument
         }
     }
     
@@ -226,10 +227,13 @@ class DetailViewModel: ObservableObject {
             }
         } catch DetailViewError.failedToFetchUser {
             print("failed to fetch user")
+            throw DetailViewError.failedToFetchUser
         } catch DetailViewError.failedToFetchInitials {
             print("Failed to fetch initials")
+            throw DetailViewError.failedToFetchInitials
         } catch {
             print("Error fetching initials \(error.localizedDescription)")
+            throw DetailViewError.failedToFetchUser
         }
     }
     
@@ -254,6 +258,7 @@ class DetailViewModel: ObservableObject {
             throw DetailViewError.failedToFetchInitials
         } catch {
             print("error fetching creator initials \(error.localizedDescription)")
+            throw DetailViewError.failedToFetchCreator
         }
     }
 }
@@ -263,6 +268,7 @@ enum DetailViewError: LocalizedError {
     case failedToFetchUser
     case failedToFetchCreator
     case failedToFetchInitials
+    case failedToDeleteDocument
     
     var errorDescription: String? {
         switch self {
@@ -274,6 +280,8 @@ enum DetailViewError: LocalizedError {
             return "Failed to fetch creator."
         case .failedToFetchInitials:
             return "Failed to fetch initials."
+        case .failedToDeleteDocument:
+            return "Failed to delete document."
         }
     }
 }
