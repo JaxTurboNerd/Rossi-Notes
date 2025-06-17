@@ -33,11 +33,18 @@ final class ProtocolViewModel: ObservableObject {
         Task {
             do {
                 try await fetchDocuments()
+                await MainActor.run {
+                    self.isLoading = false
+                }
             } catch {
                 print("fetching document error: \(error.localizedDescription)")
+                await MainActor.run {
+                    isLoading = true
+                }
                 throw FetchDocumentsError.failedFetch
             }
         }
+        isLoading = false
     }
     
     @MainActor
