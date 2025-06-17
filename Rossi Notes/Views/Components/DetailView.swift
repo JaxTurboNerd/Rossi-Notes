@@ -104,11 +104,11 @@ struct DetailView: View {
                                         }
                                         Spacer()
                                         //Possibly for the Update User initials image:
-//                                        Image(uiImage: viewModel.creatorImage ?? UIImage(systemName: "person.circle")!)
-//                                            .resizable()
-//                                            .scaledToFit()
-//                                            .frame(width: 35, height: 35)
-//                                            .clipShape(.circle)
+                                        //                                        Image(uiImage: viewModel.creatorImage ?? UIImage(systemName: "person.circle")!)
+                                        //                                            .resizable()
+                                        //                                            .scaledToFit()
+                                        //                                            .frame(width: 35, height: 35)
+                                        //                                            .clipShape(.circle)
                                     }
                                     //Details:
                                     DetailGroupView(viewModel: viewModel)
@@ -169,8 +169,12 @@ struct DetailView: View {
                     if isDeleteAlert {
                         Button("Delete", role: .destructive){
                             Task {
-                                try await viewModel.deleteNote(collectionId: collectionId, documentId: documentId)
-                                noteDeleted = true
+                                do {
+                                    try await viewModel.deleteNote(collectionId: collectionId, documentId: documentId)
+                                    noteDeleted = true
+                                } catch {
+                                    print("delete note error: \(error.localizedDescription)")
+                                }
                             }
                             dismiss.callAsFunction()
                         }

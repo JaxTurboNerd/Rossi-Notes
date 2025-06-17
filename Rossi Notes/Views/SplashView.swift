@@ -20,7 +20,7 @@ struct SplashView: View {
             }
         }
         .onAppear {
-            Task {
+            Task {//does not throw an error:
                 await appwrite.checkAuthStatus()
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
