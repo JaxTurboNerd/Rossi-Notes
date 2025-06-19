@@ -223,6 +223,8 @@ struct SignUp: View {
     }
 }
 
+//Used to validate the user required textfields on the front end.  Checks for empty fields and password
+//mis-matches, and invalid emails.
 enum SignUpTextfieldError: Error {
     case emptyFname, emptyLname, emptyEmail, emptyPassword, emptyPassword2, pwordsNotMatched, invalidEmail, invalidPassword
 }

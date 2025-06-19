@@ -31,7 +31,7 @@ class SignUpViewModel: ObservableObject {
             _ = try await appwrite.createAccount(firstName, lastName, email, password)
             self.successfulSignedUp = true
         } catch {
-            throw UserError.failed(error.localizedDescription)
+            throw UserAccountError.failed(error.localizedDescription)
         }
     }
 }

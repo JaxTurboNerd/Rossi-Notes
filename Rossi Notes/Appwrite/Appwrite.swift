@@ -75,14 +75,15 @@ class Appwrite: ObservableObject {
             let newUser = try await account.create(userId: ID.unique(), email: email, password: password, name: name)
             return newUser
         } catch let error as AppwriteError {
+            //check for the most common Appwrite error messages/types likely to be thrown from account creation errors:
             if error.message == "Invalid `email` param: Value must be a valid email address" {
-                throw UserError.invalidEmail
+                throw UserAccountError.invalidEmail
             } else if error.message == "Invalid `password` param: Password must be between 8 and 265 characters long, and should not be one of the commonly used password." {
-                throw UserError.invalidPassword
+                throw UserAccountError.invalidPassword
             } else if error.type == "user_password_mismatch" {
-                throw UserError.passwordMismatch
+                throw UserAccountError.passwordMismatch
             } else {
-                throw UserError.failed(error.localizedDescription)
+                throw UserAccountError.failed(error.localizedDescription)
             }
         }
     }
@@ -156,7 +157,7 @@ class Appwrite: ObservableObject {
             return document
         } catch {
             print(error.localizedDescription)
-            throw FetchDocumentsError.failedFetch
+            throw AppwriteDocumentError.failedToFetch
         }
     }
     
@@ -170,7 +171,7 @@ class Appwrite: ObservableObject {
             return documentList
         } catch {
             print(error.localizedDescription)
-            throw FetchDocumentsError.failedFetch
+            throw AppwriteDocumentError.failedToFetch
         }
     }
     
@@ -181,7 +182,7 @@ class Appwrite: ObservableObject {
             return document
         } catch {
             print("Appwrite create error: \(error.localizedDescription)")
-            throw CreateDocumentError.failedCreate
+            throw AppwriteDocumentError.failedToCreate
         }
     }
     
@@ -191,7 +192,7 @@ class Appwrite: ObservableObject {
             return document
         } catch {
             print(error.localizedDescription)
-            throw UpdateDocumentError.failedToUpdate
+            throw AppwriteDocumentError.failedToUpdate
         }
     }
     
@@ -200,11 +201,12 @@ class Appwrite: ObservableObject {
             let _ = try await databases.deleteDocument(databaseId: databaseId, collectionId: collectionId, documentId: documentId)
         } catch {
             print(error.localizedDescription)
+            throw AppwriteDocumentError.failedToDelete
         }
     }
 }
 
-enum AuthError: LocalizedError {
+enum AuthError: Error, LocalizedError {
     case invalidCredentials, userBlocked, signOutFailed, invalidEmail, invalidPassword, failed
     
     var errorDescription: String? {
@@ -226,11 +228,8 @@ enum AuthError: LocalizedError {
     }
 }
 
-enum UserError: LocalizedError {
-    case failed(String)
-    case invalidEmail
-    case invalidPassword
-    case passwordMismatch
+enum UserAccountError: Error, LocalizedError {
+    case failed(String), invalidEmail, invalidPassword, passwordMismatch
     
     var errorDescription: String? {
         switch self {
@@ -246,42 +245,20 @@ enum UserError: LocalizedError {
     }
 }
 
-enum DeleteDocumentError: LocalizedError {
-    case failedDelete
-    
-    var errorDescription: String? {
-        return "Failed to delete document.  Please try again."
-    }
-}
 
-enum FetchDocumentsError: LocalizedError {
-    case failedFetch
-    
-    var errorDescription: String? {
-        return "Failed to load details.  Please try again."
-    }
-}
-
-enum CreateDocumentError: LocalizedError {
-    case failedCreate, invalideStructure
+enum AppwriteDocumentError: Error, LocalizedError {
+    case failedToDelete, failedToFetch, failedToCreate, failedToUpdate, invalidStructure
     
     var errorDescription: String? {
         switch self {
-        case .failedCreate:
-            return "Failed to create document.  Please try again."
-        case .invalideStructure:
-            return "Invalid document structure.  Please check your formatting."
-        }
-    }
-}
-
-enum UpdateDocumentError: LocalizedError {
-    case failedToUpdate, invalidStructure
-    
-    var errorDescription: String? {
-        switch self {
+        case .failedToCreate:
+            return "Failed to create protocol.  Please try again."
+        case .failedToDelete:
+            return "Failed to delete protocol.  Please try again."
+        case .failedToFetch:
+            return "Failed to load details.  Please try again."
         case .failedToUpdate:
-            return "Failed to update document.  Please try again."
+            return "Failed to update protocol.  Please try again."
         case .invalidStructure:
             return "Invalid document structure.  Please check your formatting."
         }
