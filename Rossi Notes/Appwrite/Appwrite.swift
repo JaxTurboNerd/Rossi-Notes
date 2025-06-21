@@ -157,7 +157,7 @@ class Appwrite: ObservableObject {
             return document
         } catch {
             print(error.localizedDescription)
-            throw AppwriteDocumentError.failedToFetch
+            throw AppwriteDocumentError.failedToFetchDocument
         }
     }
     
@@ -169,9 +169,14 @@ class Appwrite: ObservableObject {
                 queries: [] // optional
             )
             return documentList
-        } catch {
-            print(error.localizedDescription)
-            throw AppwriteDocumentError.failedToFetch
+        } catch let error as AppwriteError {
+            if error.type == "user_unauthorized" {
+                throw AuthError.unAuthorized
+            } else if error.type == "user_blocked" {
+                throw AuthError.userBlocked
+            } else {
+                throw AppwriteDocumentError.failedToFetchDocuments
+            }
         }
     }
     
@@ -207,7 +212,7 @@ class Appwrite: ObservableObject {
 }
 
 enum AuthError: Error, LocalizedError {
-    case invalidCredentials, userBlocked, signOutFailed, invalidEmail, invalidPassword, failed
+    case invalidCredentials, userBlocked, signOutFailed, invalidEmail, invalidPassword, failed, unAuthorized
     
     var errorDescription: String? {
         switch self {
@@ -215,6 +220,8 @@ enum AuthError: Error, LocalizedError {
             return "The email or password you entered is incorrect. Please try again."
         case .userBlocked:
             return "Your account has been temporarily suspended. Please contact support"
+        case .unAuthorized:
+            return "You are not authorized to perform the requested action."
             //Incorrect email format:
         case .signOutFailed:
             return "Failed to sign out. Please try again."
@@ -247,7 +254,7 @@ enum UserAccountError: Error, LocalizedError {
 
 
 enum AppwriteDocumentError: Error, LocalizedError {
-    case failedToDelete, failedToFetch, failedToCreate, failedToUpdate, invalidStructure
+    case failedToDelete, failedToFetchDocument, failedToFetchDocuments, failedToCreate, failedToUpdate, invalidStructure
     
     var errorDescription: String? {
         switch self {
@@ -255,8 +262,10 @@ enum AppwriteDocumentError: Error, LocalizedError {
             return "Failed to create protocol.  Please try again."
         case .failedToDelete:
             return "Failed to delete protocol.  Please try again."
-        case .failedToFetch:
+        case .failedToFetchDocument:
             return "Failed to load details.  Please try again."
+        case .failedToFetchDocuments:
+            return "Failed to load protocols.  Please try again."
         case .failedToUpdate:
             return "Failed to update protocol.  Please try again."
         case .invalidStructure:

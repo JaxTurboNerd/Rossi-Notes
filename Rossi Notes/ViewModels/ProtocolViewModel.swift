@@ -15,6 +15,8 @@ final class ProtocolViewModel: ObservableObject {
     // Published properties for UI updates
     @Published public var documents: [Document<[String: AnyCodable]>] = []
     @Published public var isLoading = false
+    @Published public var showAlert = false
+    @Published public var alertMessage: String = ""
     
     // Constants
     var collectionId: String {
@@ -30,6 +32,7 @@ final class ProtocolViewModel: ObservableObject {
     //Initialize:
     init(appwrite: Appwrite){
         self.appwrite = appwrite
+        self.isLoading = true
         Task {
             do {
                 try await fetchDocuments()
@@ -37,11 +40,12 @@ final class ProtocolViewModel: ObservableObject {
                     self.isLoading = false
                 }
             } catch {
-                print("fetching document error: \(error.localizedDescription)")
                 await MainActor.run {
-                    isLoading = true
+                    self.isLoading = false
                 }
-                throw AppwriteDocumentError.failedToFetch
+                alertMessage = error.localizedDescription //will show the AuthError description
+                showAlert = true
+                throw AppwriteDocumentError.failedToFetchDocuments
             }
         }
         isLoading = false
@@ -56,8 +60,9 @@ final class ProtocolViewModel: ObservableObject {
             self.isLoading = false
         } catch {
             self.isLoading = false
-            print("fetch document error \(error.localizedDescription)")
-            throw AppwriteDocumentError.failedToFetch
+            self.alertMessage = error.localizedDescription
+            self.showAlert = true
+            throw AppwriteDocumentError.failedToFetchDocuments
         }
     }
     
@@ -65,9 +70,12 @@ final class ProtocolViewModel: ObservableObject {
     func refreshDocuments() async throws {
         do {
             try await fetchDocuments()
+            self.isLoading = false
         } catch {
-            print("refresh error \(error.localizedDescription)")
-            throw AppwriteDocumentError.failedToFetch
+            self.isLoading = false
+            self.alertMessage = error.localizedDescription
+            self.showAlert = true
+            throw AppwriteDocumentError.failedToFetchDocuments
         }
         
     }

@@ -15,7 +15,7 @@ struct ProtocolView: View {
     @Environment(\.dismiss) private var dismiss
     @State var isPlusNote: Bool = false
     @State private var showForm = false
-    @State private var showAlert = false
+    //@State private var showAlert = false
     
     init(appwrite: Appwrite){
         self.appwrite = appwrite
@@ -53,8 +53,8 @@ struct ProtocolView: View {
                             .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, isPlusNote: $isPlusNote)})
                         })
                     }
-                    .alert(isPresented: $showAlert){
-                        Alert(title: Text("Error"), message: Text("An error occurred fetching data. Please try again later."), dismissButton: .default(Text("OK")))
+                    .alert(isPresented: $viewModel.showAlert){
+                        Alert(title: Text("Error"), message: Text(viewModel.alertMessage), dismissButton: .default(Text("OK")))
                     }
                 }
             }
@@ -65,8 +65,7 @@ struct ProtocolView: View {
                     try await viewModel.refreshDocuments()
                     print("Protocol View refresh was triggered")
                 } catch {
-                    print("Error refreshing documents: \(error.localizedDescription)")
-                    showAlert = true
+                    //showAlert = true
                 }
             }
             refresh.triggerRefresh = false
@@ -76,8 +75,7 @@ struct ProtocolView: View {
                 do {
                     try await viewModel.refreshDocuments()
                 } catch {
-                    print("refresh error \(error.localizedDescription)")
-                    showAlert = true
+                    //showAlert = true
                 }
             }
         }

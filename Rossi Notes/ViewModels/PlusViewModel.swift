@@ -41,7 +41,7 @@ class PlusViewModel: ObservableObject {
                 await MainActor.run {
                     isLoading = true
                 }
-                throw AppwriteDocumentError.failedToFetch
+                throw AppwriteDocumentError.failedToFetchDocuments
             }
         }
     }
@@ -58,7 +58,7 @@ class PlusViewModel: ObservableObject {
         } catch {
             self.isLoading = false
             print("fetch document error \(error.localizedDescription)")
-            throw AppwriteDocumentError.failedToFetch
+            throw AppwriteDocumentError.failedToFetchDocuments
         }
     }
     
@@ -68,7 +68,7 @@ class PlusViewModel: ObservableObject {
             try await fetchDocuments()
         } catch {
             print("referesh error: \(error.localizedDescription)")
-            throw AppwriteDocumentError.failedToFetch
+            throw AppwriteDocumentError.failedToFetchDocuments
         }
     }
 }

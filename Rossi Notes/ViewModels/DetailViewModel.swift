@@ -41,7 +41,7 @@ class DetailViewModel: ObservableObject {
         do {
             guard let document = try await appwrite.listDocument(collectionId, documentId) else {
                 self.failedToFetch = true
-                throw AppwriteDocumentError.failedToFetch
+                throw AppwriteDocumentError.failedToFetchDocument
                 //throw FetchDocumentsError.failedFetch
             }
             self.document = document
@@ -51,7 +51,7 @@ class DetailViewModel: ObservableObject {
             setDetailsStringModel(responseData: document.data)
         } catch {
             self.isLoading = false
-            throw AppwriteDocumentError.failedToFetch
+            throw AppwriteDocumentError.failedToFetchDocument
         }
         
         do {
