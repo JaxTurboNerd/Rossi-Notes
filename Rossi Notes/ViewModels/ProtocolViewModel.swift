@@ -41,7 +41,7 @@ final class ProtocolViewModel: ObservableObject {
                 await MainActor.run {
                     isLoading = true
                 }
-                throw FetchDocumentsError.failedFetch
+                throw AppwriteDocumentError.failedToFetch
             }
         }
         isLoading = false
@@ -57,7 +57,7 @@ final class ProtocolViewModel: ObservableObject {
         } catch {
             self.isLoading = false
             print("fetch document error \(error.localizedDescription)")
-            throw FetchDocumentsError.failedFetch
+            throw AppwriteDocumentError.failedToFetch
         }
     }
     
@@ -67,7 +67,7 @@ final class ProtocolViewModel: ObservableObject {
             try await fetchDocuments()
         } catch {
             print("refresh error \(error.localizedDescription)")
-            throw FetchDocumentsError.failedFetch
+            throw AppwriteDocumentError.failedToFetch
         }
         
     }

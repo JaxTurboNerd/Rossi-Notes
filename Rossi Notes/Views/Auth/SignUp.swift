@@ -14,7 +14,8 @@ struct SignUp: View {
     @State private var isLoading = false
     @State var isShowingSignIn = false
     @State var showSignInView = false
-    //Alert vars:
+    
+    //Alert vars:  will try to move all this to the view model
     @State private var showAlert = false
     @State private var alertMessage = ""
     
@@ -113,7 +114,7 @@ struct SignUp: View {
                             //action:
                             Task {
                                 do {
-                                    let isValidFields = try checkSignUpFields(viewModel.firstName, viewModel.lastName, viewModel.email, viewModel.password, viewModel.passwordConfirm)
+                                    let isValidFields = try viewModel.checkSignUpFields(viewModel.firstName, viewModel.lastName, viewModel.email, viewModel.password, viewModel.passwordConfirm)
                                     if isValidFields {
                                         viewModel.isSubmitting = true
                                         do {
@@ -221,40 +222,6 @@ struct SignUp: View {
             }
         }
     }
-}
-
-//Used to validate the user required textfields on the front end.  Checks for empty fields and password
-//mis-matches, and invalid emails.
-enum SignUpTextfieldError: Error {
-    case emptyFname, emptyLname, emptyEmail, emptyPassword, emptyPassword2, pwordsNotMatched, invalidEmail, invalidPassword
-}
-
-private func checkSignUpFields(
-    _ fname: String,
-    _ lname: String,
-    _ email: String,
-    _ password: String,
-    _ password2: String
-) throws -> Bool {
-    let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
-    if fname.isEmpty {
-        throw SignUpTextfieldError.emptyFname
-    } else if lname.isEmpty {
-        throw SignUpTextfieldError.emptyLname
-    } else if email.isEmpty {
-        throw SignUpTextfieldError.emptyEmail
-    } else if !NSPredicate(format: "SELF MATCHES %@", emailRegex).evaluate(with: email) {
-        throw SignUpTextfieldError.invalidEmail
-    } else if password.isEmpty {
-        throw SignUpTextfieldError.emptyPassword
-    } else if password2.isEmpty {
-        throw SignUpTextfieldError.emptyPassword2
-    } else if password != password2 {
-        throw SignUpTextfieldError.pwordsNotMatched
-    } else if password.count < 9 || password2.count < 9 {
-        throw SignUpTextfieldError.invalidPassword
-    }
-    return true
 }
 
 #Preview {
