@@ -36,6 +36,7 @@ final class LoginViewModel: ObservableObject {
             self.persistSession(session)
             self.isSubmitting = false
         } catch {
+            //below will throw the custom AuthError
             throw error
         }
     }

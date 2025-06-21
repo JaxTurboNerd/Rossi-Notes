@@ -15,7 +15,6 @@ struct SignIn: View {
     
     @State private var showAlert = false
     @State private var alertMessage = ""
-    //@State private var rememberMeSelected: Bool = UserDefaults.standard.bool(forKey: "rememberMeSelected")
     
     @FocusState var emailIsFocused: Bool
     @FocusState var passwordIsFocused: Bool
