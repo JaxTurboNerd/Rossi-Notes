@@ -53,8 +53,21 @@ struct ProtocolView: View {
                             .sheet(isPresented: $showForm, content: {CreateView(appwrite: appwrite, collectionId: viewModel.collectionId, isPlusNote: $isPlusNote)})
                         })
                     }
-                    .alert(isPresented: $viewModel.showAlert){
-                        Alert(title: Text("Error"), message: Text(viewModel.alertMessage), dismissButton: .default(Text("OK")))
+                    .alert("Cannot Retrieve Protocols", isPresented: $viewModel.showAlert){
+                        Button("OK", role: .cancel){
+                            //
+                        }
+                        Button("Retry"){
+                            Task {
+                                do {
+                                    try await viewModel.refreshDocuments()
+                                } catch {
+                                  print("error: \(error.localizedDescription)")
+                                }
+                            }
+                        }
+                    } message: {
+                        Text(viewModel.alertMessage)
                     }
                 }
             }
@@ -63,9 +76,8 @@ struct ProtocolView: View {
             Task {
                 do {
                     try await viewModel.refreshDocuments()
-                    print("Protocol View refresh was triggered")
                 } catch {
-                    //showAlert = true
+                    print("refresh error: \(error.localizedDescription)")
                 }
             }
             refresh.triggerRefresh = false
@@ -75,7 +87,7 @@ struct ProtocolView: View {
                 do {
                     try await viewModel.refreshDocuments()
                 } catch {
-                    //showAlert = true
+                    print("refresh error: \(error.localizedDescription)")
                 }
             }
         }

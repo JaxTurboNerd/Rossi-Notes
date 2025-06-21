@@ -41,11 +41,10 @@ final class ProtocolViewModel: ObservableObject {
                 }
             } catch {
                 await MainActor.run {
-                    self.isLoading = false
+                    //self.isLoading = false
+                    alertMessage = error.localizedDescription //will show the AuthError description
+                    showAlert = true
                 }
-                alertMessage = error.localizedDescription //will show the AuthError description
-                showAlert = true
-                throw AppwriteDocumentError.failedToFetchDocuments
             }
         }
         isLoading = false
@@ -62,7 +61,6 @@ final class ProtocolViewModel: ObservableObject {
             self.isLoading = false
             self.alertMessage = error.localizedDescription
             self.showAlert = true
-            throw AppwriteDocumentError.failedToFetchDocuments
         }
     }
     
@@ -75,7 +73,6 @@ final class ProtocolViewModel: ObservableObject {
             self.isLoading = false
             self.alertMessage = error.localizedDescription
             self.showAlert = true
-            throw AppwriteDocumentError.failedToFetchDocuments
         }
         
     }
