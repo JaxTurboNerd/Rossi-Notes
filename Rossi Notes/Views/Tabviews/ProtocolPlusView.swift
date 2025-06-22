@@ -12,7 +12,6 @@ struct ProtocolPlusView: View {
     @EnvironmentObject private var refresh: Refresh
     @State private var showForm = false
     @State var isPlusNote: Bool = true
-    @State private var showAlert: Bool = false
     let appwrite: Appwrite
     
     init(appwrite: Appwrite){
@@ -51,8 +50,21 @@ struct ProtocolPlusView: View {
                             
                         })
                     }
-                    .alert(isPresented: $showAlert){
-                        Alert(title: Text("Error"), message: Text("An error occurred fetching data. Please try again later."), dismissButton: .default(Text("OK")))
+                    .alert("Cannot Retrieve Protocols", isPresented: $viewModel.showAlert){
+                        Button("OK", role: .cancel){
+                            //
+                        }
+                        Button("Retry"){
+                            Task {
+                                do {
+                                    try await viewModel.refreshDocuments()
+                                } catch {
+                                  print("error: \(error.localizedDescription)")
+                                }
+                            }
+                        }
+                    } message: {
+                        Text(viewModel.alertMessage)
                     }
                 }
             }
@@ -61,10 +73,8 @@ struct ProtocolPlusView: View {
             Task {
                 do {
                     try await viewModel.refreshDocuments()
-                    print("Protocol PLUS View refresh was triggered")
                 } catch {
                     print("fetch error: \(error.localizedDescription)")
-                    showAlert = true
                 }
             }
             refresh.triggerRefresh = false
@@ -75,7 +85,6 @@ struct ProtocolPlusView: View {
                     try await viewModel.refreshDocuments()
                 } catch {
                     print("Refresh error \(error.localizedDescription)")
-                    showAlert = true
                 }
             }
         }

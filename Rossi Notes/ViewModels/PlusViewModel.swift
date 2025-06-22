@@ -12,9 +12,10 @@ import JSONCodable
 class PlusViewModel: ObservableObject {
     let appwrite: Appwrite
     
-    // Published properties for UI updates
     @Published public var documents: [Document<[String: AnyCodable]>] = []
     @Published public var isLoading = false
+    @Published public var showAlert = false
+    @Published public var alertMessage: String = ""
     
     // Constants
     var collectionId: String {
@@ -39,7 +40,8 @@ class PlusViewModel: ObservableObject {
             } catch {
                 print("fetching document error: \(error.localizedDescription)")
                 await MainActor.run {
-                    isLoading = true
+                    self.alertMessage = error.localizedDescription
+                    self.showAlert = true
                 }
                 throw AppwriteDocumentError.failedToFetchDocuments
             }
@@ -57,18 +59,20 @@ class PlusViewModel: ObservableObject {
             
         } catch {
             self.isLoading = false
-            print("fetch document error \(error.localizedDescription)")
-            throw AppwriteDocumentError.failedToFetchDocuments
+            self.alertMessage = error.localizedDescription
+            self.showAlert = true
         }
     }
     
     @MainActor
     func refreshDocuments() async throws {
+        self.isLoading = true
         do {
             try await fetchDocuments()
+            self.isLoading = false
         } catch {
-            print("referesh error: \(error.localizedDescription)")
-            throw AppwriteDocumentError.failedToFetchDocuments
-        }
+            self.isLoading = false
+            self.alertMessage = error.localizedDescription
+            self.showAlert = true        }
     }
 }

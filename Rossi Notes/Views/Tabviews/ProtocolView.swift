@@ -15,7 +15,6 @@ struct ProtocolView: View {
     @Environment(\.dismiss) private var dismiss
     @State var isPlusNote: Bool = false
     @State private var showForm = false
-    //@State private var showAlert = false
     
     init(appwrite: Appwrite){
         self.appwrite = appwrite

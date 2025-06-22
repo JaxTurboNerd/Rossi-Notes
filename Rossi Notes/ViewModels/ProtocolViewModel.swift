@@ -41,7 +41,6 @@ final class ProtocolViewModel: ObservableObject {
                 }
             } catch {
                 await MainActor.run {
-                    //self.isLoading = false
                     alertMessage = error.localizedDescription //will show the AuthError description
                     showAlert = true
                 }
@@ -66,6 +65,7 @@ final class ProtocolViewModel: ObservableObject {
     
     @MainActor
     func refreshDocuments() async throws {
+        self.isLoading = true
         do {
             try await fetchDocuments()
             self.isLoading = false
