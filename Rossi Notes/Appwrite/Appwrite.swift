@@ -153,11 +153,17 @@ class Appwrite: ObservableObject {
     
     public func listDocument(_ collectionId: String, _ documentId: String) async throws -> Document<[String: AnyCodable]>? {
         do {
-            let document = try await databases.getDocument(databaseId: databaseId, collectionId: collectionId, documentId: documentId)
+            let document = try await databases.getDocument(databaseId: databaseId, collectionId: collectionId, documentId: documentId, queries: [] )
             return document
-        } catch {
-            print(error.localizedDescription)
-            throw AppwriteDocumentError.failedToFetchDocument
+        } catch let error as AppwriteError {
+            //throw AppwriteDocumentError.failedToFetchDocument
+            if error.type == "user_unauthorized" {
+                throw AuthError.unAuthorized
+            } else if error.type == "user_blocked" {
+                throw AuthError.userBlocked
+            } else {
+                throw AppwriteDocumentError.failedToFetchDocuments
+            }
         }
     }
     
@@ -185,9 +191,14 @@ class Appwrite: ObservableObject {
         do {
             let document = try await databases.createDocument(databaseId: databaseId, collectionId: collectionId, documentId: documentId, data: data)
             return document
-        } catch {
-            print("Appwrite create error: \(error.localizedDescription)")
-            throw AppwriteDocumentError.failedToCreate
+        } catch let error as AppwriteError {
+            if error.type == "user_unauthorized" {
+                throw AuthError.unAuthorized
+            } else if error.type == "user_blocked" {
+                throw AuthError.userBlocked
+            } else {
+                throw AppwriteDocumentError.failedToCreate
+            }
         }
     }
     
@@ -195,18 +206,28 @@ class Appwrite: ObservableObject {
         do {
             let document = try await databases.updateDocument(databaseId: databaseId, collectionId: collectionId, documentId: documentId, data: data)
             return document
-        } catch {
-            print(error.localizedDescription)
-            throw AppwriteDocumentError.failedToUpdate
+        } catch let error as AppwriteError {
+            if error.type == "user_unauthorized" {
+                throw AuthError.unAuthorized
+            } else if error.type == "user_blocked" {
+                throw AuthError.userBlocked
+            } else {
+                throw AppwriteDocumentError.failedToUpdate
+            }
         }
     }
     
     public func deleteDocument(_ collectionId: String, _ documentId: String) async throws {
         do {
             let _ = try await databases.deleteDocument(databaseId: databaseId, collectionId: collectionId, documentId: documentId)
-        } catch {
-            print(error.localizedDescription)
-            throw AppwriteDocumentError.failedToDelete
+        } catch let error as AppwriteError {
+            if error.type == "user_unauthorized" {
+                throw AuthError.unAuthorized
+            } else if error.type == "user_blocked" {
+                throw AuthError.userBlocked
+            } else {
+                throw AppwriteDocumentError.failedToDelete
+            }
         }
     }
 }
